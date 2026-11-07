@@ -36,8 +36,8 @@ class CableGeometryTest {
     }
     @Test void straightCornersTeesAndCrossesHaveCorrectDegree() {
         Node center=node(0,0,0,Face.DOWN);
-        List<Node> arms=List.of(new Node(0,0,0,Face.DOWN,0,1),new Node(0,0,0,Face.DOWN,2,1),
-                new Node(0,0,0,Face.DOWN,1,0),new Node(0,0,0,Face.DOWN,1,2));
+        List<Node> arms=List.of(node(-1,0,0,Face.DOWN),node(1,0,0,Face.DOWN),
+                node(0,0,-1,Face.DOWN),node(0,0,1,Face.DOWN));
         for (int count=1;count<=4;count++) {
             Set<Node> occupied=new HashSet<>(arms.subList(0,count)); occupied.add(center);
             assertEquals(count,SurfaceTopology.connections(center,occupied::contains).size());

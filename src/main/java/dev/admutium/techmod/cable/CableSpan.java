@@ -5,14 +5,27 @@ import java.util.List;
 import java.util.UUID;
 
 /** Fixed endpoints, gravity sag and stable geometry; no per-tick rope simulation. */
-public record CableSpan(UUID id, Node start, Node end) {
+public final class CableSpan {
+    private final UUID id;
+    private final Node start;
+    private final Node end;
+    private final List<Vec> points;
+    public UUID id() { return id; }
+    public Node start() { return start; }
+    public Node end() { return end; }
     public static final double MAX_DISTANCE = 5;
     public static final int STEPS = 96;
-    public CableSpan {
+    public CableSpan(UUID id, Node start, Node end) {
+        this.id=java.util.Objects.requireNonNull(id);
+        this.start=java.util.Objects.requireNonNull(start);
+        this.end=java.util.Objects.requireNonNull(end);
         double distance = start.point().subtract(end.point()).length();
         if (distance < .15 || distance > MAX_DISTANCE + 1e-8) throw new IllegalArgumentException("span out of range");
         if (start.u() != 1 || start.v() != 1 || end.u() != 1 || end.v() != 1)
             throw new IllegalArgumentException("holders must be centered");
+        List<Vec> samples=new ArrayList<>(STEPS+1);
+        for (int i=0;i<=STEPS;i++) samples.add(point((double)i/STEPS));
+        points=List.copyOf(samples);
     }
     public Vec point(double t) {
         if (t < 0 || t > 1) throw new IllegalArgumentException("t outside span");
@@ -23,11 +36,11 @@ public record CableSpan(UUID id, Node start, Node end) {
         // A parabolic approximation of a catenary, with exact mounting endpoints.
         return a.add(delta.scale(t)).add(new Vec(0, -4 * sag * t * (1 - t), 0));
     }
-    public List<Vec> points() {
-        List<Vec> points = new ArrayList<>(STEPS + 1);
-        for (int i = 0; i <= STEPS; i++) points.add(point((double) i / STEPS));
-        return List.copyOf(points);
+    public List<Vec> points() { return points; }
+    @Override public boolean equals(Object other) {
+        return other instanceof CableSpan s && id.equals(s.id) && start.equals(s.start) && end.equals(s.end);
     }
+    @Override public int hashCode() { return java.util.Objects.hash(id,start,end); }
     public double length() {
         List<Vec> points = points();
         double result = 0;

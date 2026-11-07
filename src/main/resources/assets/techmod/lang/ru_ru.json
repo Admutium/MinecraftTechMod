@@ -13,5 +13,7 @@
   "message.techmod.protected": "Здесь нельзя разместить провод.",
   "message.techmod.missing_holder": "Первый держатель больше недоступен.",
   "message.techmod.duplicate": "Эти держатели уже соединены.",
-  "message.techmod.lava": "Провод сгорел в лаве."
+  "message.techmod.lava": "Провод сгорел в лаве.",
+  "message.techmod.holder_full": "У держателя уже четыре подключения.",
+  "message.techmod.cell_full": "Здесь уже проходит восемь подвесных проводов."
 }

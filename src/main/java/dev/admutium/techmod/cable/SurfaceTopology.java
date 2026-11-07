@@ -10,6 +10,7 @@ public final class SurfaceTopology {
     public record Connection(Node target, List<Vec> path) {}
 
     public static List<Connection> connections(Node node, Predicate<Node> exists) {
+        if (node.u()==1 && node.v()==1) return centeredConnections(node,exists);
         List<Connection> result = new ArrayList<>(4);
         for (int axis : new int[]{node.face().uAxis(), node.face().vAxis()}) {
             for (int sign : new int[]{-1, 1}) {
@@ -64,6 +65,24 @@ public final class SurfaceTopology {
                     result.add(new Connection(outer, List.of(node.point(), outerCorner, outer.point())));
                 }
             }
+        }
+        return List.copyOf(result);
+    }
+
+    private static List<Connection> centeredConnections(Node node,Predicate<Node> exists) {
+        List<Connection> result=new ArrayList<>(4);
+        for (int axis:new int[]{node.face().uAxis(),node.face().vAxis()}) for (int sign:new int[]{-1,1}) {
+            Face tangent=Face.along(axis,sign);
+            Vec adjacent=node.origin().add(tangent.normal());
+            Node flat=CableLayout.placement((int)adjacent.x(),(int)adjacent.y(),(int)adjacent.z(),node.face());
+            if (exists.test(flat)) { result.add(new Connection(flat,List.of(node.point(),flat.point()))); continue; }
+            Node inner=CableLayout.placement(node.x(),node.y(),node.z(),tangent);
+            Vec corner=node.point().with(axis,node.origin().coordinate(axis)+(sign<0?Node.HEIGHT:1-Node.HEIGHT));
+            if (exists.test(inner)) { result.add(new Connection(inner,List.of(node.point(),corner,inner.point()))); continue; }
+            Vec diagonal=adjacent.add(node.face().normal());
+            Node outer=CableLayout.placement((int)diagonal.x(),(int)diagonal.y(),(int)diagonal.z(),tangent.opposite());
+            Vec outerCorner=node.point().with(axis,node.origin().coordinate(axis)+(sign<0?-Node.HEIGHT:1+Node.HEIGHT));
+            if (exists.test(outer)) result.add(new Connection(outer,List.of(node.point(),outerCorner,outer.point())));
         }
         return List.copyOf(result);
     }

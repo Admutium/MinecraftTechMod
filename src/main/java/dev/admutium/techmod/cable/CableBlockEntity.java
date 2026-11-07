@@ -17,12 +17,30 @@ import java.util.ArrayList;
 
 public final class CableBlockEntity extends BlockEntity implements RenderDataBlockEntity {
     private volatile CableSnapshot data = CableSnapshot.EMPTY;
+    private volatile CableSnapshot renderData = CableSnapshot.EMPTY;
+    private final CableShapeCache<net.minecraft.world.phys.shapes.VoxelShape> shapeCache = new CableShapeCache<>();
+    public net.minecraft.world.phys.shapes.VoxelShape selectionShape(net.minecraft.world.level.BlockGetter world) {
+        return shapeCache.get(() -> CableShapes.build(world,worldPosition,renderData));
+    }
+    private void invalidateShapes() {
+        shapeCache.invalidate();
+        if (level==null) return;
+        for (BlockPos p:BlockPos.betweenClosed(worldPosition.offset(-1,-1,-1),worldPosition.offset(1,1,1)))
+            if (level.hasChunkAt(p) && level.getChunkAt(p).getBlockEntities().get(p) instanceof CableBlockEntity be)
+                be.shapeCache.invalidate();
+    }
+    @Override public void setRemoved() {
+        invalidateShapes();
+        super.setRemoved();
+    }
 
     public CableBlockEntity(BlockPos pos, BlockState state) { super(TechMod.CABLE_ENTITY, pos, state); }
     public CableSnapshot snapshot() { return data; }
-    @Override public CableSnapshot getRenderData() { return data; }
+    @Override public CableSnapshot getRenderData() { return renderData; }
     public void update(CableSnapshot next) {
         data = next;
+        renderData = next.centered();
+        invalidateShapes();
         setChanged();
         if (level instanceof ServerLevel server) {
             server.getChunkSource().blockChanged(worldPosition);
@@ -42,6 +60,8 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
             catch (RuntimeException e) { LoggerFactory.getLogger("techmod").warn("Ignoring invalid saved cable span at {}", worldPosition); }
         }
         data = new CableSnapshot(input.getLongOr("wires", 0) & ((1L << 54) - 1), input.getIntOr("holders", 0) & 63, spans);
+        renderData=data.centered();
+        invalidateShapes();
         if (level != null && level.isClientSide()) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
             for (BlockPos p : BlockPos.betweenClosed(worldPosition.offset(-1, -1, -1), worldPosition.offset(1, 1, 1)))

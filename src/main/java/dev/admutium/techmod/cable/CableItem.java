@@ -67,13 +67,12 @@ public final class CableItem extends Item {
             if (!holder) CableWorld.burn(level,level.getFluidState(cell).is(FluidTags.LAVA) ? cell : clicked,context.getItemInHand(),player);
             return InteractionResult.SUCCESS;
         }
-        Node node=holder ? new Node(cell.getX(),cell.getY(),cell.getZ(),face,1,1)
-                : Node.nearest(cell.getX(),cell.getY(),cell.getZ(),face,hit);
+        Node node=CableLayout.placement(cell.getX(),cell.getY(),cell.getZ(),face);
         if (!CableWorld.available(level,cell) || !CableWorld.supported(level,node)) return InteractionResult.FAIL;
         CableSnapshot before=CableWorld.data(level,cell);
-        if (holder ? before.holder(face) : before.has(node)) return InteractionResult.PASS;
-        // A holder reserves the center mounting slot; other slots on its face remain available.
-        if ((holder && before.has(node)) || (!holder && node.u()==1 && node.v()==1 && before.holder(face))) return InteractionResult.FAIL;
+        if (holder ? before.holder(face) : CableLayout.hasFace(before.wires(),face)) return InteractionResult.SUCCESS;
+        // Repeated clicks never charge for a second run on the same face.
+        if ((holder && CableLayout.hasFace(before.wires(),face)) || (!holder && before.holder(face))) return InteractionResult.FAIL;
         for (CableSpan span : before.spans()) for (Vec p : span.points())
             if (p.subtract(node.point()).length()<Node.RADIUS*2+.03) return InteractionResult.FAIL;
         if (level.isClientSide()) return InteractionResult.SUCCESS;

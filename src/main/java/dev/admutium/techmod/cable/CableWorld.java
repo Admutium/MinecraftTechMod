@@ -19,6 +19,8 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.*;
 
 public final class CableWorld {
+    public static final int MAX_LINKS_PER_HOLDER=4;
+    public static final int MAX_SPANS_PER_CELL=8;
     private CableWorld() {}
     public static BlockPos pos(Node n) { return new BlockPos(n.x(), n.y(), n.z()); }
     public static Direction direction(Face face) { return Direction.valueOf(face.name()); }
@@ -77,6 +79,9 @@ public final class CableWorld {
         Set<BlockPos> occupied = cells(span);
         for (Node endpoint : List.of(span.start(), span.end())) {
             if (!data(level, pos(endpoint)).holder(endpoint.face())) return "missing_holder";
+            long links=data(level,pos(endpoint)).spans().stream()
+                    .filter(s -> s.start().equals(endpoint) || s.end().equals(endpoint)).count();
+            if (links>=MAX_LINKS_PER_HOLDER) return "holder_full";
         }
         if (data(level, pos(span.start())).spans().stream().anyMatch(s ->
                 (s.start().equals(span.start()) && s.end().equals(span.end())) ||
@@ -89,6 +94,7 @@ public final class CableWorld {
                 return "lava";
             }
             if (!available(level, p)) return "obstructed";
+            if (data(level,p).spans().size()>=MAX_SPANS_PER_CELL) return "cell_full";
         }
         List<Vec> points = span.points();
         for (int i = 1; i < points.size(); i++) {
@@ -175,6 +181,13 @@ public final class CableWorld {
     }
     public static void validate(Level level, BlockPos p, CableBlockEntity be) {
         CableSnapshot snapshot = be.snapshot();
+        CableSnapshot centered=snapshot.centered();
+        if (centered!=snapshot) {
+            int refund=CableLayout.surplus(snapshot.wires(),snapshot.holders());
+            be.update(centered);
+            drop(level,p,TechMod.COPPER_CABLE,refund);
+            snapshot=centered;
+        }
         for (Face face : Face.values()) {
             Node center = new Node(p.getX(),p.getY(),p.getZ(),face,1,1);
             if (!level.hasChunkAt(p.relative(direction(face)))) continue;

@@ -100,6 +100,8 @@ write('lang/en_us.json', {
     'message.techmod.protected': 'You cannot place a cable here.',
     'message.techmod.missing_holder': 'The first holder is no longer available.',
     'message.techmod.duplicate': 'These holders are already connected.',
+    'message.techmod.holder_full': 'This holder already has four connections.',
+    'message.techmod.cell_full': 'Eight suspended cables already pass through this cell.',
     'message.techmod.lava': 'The cable burned in lava.'
 })
 write('lang/ru_ru.json', {
@@ -117,5 +119,7 @@ write('lang/ru_ru.json', {
     'message.techmod.protected': 'Здесь нельзя разместить провод.',
     'message.techmod.missing_holder': 'Первый держатель больше недоступен.',
     'message.techmod.duplicate': 'Эти держатели уже соединены.',
+    'message.techmod.holder_full': 'У держателя уже четыре подключения.',
+    'message.techmod.cell_full': 'Здесь уже проходит восемь подвесных проводов.',
     'message.techmod.lava': 'Провод сгорел в лаве.'
 })

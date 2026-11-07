@@ -32,8 +32,9 @@ public final class CableModel implements BlockStateModel {
                                     RandomSource random, Predicate<@Nullable Direction> cullTest) {
         CableSnapshot data=snapshot(level,pos);
         Vec origin=new Vec(pos.getX(),pos.getY(),pos.getZ());
-        for (int i=0;i<54;i++) {
-            Node n=Node.fromIndex(pos.getX(),pos.getY(),pos.getZ(),i);
+        for (Face face:Face.values()) {
+            Node n=CableLayout.placement(pos.getX(),pos.getY(),pos.getZ(),face);
+            int i=n.index();
             if (data.has(n)) {
                 int variant=Math.floorMod(Objects.hash(n.x(),n.y(),n.z(),i),3);
                 var connections=SurfaceTopology.connections(n,other -> {
@@ -42,18 +43,13 @@ public final class CableModel implements BlockStateModel {
                 });
                 if (connections.isEmpty()) {
                     List<Vec> coil=SurfaceTopology.coil(n);
-                    polyline(emitter,coil,origin,Node.RADIUS,variant);
-                    cap(emitter,coil.getFirst(),coil.get(1).subtract(coil.getFirst()).scale(-1),origin,Node.RADIUS,3);
-                    cap(emitter,coil.getLast(),coil.getLast().subtract(coil.get(coil.size()-2)),origin,Node.RADIUS,3);
+                    var rings=TubeGeometry.rings(coil,Node.RADIUS);
+                    tubeRings(emitter,rings,origin,variant,0,rings.size()-1);
+                    ringCap(emitter,rings.getFirst(),origin,3,true);
+                    ringCap(emitter,rings.getLast(),origin,3,false);
                 } else {
-                    for (var link:connections) {
-                        List<Vec> half=half(link.path());
-                        polyline(emitter,wobble(half,n),origin,Node.RADIUS,variant);
-                    }
-                    if (connections.size()==1) {
-                        Vec direction=connections.getFirst().path().get(1).subtract(n.point()).normalized();
-                        cap(emitter,n.point(),direction.scale(-1),origin,Node.RADIUS,3);
-                    }
+                    for (var link:connections) connection(emitter,n,link,origin,variant,connections.size()==1);
+                    if (connections.size()>1) joint(emitter,n.point(),origin,variant);
                 }
                 // Future machine blocks opt into CablePort. The sleeve appears only at a real compatible port.
                 for (Direction d:Direction.values()) {
@@ -61,7 +57,7 @@ public final class CableModel implements BlockStateModel {
                     BlockPos machine=pos.relative(d);
                     if (level.getBlockState(machine).getBlock() instanceof CablePort port && port.acceptsCable(level,machine,d.getOpposite())) {
                         Vec end=n.point().with(axis(d),origin.coordinate(axis(d))+(d.getAxisDirection()==Direction.AxisDirection.POSITIVE ? .99 : .01));
-                        if (end.subtract(n.point()).length()<.3) {
+                        if (end.subtract(n.point()).length()<.55) {
                             tube(emitter,n.point(),end,origin,Node.RADIUS,variant);
                             Vec sleeve=end.add(n.point().subtract(end).normalized().scale(.13));
                             tube(emitter,sleeve,end,origin,.068,4);
@@ -85,67 +81,84 @@ public final class CableModel implements BlockStateModel {
             }
             // Draw the holder's half of any surface connections.
             for (var link:SurfaceTopology.connections(center,n -> snapshot(level,new BlockPos(n.x(),n.y(),n.z())).has(n)))
-                polyline(emitter,half(link.path()),origin,Node.RADIUS,0);
+                connection(emitter,center,link,origin,0,false);
         }
         for (CableSpan span:data.spans()) {
-            List<Vec> points=span.points();
-            for (int i=1;i<points.size();i++) {
-                Vec a=points.get(i-1), b=points.get(i), mid=a.add(b).scale(.5);
+            var rings=TubeGeometry.rings(span.points(),Node.RADIUS);
+            int variant=Math.floorMod(span.id().hashCode(),3);
+            for (int i=1;i<rings.size();i++) {
+                Vec mid=rings.get(i-1).center().add(rings.get(i).center()).scale(.5);
                 if (BlockPos.containing(mid.x(),mid.y(),mid.z()).equals(pos))
-                    tube(emitter,a,b,origin,Node.RADIUS,Math.floorMod(span.id().hashCode(),3));
+                    tubeRings(emitter,rings,origin,variant,i-1,i);
             }
         }
     }
     private static int axis(Direction d) { return d.getStepX()!=0 ? 0 : d.getStepY()!=0 ? 1 : 2; }
-    private static List<Vec> half(List<Vec> points) {
-        double total=0;
-        for (int i=1;i<points.size();i++) total+=points.get(i).subtract(points.get(i-1)).length();
-        List<Vec> result=new ArrayList<>(); result.add(points.getFirst());
-        double remaining=total/2;
-        for (int i=1;i<points.size();i++) {
-            Vec a=points.get(i-1), b=points.get(i); double length=b.subtract(a).length();
-            if (remaining<=length) { result.add(a.add(b.subtract(a).scale(remaining/length))); break; }
-            result.add(b); remaining-=length;
+    private void connection(QuadEmitter out,Node n,SurfaceTopology.Connection link,Vec origin,int material,boolean exposed) {
+        var path=TubeGeometry.connection(n,link);
+        var rings=TubeGeometry.rings(path.points(),Node.RADIUS);
+        int from=path.firstHalf()?0:path.split(),to=path.firstHalf()?path.split():rings.size()-1;
+        tubeRings(out,rings,origin,material,from,to);
+        if (exposed) ringCap(out,path.firstHalf()?rings.getFirst():rings.getLast(),origin,3,path.firstHalf());
+    }
+    private void tubeRings(QuadEmitter out,List<TubeGeometry.Ring> rings,Vec origin,int material,int from,int to) {
+        for (int i=from+1;i<=to;i++) {
+            var a=rings.get(i-1).vertices();var b=rings.get(i).vertices();
+            for (int side=0;side<TubeGeometry.SIDES;side++) {
+                int next=(side+1)%TubeGeometry.SIDES;
+                quad(out,new Vec[]{a.get(side),a.get(next),b.get(next),b.get(side)},origin,material);
+            }
         }
-        return result;
     }
-    private static List<Vec> wobble(List<Vec> points,Node node) {
-        List<Vec> result=new ArrayList<>();
-        for (int i=1;i<points.size();i++) {
-            Vec a=points.get(i-1),b=points.get(i);
-            Vec tangent=b.subtract(a).normalized();
-            Vec sideways=tangent.cross(node.face().normal()).normalized();
-            if (i==1) result.add(a);
-            double amount=((Objects.hash(node.x(),node.y(),node.z(),node.index())&1)==0 ? 1 : -1)*.009;
-            result.add(a.add(b).scale(.5).add(sideways.scale(amount)));
-            result.add(b);
+    private void ringCap(QuadEmitter out,TubeGeometry.Ring ring,Vec origin,int material,boolean reverse) {
+        for(int side=0;side<TubeGeometry.SIDES;side++) {
+            int next=(side+1)%TubeGeometry.SIDES;
+            int a=reverse?next:side,b=reverse?side:next;
+            Vec[] points={ring.center(),ring.vertices().get(a),ring.vertices().get(b),ring.vertices().get(b)};
+            double angleA=a*Math.PI*2/TubeGeometry.SIDES,angleB=b*Math.PI*2/TubeGeometry.SIDES;
+            for(int i=0;i<4;i++) {
+                Vec p=points[i].subtract(origin);
+                out.pos(i,(float)p.x(),(float)p.y(),(float)p.z()).color(i,0xFFFFFFFF);
+            }
+            out.uv(0,.5f,.5f);
+            out.uv(1,(float)(.5+.5*Math.cos(angleA)),(float)(.5+.5*Math.sin(angleA)));
+            out.uv(2,(float)(.5+.5*Math.cos(angleB)),(float)(.5+.5*Math.sin(angleB)));
+            out.uv(3,(float)(.5+.5*Math.cos(angleB)),(float)(.5+.5*Math.sin(angleB)));
+            out.materialBake(materials[material],0).emit();
         }
-        return result;
     }
-    private void polyline(QuadEmitter out,List<Vec> points,Vec origin,double radius,int material) {
-        for (int i=1;i<points.size();i++) tube(out,points.get(i-1),points.get(i),origin,radius,material);
-    }
-    private static Vec[] frame(Vec direction) {
-        Vec tangent=direction.normalized();
-        Vec u=tangent.cross(Math.abs(tangent.y())<.9 ? new Vec(0,1,0) : new Vec(1,0,0)).normalized();
-        return new Vec[]{u,tangent.cross(u).normalized()};
+    private void joint(QuadEmitter out,Vec center,Vec origin,int material) {
+        double r=Node.RADIUS*1.055;
+        List<List<Vec>> latitudes=new ArrayList<>();
+        for(int latitude=-1;latitude<=1;latitude++) {
+            double angle=latitude*Math.PI/4;
+            List<Vec> ring=new ArrayList<>();
+            for(int side=0;side<8;side++) {
+                double around=side*Math.PI/4;
+                ring.add(center.add(new Vec(Math.cos(around)*Math.cos(angle)*r,Math.sin(angle)*r,-Math.sin(around)*Math.cos(angle)*r)));
+            }
+            latitudes.add(ring);
+        }
+        for(int row=1;row<3;row++) for(int side=0;side<8;side++) {
+            int next=(side+1)%8;
+            quad(out,new Vec[]{latitudes.get(row-1).get(side),latitudes.get(row-1).get(next),
+                    latitudes.get(row).get(next),latitudes.get(row).get(side)},origin,material);
+        }
+        Vec top=center.add(new Vec(0,r,0)),bottom=center.add(new Vec(0,-r,0));
+        for(int side=0;side<8;side++) {
+            int next=(side+1)%8;
+            quad(out,new Vec[]{bottom,latitudes.getFirst().get(next),latitudes.getFirst().get(side),latitudes.getFirst().get(side)},origin,material);
+            quad(out,new Vec[]{top,latitudes.getLast().get(side),latitudes.getLast().get(next),latitudes.getLast().get(next)},origin,material);
+        }
     }
     private void tube(QuadEmitter out,Vec a,Vec b,Vec origin,double radius,int material) {
         if (b.subtract(a).length()<1e-7) return;
-        Vec[] frame=frame(b.subtract(a));
-        for (int side=0;side<8;side++) {
-            double angle=side*Math.PI/4,next=(side+1)*Math.PI/4;
-            Vec p=frame[0].scale(Math.cos(angle)*radius).add(frame[1].scale(Math.sin(angle)*radius));
-            Vec q=frame[0].scale(Math.cos(next)*radius).add(frame[1].scale(Math.sin(next)*radius));
-            quad(out,new Vec[]{a.add(p),a.add(q),b.add(q),b.add(p)},origin,material);
-        }
+        var rings=TubeGeometry.rings(List.of(a,b),radius);
+        tubeRings(out,rings,origin,material,0,1);
     }
     private void cap(QuadEmitter out,Vec center,Vec direction,Vec origin,double radius,int material) {
-        Vec[] frame=frame(direction);
-        // The end texture is a rubber ring with a stranded copper core.
-        Vec u=frame[0].scale(radius),v=frame[1].scale(radius);
-        quad(out,new Vec[]{center.subtract(u).subtract(v),center.add(u).subtract(v),
-                center.add(u).add(v),center.subtract(u).add(v)},origin,material);
+        var ring=TubeGeometry.rings(List.of(center,center.add(direction.normalized())),radius).getFirst();
+        ringCap(out,ring,origin,material,false);
     }
     private void quad(QuadEmitter out,Vec[] points,Vec origin,int material) {
         for (int i=0;i<4;i++) {
