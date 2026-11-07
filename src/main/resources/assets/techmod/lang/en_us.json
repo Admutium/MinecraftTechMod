@@ -13,7 +13,7 @@
   "message.techmod.protected": "You cannot place a cable here.",
   "message.techmod.missing_holder": "The first holder is no longer available.",
   "message.techmod.duplicate": "These holders are already connected.",
-  "message.techmod.lava": "The cable burned in lava.",
   "message.techmod.holder_full": "This holder already has four connections.",
-  "message.techmod.cell_full": "Eight suspended cables already pass through this cell."
+  "message.techmod.cell_full": "Eight suspended cables already pass through this cell.",
+  "message.techmod.lava": "The cable burned in lava."
 }

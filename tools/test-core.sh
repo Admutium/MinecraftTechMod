@@ -13,9 +13,11 @@ printf '%s  %s\n' "$expected_sha512" "$junit_jar" | sha512sum --check --status
 java_bin="${JAVA_HOME:+$JAVA_HOME/bin/}java"
 javac_bin="${JAVA_HOME:+$JAVA_HOME/bin/}javac"
 "$javac_bin" --release 25 -cp "$junit_jar" -d "$cache_dir/classes" \
-    "$repo_dir"/src/main/java/dev/admutium/techmod/cable/{Vec,Face,Node,SurfaceTopology,CableSpan,CableLayout,CableSnapshot,CableHitGeometry,CableShapeCache,TubeGeometry}.java \
+    "$repo_dir"/src/main/java/dev/admutium/techmod/cable/{Vec,Face,Node,SurfaceTopology,CableSpan,CableLayout,CableSnapshot,CableHitGeometry,CableShapeCache,TubeGeometry,CablePicking}.java \
     "$repo_dir/src/test/java/dev/admutium/techmod/cable/CableGeometryTest.java" \
-    "$repo_dir/src/test/java/dev/admutium/techmod/cable/CableRegressionTest.java"
+    "$repo_dir/src/test/java/dev/admutium/techmod/cable/CableRegressionTest.java" \
+    "$repo_dir/src/test/java/dev/admutium/techmod/cable/CableHolderPickingTest.java"
 "$java_bin" -jar "$junit_jar" execute --class-path "$cache_dir/classes" \
     --select-class dev.admutium.techmod.cable.CableGeometryTest \
-    --select-class dev.admutium.techmod.cable.CableRegressionTest --disable-banner
+    --select-class dev.admutium.techmod.cable.CableRegressionTest \
+    --select-class dev.admutium.techmod.cable.CableHolderPickingTest --disable-banner

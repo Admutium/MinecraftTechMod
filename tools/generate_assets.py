@@ -48,16 +48,10 @@ for y in (0, 1, 15, 16, 30, 31):
     d.line((0, y, 31, y), fill=(55, 64, 69))
 save(im, 'textures/block/holder.png')
 
-im = Image.new('RGBA', (32, 32))
-d = ImageDraw.Draw(im)
-points = [(25, 22), (26, 15), (23, 8), (16, 5), (9, 8), (5, 15), (7, 23), (14, 27), (20, 24), (22, 18), (19, 13), (14, 12), (11, 16), (13, 21), (17, 20)]
-d.line(points, fill=(11, 14, 18), width=6)
-d.line([(x-1, y-1) for x, y in points], fill=(51, 59, 66), width=3)
-d.line([(x-1, y-2) for x, y in points], fill=(82, 88, 91), width=1)
-d.ellipse((23, 19, 28, 24), fill=(32, 34, 37), outline=(98, 100, 99))
-d.ellipse((24, 20, 27, 23), fill=(216, 128, 58))
-d.point((25, 20), fill=(255, 199, 113))
-save(im, 'textures/item/copper_cable.png')
+# User-selected generated artwork, normalized to an atlas-friendly 128x128 PNG.
+# Resampling is nearest-neighbor to retain the approved pixel-art appearance.
+with Image.open(Path(__file__).parent / 'art/copper_cable_coil_source.png') as approved:
+    save(approved.convert('RGBA').resize((128, 128), Image.Resampling.NEAREST), 'textures/item/copper_cable.png')
 
 im = Image.new('RGBA', (32, 32))
 d = ImageDraw.Draw(im)

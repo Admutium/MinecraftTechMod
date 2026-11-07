@@ -8,7 +8,19 @@ import java.util.function.Predicate;
 public final class CableHitGeometry {
     public static final int GRID=16;
     private CableHitGeometry() {}
-    public record Box(int minX,int minY,int minZ,int maxX,int maxY,int maxZ) {}
+    public record Box(int minX,int minY,int minZ,int maxX,int maxY,int maxZ) {
+        public boolean contains(Vec local) {
+            double epsilon=1e-6;
+            return local.x()>=minX/16.0-epsilon && local.x()<=maxX/16.0+epsilon &&
+                    local.y()>=minY/16.0-epsilon && local.y()<=maxY/16.0+epsilon &&
+                    local.z()>=minZ/16.0-epsilon && local.z()<=maxZ/16.0+epsilon;
+        }
+    }
+    public static Box mountBox(Node node,boolean holder) {
+        List<Box> result=new ArrayList<>(1);
+        add(result,node.point(),node.point(),node.origin(),holder?.145:.12);
+        return result.getFirst();
+    }
     public static List<Box> boxes(int x,int y,int z,CableSnapshot raw,Predicate<Node> exists) {
         CableSnapshot data=raw.centered();
         Vec origin=new Vec(x,y,z);
@@ -16,7 +28,7 @@ public final class CableHitGeometry {
         for (Face face:Face.values()) {
             Node node=CableLayout.placement(x,y,z,face);
             if (!data.has(node) && !data.holder(face)) continue;
-            add(result,node.point(),node.point(),origin,data.holder(face)?.145:.12);
+            result.add(mountBox(node,data.holder(face)));
             for (var link:SurfaceTopology.connections(node,exists)) {
                 List<Vec> path=link.path();
                 for (int i=1;i<path.size();i++) add(result,path.get(i-1),path.get(i),origin,Node.RADIUS+.01);

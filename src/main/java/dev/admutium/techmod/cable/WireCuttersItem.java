@@ -11,6 +11,8 @@ public final class WireCuttersItem extends Item {
     public WireCuttersItem(Properties properties) { super(properties); }
     public static Node nearest(Level level, BlockPos pos, Vec hit, boolean holdersOnly) {
         CableSnapshot data=CableWorld.data(level,pos);
+        Node selectedHolder=CablePicking.holder(pos.getX(),pos.getY(),pos.getZ(),data,hit);
+        if(selectedHolder!=null || holdersOnly) return selectedHolder;
         Node best=null;
         double distance=Double.POSITIVE_INFINITY;
         for (int i=0;i<54;i++) {
