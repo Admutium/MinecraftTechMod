@@ -5,6 +5,11 @@
     "techmod:coal_generator",
     "techmod:electric_furnace",
     "techmod:crusher",
-    "techmod:solar_panel"
+    "techmod:solar_panel",
+    "techmod:conveyor",
+    "techmod:manipulator",
+    "techmod:splitter",
+    "techmod:press",
+    "techmod:conveyor_drive"
   ]
 }

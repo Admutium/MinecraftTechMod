@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "facing=north,active=false,status=0": {
+      "model": "techmod:block/conveyor_drive_0_0",
+      "y": 0
+    },
+    "facing=east,active=false,status=0": {
+      "model": "techmod:block/conveyor_drive_0_0",
+      "y": 90
+    },
+    "facing=south,active=false,status=0": {
+      "model": "techmod:block/conveyor_drive_0_0",
+      "y": 180
+    },
+    "facing=west,active=false,status=0": {
+      "model": "techmod:block/conveyor_drive_0_0",
+      "y": 270
+    },
+    "facing=north,active=false,status=1": {
+      "model": "techmod:block/conveyor_drive_0_1",
+      "y": 0
+    },
+    "facing=east,active=false,status=1": {
+      "model": "techmod:block/conveyor_drive_0_1",
+      "y": 90
+    },
+    "facing=south,active=false,status=1": {
+      "model": "techmod:block/conveyor_drive_0_1",
+      "y": 180
+    },
+    "facing=west,active=false,status=1": {
+      "model": "techmod:block/conveyor_drive_0_1",
+      "y": 270
+    },
+    "facing=north,active=false,status=2": {
+      "model": "techmod:block/conveyor_drive_0_2",
+      "y": 0
+    },
+    "facing=east,active=false,status=2": {
+      "model": "techmod:block/conveyor_drive_0_2",
+      "y": 90
+    },
+    "facing=south,active=false,status=2": {
+      "model": "techmod:block/conveyor_drive_0_2",
+      "y": 180
+    },
+    "facing=west,active=false,status=2": {
+      "model": "techmod:block/conveyor_drive_0_2",
+      "y": 270
+    },
+    "facing=north,active=true,status=0": {
+      "model": "techmod:block/conveyor_drive_1_0",
+      "y": 0
+    },
+    "facing=east,active=true,status=0": {
+      "model": "techmod:block/conveyor_drive_1_0",
+      "y": 90
+    },
+    "facing=south,active=true,status=0": {
+      "model": "techmod:block/conveyor_drive_1_0",
+      "y": 180
+    },
+    "facing=west,active=true,status=0": {
+      "model": "techmod:block/conveyor_drive_1_0",
+      "y": 270
+    },
+    "facing=north,active=true,status=1": {
+      "model": "techmod:block/conveyor_drive_1_1",
+      "y": 0
+    },
+    "facing=east,active=true,status=1": {
+      "model": "techmod:block/conveyor_drive_1_1",
+      "y": 90
+    },
+    "facing=south,active=true,status=1": {
+      "model": "techmod:block/conveyor_drive_1_1",
+      "y": 180
+    },
+    "facing=west,active=true,status=1": {
+      "model": "techmod:block/conveyor_drive_1_1",
+      "y": 270
+    },
+    "facing=north,active=true,status=2": {
+      "model": "techmod:block/conveyor_drive_1_2",
+      "y": 0
+    },
+    "facing=east,active=true,status=2": {
+      "model": "techmod:block/conveyor_drive_1_2",
+      "y": 90
+    },
+    "facing=south,active=true,status=2": {
+      "model": "techmod:block/conveyor_drive_1_2",
+      "y": 180
+    },
+    "facing=west,active=true,status=2": {
+      "model": "techmod:block/conveyor_drive_1_2",
+      "y": 270
+    }
+  }
+}

@@ -15,10 +15,10 @@ public final class MachineItem extends BlockItem {
  @Override public void appendHoverText(ItemStack s,Item.TooltipContext c,TooltipDisplay d,Consumer<Component> out,TooltipFlag f){
   var state=s.getOrDefault(Machines.STATE,MachineState.EMPTY);int count=0;long total=0;
   for(var b:state.batteries())if(!b.isEmpty()){count++;total+=BatteryItem.charge(b);}
-  if(((MachineBlock)getBlock()).kind!=MachineKind.SOLAR)out.accept(Component.translatable("tooltip.techmod.installed",count));
+  if(((MachineBlock)getBlock()).kind.slots>0)out.accept(Component.translatable("tooltip.techmod.installed",count));
   if(((MachineBlock)getBlock()).kind==MachineKind.CABINET)
    out.accept(Component.translatable("tooltip.techmod.charge",Energy.format(total),Integer.toString(count*300)));
-  else out.accept(Component.translatable("tooltip.techmod.charge",Energy.format(state.energy()),((MachineBlock)getBlock()).kind==MachineKind.SOLAR?"10":"300"));
+  else out.accept(Component.translatable("tooltip.techmod.charge",Energy.format(state.energy()),((MachineBlock)getBlock()).kind.slots==0?"10":"300"));
   for(int i=0;i<state.batteries().size();i++)if(!state.batteries().get(i).isEmpty())
     out.accept(Component.literal("  "+(i+1)+": "+Energy.format(BatteryItem.charge(state.batteries().get(i)))+" / 300 TE"));
   if(state.fuelTicks()>0)out.accept(Component.translatable("tooltip.techmod.active_fuel",state.fuelTicks()/20));

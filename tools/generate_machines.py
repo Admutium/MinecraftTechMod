@@ -74,6 +74,9 @@ def model(kind,upper,active,status):
    for x in [4,6.5,9,11.5]:e.append(box([x,4,1],[x+.55,8,2],'steel'))
    if active:
     textures['fire']='minecraft:block/fire_0';e.append(box([3,4,9],[13,10,9.01],'fire',['north']))
+  if kind=='press':
+   e += [box([3,4,9],[13,5,11],'steel'),box([7,11,5],[9,14,7],'copper')]
+   textures['heater']=tex['inside']
   if kind=='crusher':
    # Feed hopper on top, inset crushing rollers and bottom collection drawer.
    for a,b in [([3,14,3],[5,16,13]),([11,14,3],[13,16,13]),([5,14,3],[11,16,5]),([5,14,11],[11,16,13])]:e.append(box(a,b,'steel'))
@@ -86,7 +89,7 @@ def model(kind,upper,active,status):
   if status:lamp['light_emission']=10
   for x in [3,6,9,12]:e.append(box([x,15.9,5],[x+1,16.05,11],'inside'))
  return {'parent':'minecraft:block/block','textures':textures,'elements':e,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}}
-for kind in ['battery_cabinet','coal_generator','electric_furnace','crusher']:
+for kind in ['battery_cabinet','coal_generator','electric_furnace','crusher','press']:
  variants={}
  for facing,yaw in [('north',0),('east',90),('south',180),('west',270)]:
   for upper in [False,True]:
@@ -108,7 +111,7 @@ for kind in ['battery_cabinet','coal_generator','electric_furnace','crusher']:
 # Append translations without touching existing cable identifiers.
 for lang in ['ru_ru','en_us']:
  p=ROOT/f'lang/{lang}.json';d=json.loads(p.read_text());ru=lang=='ru_ru'
- names={'battery':('Аккумулятор','Battery'),'battery_cabinet':('Аккумуляторный шкаф АШ-8','AS-8 Battery Cabinet'),'coal_generator':('Угольный генератор','Coal Generator'),'electric_furnace':('Электропечь','Electric Furnace'),'crusher':('Дробитель','Crusher'),'solar_panel':('Солнечная панель','Solar Panel')}
+ names={'battery':('Аккумулятор','Battery'),'battery_cabinet':('Аккумуляторный шкаф АШ-8','AS-8 Battery Cabinet'),'coal_generator':('Угольный генератор','Coal Generator'),'electric_furnace':('Электропечь','Electric Furnace'),'crusher':('Дробитель','Crusher'),'solar_panel':('Солнечная панель','Solar Panel'),'press':('Пресс','Press'),'conveyor_drive':('Электропривод','Conveyor Drive')}
  for key,pair in names.items():d[('item.'if key=='battery'else'block.')+'techmod.'+key]=pair[0 if ru else 1]
  for metal,pair in {'iron':('железная','Iron'),'copper':('медная','Copper'),'gold':('золотая','Gold')}.items():
   d['item.techmod.crushed_'+metal]=('Дроблёная '+pair[0]+' руда') if ru else ('Crushed '+pair[1]+' Ore')

@@ -47,7 +47,7 @@ public class MachineBlock extends Block implements EntityBlock,CablePort {
   var s=w.getBlockState(p);return !s.getValue(UPPER) && (side==input(s)||side==output(s));
  }
  public Direction input(BlockState s){return kind==MachineKind.GENERATOR?null:kind==MachineKind.CABINET?s.getValue(FACING).getCounterClockWise():s.getValue(FACING).getOpposite();}
- public Direction output(BlockState s){return (kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER)?null:kind==MachineKind.CABINET?s.getValue(FACING).getClockWise():s.getValue(FACING).getOpposite();}
+ public Direction output(BlockState s){return (kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER||kind==MachineKind.PRESS||kind==MachineKind.DRIVE)?null:kind==MachineKind.CABINET?s.getValue(FACING).getClockWise():s.getValue(FACING).getOpposite();}
  @Override protected List<ItemStack> getDrops(BlockState s,LootParams.Builder b){
   if(s.getValue(UPPER))return List.of();
   var be=b.getOptionalParameter(LootContextParams.BLOCK_ENTITY);

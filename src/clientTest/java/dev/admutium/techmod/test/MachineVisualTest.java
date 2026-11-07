@@ -18,7 +18,7 @@ public final class MachineVisualTest implements FabricClientGameTest {
    sp.getServer().runCommand("tp @a 0 3 5 180 8");
    sp.getServer().runOnServer(server->{
     var w=sp.getConnection().getServerLevel();
-    for(var kind:MachineKind.values()){
+    for(var kind:new MachineKind[]{MachineKind.CABINET,MachineKind.GENERATOR,MachineKind.FURNACE,MachineKind.CRUSHER,MachineKind.SOLAR}){
      int x=kind==MachineKind.CABINET?0:kind==MachineKind.GENERATOR?-2:kind==MachineKind.FURNACE?2:kind==MachineKind.CRUSHER?4:6;BlockPos p=new BlockPos(x,3,0);
      var state=Machines.BLOCKS.get(kind).defaultBlockState().setValue(MachineBlock.FACING,Direction.SOUTH);
      w.setBlock(p,state,3);
@@ -57,7 +57,7 @@ public final class MachineVisualTest implements FabricClientGameTest {
    sp.getServer().runCommand("tp @a 7 3 2");c.waitFor(client->client.player.getX()>6);c.getInput().lookAt(new BlockPos(6,3,0));c.waitTicks(5);c.takeScreenshot("kontur-solar-close");
    sp.getServer().runCommand("tp @a 1 2.6 -1");c.waitFor(client->client.player.getZ()<0);c.getInput().lookAt(new BlockPos(1,4,-4));c.waitTicks(6);c.takeScreenshot("kontur-solar-array");
    sp.getServer().runCommand("tp @a 2 3 4");c.waitFor(client->client.player.getX()>1&&client.player.getX()<3);
-   for(var kind:MachineKind.values()){
+   for(var kind:new MachineKind[]{MachineKind.CABINET,MachineKind.GENERATOR,MachineKind.FURNACE,MachineKind.CRUSHER,MachineKind.SOLAR}){
     int x=kind==MachineKind.CABINET?0:kind==MachineKind.GENERATOR?-2:kind==MachineKind.FURNACE?2:kind==MachineKind.CRUSHER?4:6;
     sp.getServer().runOnServer(server->{var player=sp.getConnection().getServerPlayer();player.openMenu((MachineBlockEntity)sp.getConnection().getServerLevel().getBlockEntity(new BlockPos(x,3,0)));});
     c.waitForScreen(MachineScreen.class);c.waitTicks(4);c.takeScreenshot("kontur-"+kind.id+"-screen");c.setScreen(()->null);c.waitTicks(2);

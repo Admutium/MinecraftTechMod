@@ -6,6 +6,9 @@ import net.fabricmc.fabric.api.client.model.loading.v1.CustomUnbakedBlockStateMo
 
 public final class TechModClient implements ClientModInitializer {
     @Override public void onInitializeClient() {
+        dev.admutium.techmod.client.conveyor.ConveyorPreview.init();
+        net.minecraft.client.gui.screens.MenuScreens.register(dev.admutium.techmod.conveyor.Conveyors.MENU,dev.admutium.techmod.client.conveyor.ConveyorScreen::new);
+        net.minecraft.client.renderer.blockentity.BlockEntityRenderers.register(dev.admutium.techmod.conveyor.Conveyors.ENTITY,dev.admutium.techmod.client.conveyor.ConveyorRenderer::new);
         dev.admutium.techmod.client.sound.MachineAudio.init();
         dev.admutium.techmod.client.machine.EnergyTooltips.init();
         for(var menu:dev.admutium.techmod.machine.Machines.MENUS.values())net.minecraft.client.gui.screens.MenuScreens.register(menu,dev.admutium.techmod.client.machine.MachineScreen::new);

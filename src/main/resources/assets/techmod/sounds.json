@@ -25,5 +25,23 @@
         "attenuation_distance": 6
       }
     ]
+  },
+  "press_loop": {
+    "subtitle": "subtitles.techmod.press_loop",
+    "sounds": [
+      {
+        "name": "techmod:machines/press",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "conveyor_drive_loop": {
+    "subtitle": "subtitles.techmod.conveyor_drive_loop",
+    "sounds": [
+      {
+        "name": "techmod:machines/conveyor_drive",
+        "attenuation_distance": 6
+      }
+    ]
   }
 }

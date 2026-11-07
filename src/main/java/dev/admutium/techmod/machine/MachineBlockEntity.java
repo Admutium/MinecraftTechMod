@@ -25,15 +25,17 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  private long lastSent=-1;private String recipeKey="";private boolean removedContents;
  private int batteryCursor;
  private RecipeHolder<SmeltingRecipe> cachedRecipe;
- public MachineBlockEntity(BlockPos p,BlockState s){super(Machines.ENTITY,p,s);kind=((MachineBlock)s.getBlock()).kind;items=NonNullList.withSize(kind.slots,ItemStack.EMPTY);}
+ public MachineBlockEntity(BlockPos p,BlockState s){super(Machines.ENTITY,p,s);kind=((MachineBlock)s.getBlock()).kind;items=NonNullList.withSize(kind.slots,ItemStack.EMPTY);java.util.Arrays.fill(itemSides,0);itemSides[Direction.UP.ordinal()]=1;itemSides[Direction.DOWN.ordinal()]=2;var front=s.getValue(MachineBlock.FACING);itemSides[front.ordinal()]=2;itemSides[front.getClockWise().ordinal()]=1;itemSides[front.getCounterClockWise().ordinal()]=1;}
+ public int driveLoad,driveMode;
+ public final int[] itemSides={2,1,0,0,1,1};
  public int solarEfficiency,solarRate,solarStatus;private long nextSkyCheck;private boolean solarSkyOpen;
  public boolean generates(){return kind==MachineKind.GENERATOR||kind==MachineKind.SOLAR;}
- public boolean processes(){return kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER;}
- public int processTicks(){return kind==MachineKind.CRUSHER?120:160;}
+ public boolean processes(){return kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER||kind==MachineKind.PRESS;}
+ public int processTicks(){return kind==MachineKind.CRUSHER?120:kind==MachineKind.PRESS?80:160;}
  public static int fuelDuration(ItemStack s){return s.is(Items.COAL_BLOCK)?9000:isFuel(s)?900:0;}
- public int batterySlot(){if(kind==MachineKind.SOLAR)return -1;return kind==MachineKind.GENERATOR?1:2;}
+ public int batterySlot(){if(kind.slots==0)return -1;return kind==MachineKind.GENERATOR?1:2;}
  public long stored(){if(kind!=MachineKind.CABINET)return energy;long sum=0;for(var s:items)sum+=BatteryItem.charge(s);return sum;}
- public long capacity(){if(kind!=MachineKind.CABINET)return kind==MachineKind.SOLAR?SolarPower.CAPACITY:Energy.BUFFER;return items.stream().filter(s->s.getItem() instanceof BatteryItem).count()*Energy.BATTERY;}
+ public long capacity(){if(kind!=MachineKind.CABINET)return kind==MachineKind.SOLAR||kind==MachineKind.DRIVE?SolarPower.CAPACITY:Energy.BUFFER;return items.stream().filter(s->s.getItem() instanceof BatteryItem).count()*Energy.BATTERY;}
  public long receive(long amount){
   amount=Math.max(0,Math.min(amount,capacity()-stored()));long left=amount;
   if(kind!=MachineKind.CABINET){energy+=amount;return amount;}
@@ -51,6 +53,7 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  }
  public void beginTick(){
   if(kind==MachineKind.CABINET && level instanceof ServerLevel w){var above=w.getBlockState(worldPosition.above());if(above.is(Machines.BLOCKS.get(kind)) && above.getValue(MachineBlock.UPPER))w.removeBlock(worldPosition.above(),false);}
+  if(kind==MachineKind.DRIVE&&level instanceof ServerLevel server)dev.admutium.techmod.conveyor.ConveyorNetwork.registerDrive(server,this);
   incoming=outgoing=loss=0;working=false;wantsWork=false;
   if(kind==MachineKind.SOLAR&&level instanceof ServerLevel w){
    if(w.getGameTime()>=nextSkyCheck){solarSkyOpen=SolarPower.skyOpen(w,worldPosition);nextSkyCheck=w.getGameTime()+20;}
@@ -71,8 +74,8 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  private boolean fits(ItemStack result){var out=items.get(1);return !result.isEmpty() && (out.isEmpty() || ItemStack.isSameItemSameComponents(out,result)&&out.getCount()+result.getCount()<=out.getMaxStackSize());}
  private ItemStack outputForRecipe(){
   if(!(level instanceof ServerLevel w) || items.get(0).isEmpty()){cachedRecipe=null;return null;}
-  Item special=kind==MachineKind.CRUSHER?Machines.CRUSHED.get(items.get(0).getItem()):Machines.SMELTED.get(items.get(0).getItem());
-  if(kind==MachineKind.CRUSHER || special!=null){cachedRecipe=null;ItemStack result=special==null?ItemStack.EMPTY:new ItemStack(special,kind==MachineKind.CRUSHER?2:1);return fits(result)?result:null;}
+  Item special=kind==MachineKind.CRUSHER?Machines.CRUSHED.get(items.get(0).getItem()):kind==MachineKind.PRESS?Machines.PLATES.get(items.get(0).getItem()):Machines.SMELTED.get(items.get(0).getItem());
+  if(kind==MachineKind.CRUSHER || kind==MachineKind.PRESS || special!=null){cachedRecipe=null;ItemStack result=special==null?ItemStack.EMPTY:new ItemStack(special,kind==MachineKind.CRUSHER?2:1);return fits(result)?result:null;}
   var input=new SingleRecipeInput(items.get(0));
   var recipe=w.recipeAccess().getRecipeFor(RecipeType.SMELTING,input,w,cachedRecipe).orElse(null);
   cachedRecipe=recipe;if(recipe==null)return null;
@@ -83,6 +86,7 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  public void finishTick(){
   displayIn+=incoming-flowWindow[0][flowCursor];displayOut+=outgoing-flowWindow[1][flowCursor];displayLoss+=loss-flowWindow[2][flowCursor];
   flowWindow[0][flowCursor]=incoming;flowWindow[1][flowCursor]=outgoing;flowWindow[2][flowCursor]=loss;flowCursor=(flowCursor+1)%20;
+  if(kind==MachineKind.DRIVE){if(level instanceof ServerLevel w&&w.getGameTime()%10==0)w.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),2);return;}
   if(processes()){
    ItemStack result=outputForRecipe();String key=result==null?recipeKey:cachedRecipe==null?net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(items.get(0).getItem()).toString():cachedRecipe.id().toString();
    if(!key.equals(recipeKey)){progress=0;recipeKey=key;}
@@ -113,7 +117,7 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
   }
  }
  private long visualStamp(){long h=progress/10;for(var s:items)h=h*31+(s.isEmpty()?0:Objects.hash(s.getItem(),s.getCount(),BatteryItem.charge(s)*100/Energy.BATTERY));return h;}
- public String statusKey(){if(kind==MachineKind.SOLAR)return solarStatusKey(solarStatus);if(kind==MachineKind.GENERATOR)return working?"generating":fuelTicks>0||isFuel(items.get(0))?"full":"no_fuel";
+ public String statusKey(){if(kind==MachineKind.DRIVE)return "drive";if(kind==MachineKind.SOLAR)return solarStatusKey(solarStatus);if(kind==MachineKind.GENERATOR)return working?"generating":fuelTicks>0||isFuel(items.get(0))?"full":"no_fuel";
   if(kind==MachineKind.CABINET)return capacity()==0?"no_batteries":"storage";
   if(items.get(0).isEmpty())return "no_input";if(outputForRecipe()==null)return "no_recipe_or_full";return working?(kind==MachineKind.CRUSHER?"crushing":"smelting"):"no_power";}
  public static String solarStatusKey(int status){return switch(status){case 1->"no_sun";case 2->"shaded";case 3->"night";case 4->"full";default->"solar_generating";};}
@@ -123,7 +127,7 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  public void restore(MachineState s){
   energy=kind==MachineKind.CABINET?0:Energy.clamp(s.energy(),capacity());fuelTicks=kind==MachineKind.GENERATOR?Math.clamp(s.fuelTicks(),0,9000):0;progress=0;
   fuelTotalTicks=s.fuelTotalTicks()==9000||fuelTicks>900?9000:900;
-  int count=kind==MachineKind.CABINET?8:kind==MachineKind.SOLAR?0:1;for(int i=0;i<Math.min(count,s.batteries().size());i++)if(s.batteries().get(i).getItem() instanceof BatteryItem){var b=s.batteries().get(i).copyWithCount(1);BatteryItem.setCharge(b,BatteryItem.charge(b));items.set(kind==MachineKind.CABINET?i:batterySlot(),b);}setChanged();
+  int count=kind==MachineKind.CABINET?8:kind.slots==0?0:1;for(int i=0;i<Math.min(count,s.batteries().size());i++)if(s.batteries().get(i).getItem() instanceof BatteryItem){var b=s.batteries().get(i).copyWithCount(1);BatteryItem.setCharge(b,BatteryItem.charge(b));items.set(kind==MachineKind.CABINET?i:batterySlot(),b);}setChanged();
  }
  @Override public void preRemoveSideEffects(BlockPos p,BlockState replacement){
   if(!removedContents && level instanceof ServerLevel w){removedContents=true;
@@ -135,10 +139,10 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
   // Do not call Container's default spill: batteries are preserved inside the machine item.
  }
  @Override public void setRemoved(){if(level!=null)EnergyNetwork.invalidate(level);super.setRemoved();}
- @Override public void loadAdditional(ValueInput i){super.loadAdditional(i);energy=Energy.clamp(i.getLongOr("energy",0),kind==MachineKind.SOLAR?SolarPower.CAPACITY:Energy.BUFFER);fuelTicks=Math.clamp(i.getIntOr("fuel",0),0,9000);fuelTotalTicks=i.getIntOr("fuel_total",fuelTicks>900?9000:900);progress=Math.clamp(i.getIntOr("progress",0),0,processTicks()-1);recipeKey=i.getStringOr("recipe","");
+ @Override public void loadAdditional(ValueInput i){super.loadAdditional(i);driveMode=Math.clamp(i.getIntOr("drive_mode",0),0,2);driveLoad=Math.clamp(i.getIntOr("drive_load",0),0,16);var sides=i.read("item_sides",com.mojang.serialization.Codec.INT.listOf()).orElse(java.util.Arrays.stream(itemSides).boxed().toList());for(int k=0;k<6;k++)itemSides[k]=k<sides.size()?Math.clamp(sides.get(k),0,2):0;energy=Energy.clamp(i.getLongOr("energy",0),kind==MachineKind.SOLAR||kind==MachineKind.DRIVE?SolarPower.CAPACITY:Energy.BUFFER);fuelTicks=Math.clamp(i.getIntOr("fuel",0),0,9000);fuelTotalTicks=i.getIntOr("fuel_total",fuelTicks>900?9000:900);progress=Math.clamp(i.getIntOr("progress",0),0,processTicks()-1);recipeKey=i.getStringOr("recipe","");
   var saved=i.read("items",ItemStack.OPTIONAL_CODEC.listOf()).orElse(List.of());for(int k=0;k<items.size();k++)items.set(k,k<saved.size()?saved.get(k):ItemStack.EMPTY);
  }
- @Override public void saveAdditional(ValueOutput o){super.saveAdditional(o);o.putLong("energy",energy);o.putInt("fuel",fuelTicks);o.putInt("fuel_total",fuelTotalTicks);o.putInt("progress",progress);o.putString("recipe",recipeKey);o.store("items",ItemStack.OPTIONAL_CODEC.listOf(),items);}
+ @Override public void saveAdditional(ValueOutput o){super.saveAdditional(o);o.putLong("energy",energy);o.putInt("drive_mode",driveMode);o.putInt("drive_load",driveLoad);o.store("item_sides",com.mojang.serialization.Codec.INT.listOf(),java.util.Arrays.stream(itemSides).boxed().toList());o.putInt("fuel",fuelTicks);o.putInt("fuel_total",fuelTotalTicks);o.putInt("progress",progress);o.putString("recipe",recipeKey);o.store("items",ItemStack.OPTIONAL_CODEC.listOf(),items);}
  @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
  @Override public CompoundTag getUpdateTag(HolderLookup.Provider r){return saveCustomOnly(r);}
  @Override public int getContainerSize(){return items.size();}
@@ -148,7 +152,7 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  @Override public ItemStack removeItemNoUpdate(int i){return ContainerHelper.takeItem(items,i);}
  @Override public void setItem(int i,ItemStack s){items.set(i,s);s.limitSize(s.getItem() instanceof BatteryItem?1:s.getMaxStackSize());setChanged();}
  @Override public boolean canPlaceItem(int slot,ItemStack s){
-  if(kind==MachineKind.SOLAR)return false;
+  if(kind.slots==0)return false;
   if(kind==MachineKind.CABINET)return s.getItem() instanceof BatteryItem;
   if(slot==batterySlot())return s.getItem() instanceof BatteryItem;
   return slot==0 && (processes() || isFuel(s));

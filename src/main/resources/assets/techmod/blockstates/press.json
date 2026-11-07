@@ -1,0 +1,196 @@
+{
+  "variants": {
+    "facing=north,upper=false,active=false,status=0": {
+      "model": "techmod:block/press_0_0_0",
+      "y": 0
+    },
+    "facing=north,upper=false,active=false,status=1": {
+      "model": "techmod:block/press_0_0_1",
+      "y": 0
+    },
+    "facing=north,upper=false,active=false,status=2": {
+      "model": "techmod:block/press_0_0_2",
+      "y": 0
+    },
+    "facing=north,upper=false,active=true,status=0": {
+      "model": "techmod:block/press_0_1_0",
+      "y": 0
+    },
+    "facing=north,upper=false,active=true,status=1": {
+      "model": "techmod:block/press_0_1_1",
+      "y": 0
+    },
+    "facing=north,upper=false,active=true,status=2": {
+      "model": "techmod:block/press_0_1_2",
+      "y": 0
+    },
+    "facing=north,upper=true,active=false,status=0": {
+      "model": "techmod:block/press_1_0_0",
+      "y": 0
+    },
+    "facing=north,upper=true,active=false,status=1": {
+      "model": "techmod:block/press_1_0_1",
+      "y": 0
+    },
+    "facing=north,upper=true,active=false,status=2": {
+      "model": "techmod:block/press_1_0_2",
+      "y": 0
+    },
+    "facing=north,upper=true,active=true,status=0": {
+      "model": "techmod:block/press_1_1_0",
+      "y": 0
+    },
+    "facing=north,upper=true,active=true,status=1": {
+      "model": "techmod:block/press_1_1_1",
+      "y": 0
+    },
+    "facing=north,upper=true,active=true,status=2": {
+      "model": "techmod:block/press_1_1_2",
+      "y": 0
+    },
+    "facing=east,upper=false,active=false,status=0": {
+      "model": "techmod:block/press_0_0_0",
+      "y": 90
+    },
+    "facing=east,upper=false,active=false,status=1": {
+      "model": "techmod:block/press_0_0_1",
+      "y": 90
+    },
+    "facing=east,upper=false,active=false,status=2": {
+      "model": "techmod:block/press_0_0_2",
+      "y": 90
+    },
+    "facing=east,upper=false,active=true,status=0": {
+      "model": "techmod:block/press_0_1_0",
+      "y": 90
+    },
+    "facing=east,upper=false,active=true,status=1": {
+      "model": "techmod:block/press_0_1_1",
+      "y": 90
+    },
+    "facing=east,upper=false,active=true,status=2": {
+      "model": "techmod:block/press_0_1_2",
+      "y": 90
+    },
+    "facing=east,upper=true,active=false,status=0": {
+      "model": "techmod:block/press_1_0_0",
+      "y": 90
+    },
+    "facing=east,upper=true,active=false,status=1": {
+      "model": "techmod:block/press_1_0_1",
+      "y": 90
+    },
+    "facing=east,upper=true,active=false,status=2": {
+      "model": "techmod:block/press_1_0_2",
+      "y": 90
+    },
+    "facing=east,upper=true,active=true,status=0": {
+      "model": "techmod:block/press_1_1_0",
+      "y": 90
+    },
+    "facing=east,upper=true,active=true,status=1": {
+      "model": "techmod:block/press_1_1_1",
+      "y": 90
+    },
+    "facing=east,upper=true,active=true,status=2": {
+      "model": "techmod:block/press_1_1_2",
+      "y": 90
+    },
+    "facing=south,upper=false,active=false,status=0": {
+      "model": "techmod:block/press_0_0_0",
+      "y": 180
+    },
+    "facing=south,upper=false,active=false,status=1": {
+      "model": "techmod:block/press_0_0_1",
+      "y": 180
+    },
+    "facing=south,upper=false,active=false,status=2": {
+      "model": "techmod:block/press_0_0_2",
+      "y": 180
+    },
+    "facing=south,upper=false,active=true,status=0": {
+      "model": "techmod:block/press_0_1_0",
+      "y": 180
+    },
+    "facing=south,upper=false,active=true,status=1": {
+      "model": "techmod:block/press_0_1_1",
+      "y": 180
+    },
+    "facing=south,upper=false,active=true,status=2": {
+      "model": "techmod:block/press_0_1_2",
+      "y": 180
+    },
+    "facing=south,upper=true,active=false,status=0": {
+      "model": "techmod:block/press_1_0_0",
+      "y": 180
+    },
+    "facing=south,upper=true,active=false,status=1": {
+      "model": "techmod:block/press_1_0_1",
+      "y": 180
+    },
+    "facing=south,upper=true,active=false,status=2": {
+      "model": "techmod:block/press_1_0_2",
+      "y": 180
+    },
+    "facing=south,upper=true,active=true,status=0": {
+      "model": "techmod:block/press_1_1_0",
+      "y": 180
+    },
+    "facing=south,upper=true,active=true,status=1": {
+      "model": "techmod:block/press_1_1_1",
+      "y": 180
+    },
+    "facing=south,upper=true,active=true,status=2": {
+      "model": "techmod:block/press_1_1_2",
+      "y": 180
+    },
+    "facing=west,upper=false,active=false,status=0": {
+      "model": "techmod:block/press_0_0_0",
+      "y": 270
+    },
+    "facing=west,upper=false,active=false,status=1": {
+      "model": "techmod:block/press_0_0_1",
+      "y": 270
+    },
+    "facing=west,upper=false,active=false,status=2": {
+      "model": "techmod:block/press_0_0_2",
+      "y": 270
+    },
+    "facing=west,upper=false,active=true,status=0": {
+      "model": "techmod:block/press_0_1_0",
+      "y": 270
+    },
+    "facing=west,upper=false,active=true,status=1": {
+      "model": "techmod:block/press_0_1_1",
+      "y": 270
+    },
+    "facing=west,upper=false,active=true,status=2": {
+      "model": "techmod:block/press_0_1_2",
+      "y": 270
+    },
+    "facing=west,upper=true,active=false,status=0": {
+      "model": "techmod:block/press_1_0_0",
+      "y": 270
+    },
+    "facing=west,upper=true,active=false,status=1": {
+      "model": "techmod:block/press_1_0_1",
+      "y": 270
+    },
+    "facing=west,upper=true,active=false,status=2": {
+      "model": "techmod:block/press_1_0_2",
+      "y": 270
+    },
+    "facing=west,upper=true,active=true,status=0": {
+      "model": "techmod:block/press_1_1_0",
+      "y": 270
+    },
+    "facing=west,upper=true,active=true,status=1": {
+      "model": "techmod:block/press_1_1_1",
+      "y": 270
+    },
+    "facing=west,upper=true,active=true,status=2": {
+      "model": "techmod:block/press_1_1_2",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,580 @@
+{
+  "variants": {
+    "facing=north,slope=2,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_0",
+      "y": 0
+    },
+    "facing=north,slope=2,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=2,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_0",
+      "y": 90
+    },
+    "facing=east,slope=2,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=2,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_0",
+      "y": 180
+    },
+    "facing=south,slope=2,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=2,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_0",
+      "y": 270
+    },
+    "facing=west,slope=2,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=2,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_1",
+      "y": 0
+    },
+    "facing=north,slope=2,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=2,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_1",
+      "y": 90
+    },
+    "facing=east,slope=2,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=2,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_1",
+      "y": 180
+    },
+    "facing=south,slope=2,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=2,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_-1_1",
+      "y": 270
+    },
+    "facing=west,slope=2,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=2,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_0",
+      "y": 0
+    },
+    "facing=north,slope=2,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=2,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_0",
+      "y": 90
+    },
+    "facing=east,slope=2,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=2,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_0",
+      "y": 180
+    },
+    "facing=south,slope=2,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=2,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_0",
+      "y": 270
+    },
+    "facing=west,slope=2,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=2,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_1",
+      "y": 0
+    },
+    "facing=north,slope=2,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=2,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_1",
+      "y": 90
+    },
+    "facing=east,slope=2,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=2,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_1",
+      "y": 180
+    },
+    "facing=south,slope=2,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=2,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_0_1",
+      "y": 270
+    },
+    "facing=west,slope=2,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=2,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_0",
+      "y": 0
+    },
+    "facing=north,slope=2,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=2,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_0",
+      "y": 90
+    },
+    "facing=east,slope=2,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=2,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_0",
+      "y": 180
+    },
+    "facing=south,slope=2,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=2,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_0",
+      "y": 270
+    },
+    "facing=west,slope=2,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=2,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_1",
+      "y": 0
+    },
+    "facing=north,slope=2,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=2,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_1",
+      "y": 90
+    },
+    "facing=east,slope=2,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=2,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_1",
+      "y": 180
+    },
+    "facing=south,slope=2,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=2,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_-1_1_1",
+      "y": 270
+    },
+    "facing=west,slope=2,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=0,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_0",
+      "y": 0
+    },
+    "facing=north,slope=0,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=0,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_0",
+      "y": 90
+    },
+    "facing=east,slope=0,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=0,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_0",
+      "y": 180
+    },
+    "facing=south,slope=0,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=0,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_0",
+      "y": 270
+    },
+    "facing=west,slope=0,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=0,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_1",
+      "y": 0
+    },
+    "facing=north,slope=0,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=0,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_1",
+      "y": 90
+    },
+    "facing=east,slope=0,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=0,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_1",
+      "y": 180
+    },
+    "facing=south,slope=0,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=0,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_-1_1",
+      "y": 270
+    },
+    "facing=west,slope=0,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=0,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_0_0",
+      "y": 0
+    },
+    "facing=north,slope=0,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=0,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_0_0",
+      "y": 90
+    },
+    "facing=east,slope=0,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=0,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_0_0",
+      "y": 180
+    },
+    "facing=south,slope=0,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=0,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_0_0",
+      "y": 270
+    },
+    "facing=west,slope=0,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=0,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_0_1",
+      "y": 0
+    },
+    "facing=north,slope=0,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=0,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_0_1",
+      "y": 90
+    },
+    "facing=east,slope=0,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=0,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_0_1",
+      "y": 180
+    },
+    "facing=south,slope=0,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=0,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_0_1",
+      "y": 270
+    },
+    "facing=west,slope=0,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=0,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_1_0",
+      "y": 0
+    },
+    "facing=north,slope=0,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=0,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_1_0",
+      "y": 90
+    },
+    "facing=east,slope=0,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=0,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_1_0",
+      "y": 180
+    },
+    "facing=south,slope=0,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=0,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_0_1_0",
+      "y": 270
+    },
+    "facing=west,slope=0,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=0,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_1_1",
+      "y": 0
+    },
+    "facing=north,slope=0,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=0,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_1_1",
+      "y": 90
+    },
+    "facing=east,slope=0,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=0,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_1_1",
+      "y": 180
+    },
+    "facing=south,slope=0,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=0,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_0_1_1",
+      "y": 270
+    },
+    "facing=west,slope=0,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=1,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_0",
+      "y": 0
+    },
+    "facing=north,slope=1,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=1,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_0",
+      "y": 90
+    },
+    "facing=east,slope=1,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=1,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_0",
+      "y": 180
+    },
+    "facing=south,slope=1,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=1,turn=2,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_0",
+      "y": 270
+    },
+    "facing=west,slope=1,turn=2,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=1,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_1",
+      "y": 0
+    },
+    "facing=north,slope=1,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=1,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_1",
+      "y": 90
+    },
+    "facing=east,slope=1,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=1,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_1",
+      "y": 180
+    },
+    "facing=south,slope=1,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=1,turn=2,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_-1_1",
+      "y": 270
+    },
+    "facing=west,slope=1,turn=2,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=1,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_0_0",
+      "y": 0
+    },
+    "facing=north,slope=1,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=1,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_0_0",
+      "y": 90
+    },
+    "facing=east,slope=1,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=1,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_0_0",
+      "y": 180
+    },
+    "facing=south,slope=1,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=1,turn=0,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_0_0",
+      "y": 270
+    },
+    "facing=west,slope=1,turn=0,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=1,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_0_1",
+      "y": 0
+    },
+    "facing=north,slope=1,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=1,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_0_1",
+      "y": 90
+    },
+    "facing=east,slope=1,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=1,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_0_1",
+      "y": 180
+    },
+    "facing=south,slope=1,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=1,turn=0,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_0_1",
+      "y": 270
+    },
+    "facing=west,slope=1,turn=0,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=1,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_1_0",
+      "y": 0
+    },
+    "facing=north,slope=1,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=1,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_1_0",
+      "y": 90
+    },
+    "facing=east,slope=1,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=1,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_1_0",
+      "y": 180
+    },
+    "facing=south,slope=1,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=1,turn=1,active=false,upper=false": {
+      "model": "techmod:block/conveyor_1_1_0",
+      "y": 270
+    },
+    "facing=west,slope=1,turn=1,active=false,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    },
+    "facing=north,slope=1,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_1_1",
+      "y": 0
+    },
+    "facing=north,slope=1,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 0
+    },
+    "facing=east,slope=1,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_1_1",
+      "y": 90
+    },
+    "facing=east,slope=1,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 90
+    },
+    "facing=south,slope=1,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_1_1",
+      "y": 180
+    },
+    "facing=south,slope=1,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 180
+    },
+    "facing=west,slope=1,turn=1,active=true,upper=false": {
+      "model": "techmod:block/conveyor_1_1_1",
+      "y": 270
+    },
+    "facing=west,slope=1,turn=1,active=true,upper=true": {
+      "model": "techmod:block/conveyor_empty",
+      "y": 270
+    }
+  }
+}

@@ -15,7 +15,7 @@ public final class EnergyTooltips {
   else {
    var item=(MachineItem)stack.getItem();var kind=((MachineBlock)item.getBlock()).kind;var state=stack.getOrDefault(Machines.STATE,MachineState.EMPTY);
    long total=0;int count=0;for(var b:state.batteries())if(!b.isEmpty()){count++;total+=BatteryItem.charge(b);}
-   if(kind!=MachineKind.SOLAR)lines.add(Component.translatable("tooltip.techmod.installed",count));lines.add(Component.translatable("tooltip.techmod.charge",Energy.format(kind==MachineKind.CABINET?total:state.energy(),true),kind==MachineKind.CABINET?Integer.toString(count*300):kind==MachineKind.SOLAR?"10":"300"));
+   if(kind.slots>0)lines.add(Component.translatable("tooltip.techmod.installed",count));lines.add(Component.translatable("tooltip.techmod.charge",Energy.format(kind==MachineKind.CABINET?total:state.energy(),true),kind==MachineKind.CABINET?Integer.toString(count*300):kind.slots==0?"10":"300"));
    lines.add(Component.translatable("tooltip.techmod.limits",kind==MachineKind.GENERATOR||kind==MachineKind.SOLAR?"0.00":"8.00",kind==MachineKind.SOLAR?"2.00":kind==MachineKind.CABINET||kind==MachineKind.GENERATOR?"8.00":"0.00"));
    if(kind==MachineKind.CABINET)lines.add(Component.translatable("tooltip.techmod.current_limit",Energy.format(Math.min(Energy.PORT_RATE,count*Energy.BATTERY_RATE)*20,true)));
    for(int i=0;i<state.batteries().size();i++)if(!state.batteries().get(i).isEmpty())lines.add(Component.literal("  "+(i+1)+": "+Energy.format(BatteryItem.charge(state.batteries().get(i)),true)+" / 300 TE"));

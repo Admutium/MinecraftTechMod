@@ -39,6 +39,7 @@ public final class TechMod implements ModInitializer {
     @Override
     public void onInitialize() {
         dev.admutium.techmod.machine.Machines.init();
+        dev.admutium.techmod.conveyor.Conveyors.init();
         Registry.register(BuiltInRegistries.BLOCK, id("cable"), CABLE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("cable"), CABLE_ENTITY);
         Registry.register(BuiltInRegistries.ITEM, id("copper_cable"), COPPER_CABLE);
@@ -54,6 +55,8 @@ public final class TechMod implements ModInitializer {
                     output.accept(dev.admutium.techmod.machine.Machines.BATTERY);
                     for(var item:dev.admutium.techmod.machine.Machines.ITEMS.values())output.accept(item);
                     for(var item:dev.admutium.techmod.machine.Machines.CRUSHED.values())output.accept(item);
+                    for(var item:dev.admutium.techmod.machine.Machines.PLATES.values())output.accept(item);
+                    for(var item:dev.admutium.techmod.conveyor.Conveyors.ITEMS.values())output.accept(item);
                 }).build());
         // TODO(crafting): add balanced recipes for cables, holders, batteries and all machines after material progression is designed.
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> CableItem.clearSelections());
