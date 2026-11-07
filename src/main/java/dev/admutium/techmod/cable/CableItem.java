@@ -36,24 +36,24 @@ public final class CableItem extends Item {
             String dimension=level.dimension().toString();
             if (player.isShiftKeyDown()) {
                 clearSelection(player.getUUID());
-                player.displayClientMessage(Component.translatable("message.techmod.cancelled"),true);
+                player.sendOverlayMessage(Component.translatable("message.techmod.cancelled"));
                 return InteractionResult.SUCCESS;
             }
             if (start==null || !start.dimension().equals(dimension) || start.expires()<level.getGameTime()) {
                 SELECTIONS.put(player.getUUID(),new Selection(nearest,dimension,level.getGameTime()+1200));
-                player.displayClientMessage(Component.translatable("message.techmod.selected"),true);
+                player.sendOverlayMessage(Component.translatable("message.techmod.selected"));
                 return InteractionResult.SUCCESS;
             }
             if (start.node().equals(nearest)) {
                 clearSelection(player.getUUID());
-                player.displayClientMessage(Component.translatable("message.techmod.cancelled"),true);
+                player.sendOverlayMessage(Component.translatable("message.techmod.cancelled"));
                 return InteractionResult.SUCCESS;
             }
             String error;
             try { error=CableWorld.createSpan(level,player,new CableSpan(UUID.randomUUID(),start.node(),nearest),context.getItemInHand()); }
             catch (IllegalArgumentException e) { error="range"; }
             if (error==null || "lava".equals(error)) clearSelection(player.getUUID());
-            player.displayClientMessage(Component.translatable("message.techmod."+(error==null ? "connected" : error)),true);
+            player.sendOverlayMessage(Component.translatable("message.techmod."+(error==null ? "connected" : error)));
             return InteractionResult.SUCCESS;
         }
 

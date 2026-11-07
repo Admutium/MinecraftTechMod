@@ -24,7 +24,7 @@ public final class TechMod implements ModInitializer {
     public static final String ID = "techmod";
     public static final CableBlock CABLE = new CableBlock(BlockBehaviour.Properties.of()
             .setId(ResourceKey.create(Registries.BLOCK, id("cable")))
-            .strength(.25f).noOcclusion().noCollission());
+            .strength(.25f).noOcclusion().noCollision().dynamicShape());
     public static final BlockEntityType<CableBlockEntity> CABLE_ENTITY = FabricBlockEntityTypeBuilder
             .create(CableBlockEntity::new, CABLE).build();
     public static final Item COPPER_CABLE = new CableItem(properties("copper_cable"), false);
