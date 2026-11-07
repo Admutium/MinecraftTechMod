@@ -1,0 +1,17 @@
+{
+  "itemGroup.techmod": "TechMod",
+  "block.techmod.cable": "Cable assembly",
+  "item.techmod.copper_cable": "Insulated Copper Cable",
+  "item.techmod.cable_holder": "Cable Holder",
+  "item.techmod.wire_cutters": "Wire Cutters",
+  "message.techmod.selected": "First holder selected. Click another holder within 5 blocks. Sneak-click to cancel.",
+  "message.techmod.cancelled": "Cable connection cancelled.",
+  "message.techmod.connected": "Cable connected.",
+  "message.techmod.range": "Holders must be within 5 blocks in a straight line.",
+  "message.techmod.obstructed": "The sagging cable would intersect an obstacle or another cable.",
+  "message.techmod.unloaded": "All cable cells must be loaded.",
+  "message.techmod.protected": "You cannot place a cable here.",
+  "message.techmod.missing_holder": "The first holder is no longer available.",
+  "message.techmod.duplicate": "These holders are already connected.",
+  "message.techmod.lava": "The cable burned in lava."
+}

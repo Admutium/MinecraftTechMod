@@ -1,0 +1,17 @@
+{
+  "itemGroup.techmod": "TechMod",
+  "block.techmod.cable": "Кабельная сборка",
+  "item.techmod.copper_cable": "Изолированный медный провод",
+  "item.techmod.cable_holder": "Кабельный держатель",
+  "item.techmod.wire_cutters": "Кусачки",
+  "message.techmod.selected": "Первый держатель выбран. Нажмите на второй в радиусе 5 блоков. Shift + ПКМ — отмена.",
+  "message.techmod.cancelled": "Соединение отменено.",
+  "message.techmod.connected": "Провод подключён.",
+  "message.techmod.range": "Между держателями должно быть не больше 5 блоков по прямой.",
+  "message.techmod.obstructed": "Провисающий провод пересечётся с препятствием или другим проводом.",
+  "message.techmod.unloaded": "Все ячейки провода должны быть загружены.",
+  "message.techmod.protected": "Здесь нельзя разместить провод.",
+  "message.techmod.missing_holder": "Первый держатель больше недоступен.",
+  "message.techmod.duplicate": "Эти держатели уже соединены.",
+  "message.techmod.lava": "Провод сгорел в лаве."
+}

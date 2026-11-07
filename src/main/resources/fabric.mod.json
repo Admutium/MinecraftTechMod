@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "techmod",
+  "version": "${version}",
+  "name": "TechMod",
+  "description": "Industrial surface wiring and suspended copper cables.",
+  "authors": ["Admutium"],
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.admutium.techmod.TechMod"],
+    "client": ["dev.admutium.techmod.client.TechModClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": ">=0.165.0+26.3"
+  }
+}
