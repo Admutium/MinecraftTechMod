@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"techmod_visual_tests","version":"1.0","name":"Kontur visual integration test","environment":"client","entrypoints":{"fabric-client-gametest":["dev.admutium.techmod.test.MachineVisualTest"]},"depends":{"techmod":"*","fabric-client-gametest-api-v1":"*"}}

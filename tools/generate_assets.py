@@ -15,6 +15,10 @@ def save(im, path):
 def write(path, data):
     p = ROOT / path
     p.parent.mkdir(parents=True, exist_ok=True)
+    if path.startswith('lang/') and p.exists():
+        previous = json.loads(p.read_text())
+        previous.update(data)
+        data = previous
     p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
 
 for variant, name in enumerate(['rubber', 'rubber_ribbed', 'rubber_marked']):
@@ -80,7 +84,7 @@ for name in ['copper_cable', 'cable_holder', 'wire_cutters']:
     write(f'items/{name}.json', {'model': {'type': 'minecraft:model', 'model': f'techmod:item/{name}'}})
 write('blockstates/cable.json', {'variants': {'': {'fabric:type': 'techmod:cable'}}})
 write('lang/en_us.json', {
-    'itemGroup.techmod': 'TechMod',
+    'itemGroup.techmod': 'Kontur',
     'block.techmod.cable': 'Cable assembly',
     'item.techmod.copper_cable': 'Insulated Copper Cable',
     'item.techmod.cable_holder': 'Cable Holder',
@@ -99,7 +103,7 @@ write('lang/en_us.json', {
     'message.techmod.lava': 'The cable burned in lava.'
 })
 write('lang/ru_ru.json', {
-    'itemGroup.techmod': 'TechMod',
+    'itemGroup.techmod': 'Контур',
     'block.techmod.cable': 'Кабельная сборка',
     'item.techmod.copper_cable': 'Изолированный медный провод',
     'item.techmod.cable_holder': 'Кабельный держатель',

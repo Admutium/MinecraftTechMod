@@ -31,6 +31,7 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
     }
     @Override public void setRemoved() {
         invalidateShapes();
+        if(level!=null)dev.admutium.techmod.energy.EnergyNetwork.invalidate(level);
         super.setRemoved();
     }
 
@@ -38,6 +39,7 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
     public CableSnapshot snapshot() { return data; }
     @Override public CableSnapshot getRenderData() { return renderData; }
     public void update(CableSnapshot next) {
+        if(level!=null)dev.admutium.techmod.energy.EnergyNetwork.invalidate(level);
         data = next;
         renderData = next.centered();
         invalidateShapes();

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "techmod",
   "version": "${version}",
-  "name": "TechMod",
-  "description": "Industrial surface wiring and suspended copper cables.",
+  "name": "Контур / Kontur",
+  "description": "Industrial energy networks, battery storage and electric machinery.",
   "authors": ["Admutium"],
   "environment": "*",
   "entrypoints": {

@@ -2,6 +2,8 @@ plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
+base { archivesName = "kontur" }
+
 repositories { mavenCentral() }
 
 loom {
@@ -34,3 +36,35 @@ java {
 }
 tasks.withType(JavaCompile).configureEach { options.release = 25 }
 test { useJUnitPlatform() }
+
+// Native server integration tests; not included in the distributed mod JAR.
+sourceSets { gametest { compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath; runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath } }
+configurations { gametestImplementation.extendsFrom implementation; gametestRuntimeOnly.extendsFrom runtimeOnly }
+loom {
+    mods { techmod_tests { sourceSet sourceSets.gametest } }
+    runs {
+        gameTest {
+            server()
+            name 'Kontur integration tests'
+            source sourceSets.gametest
+            runDir 'build/gametest-run'
+            vmArg '-Dfabric-api.gametest'
+            vmArg '-Dfabric-api.gametest.report-file=../gametest-results.xml'
+            vmArg '-Dfabric-api.gametest.filter=techmod_tests:*'
+        }
+    }
+}
+sourceSets { clientTest { compileClasspath += sourceSets.main.output + sourceSets.client.output + sourceSets.client.compileClasspath; runtimeClasspath += sourceSets.main.output + sourceSets.client.output + sourceSets.client.runtimeClasspath } }
+configurations { clientTestImplementation.extendsFrom implementation; clientTestRuntimeOnly.extendsFrom runtimeOnly }
+loom {
+ mods { techmod_visual_tests { sourceSet sourceSets.clientTest } }
+ runs {
+  visualTest {
+   client()
+   source sourceSets.clientTest
+   runDir 'build/visual-test-run'
+   vmArg '-Dfabric.client.gametest'
+   vmArg '-Dfabric.client.gametest.modid=techmod_visual_tests'
+  }
+ }
+}

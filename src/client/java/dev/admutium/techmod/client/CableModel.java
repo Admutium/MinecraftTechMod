@@ -51,18 +51,28 @@ public final class CableModel implements BlockStateModel {
                     for (var link:connections) connection(emitter,n,link,origin,variant,connections.size()==1);
                     if (connections.size()>1) joint(emitter,n.point(),origin,variant);
                 }
-                // Future machine blocks opt into CablePort. The sleeve appears only at a real compatible port.
+                BlockPos support=pos.relative(Direction.valueOf(n.face().name()));
+                if(level.getBlockState(support).getBlock() instanceof CablePort port && port.acceptsCable(level,support,Direction.valueOf(n.face().opposite().name()))) {
+                    Vec socket=n.point().add(n.face().normal().scale(Node.HEIGHT));
+                    tube(emitter,n.point(),socket,origin,.063,4);
+                }
+                // Compatible ports receive a surface-following lead and a visible terminal sleeve.
                 for (Direction d:Direction.values()) {
                     if (axis(d)==n.face().axis) continue;
                     BlockPos machine=pos.relative(d);
                     if (level.getBlockState(machine).getBlock() instanceof CablePort port && port.acceptsCable(level,machine,d.getOpposite())) {
-                        Vec end=n.point().with(axis(d),origin.coordinate(axis(d))+(d.getAxisDirection()==Direction.AxisDirection.POSITIVE ? .99 : .01));
-                        if (end.subtract(n.point()).length()<.55) {
-                            tube(emitter,n.point(),end,origin,Node.RADIUS,variant);
-                            Vec sleeve=end.add(n.point().subtract(end).normalized().scale(.13));
-                            tube(emitter,sleeve,end,origin,.068,4);
-                            cap(emitter,end,end.subtract(sleeve),origin,.068,4);
-                        }
+                        Vec end=new Vec(machine.getX()+.5-d.getStepX()*.5,machine.getY()+.5-d.getStepY()*.5,machine.getZ()+.5-d.getStepZ()*.5);
+                        Vec wall=end.with(axis(d),end.coordinate(axis(d))-(d.getStepX()+d.getStepY()+d.getStepZ())*Node.HEIGHT);
+                        Vec corner=wall.with(n.face().axis,n.point().coordinate(n.face().axis));
+                        List<Vec> path=new ArrayList<>();path.add(n.point());
+                        if(corner.subtract(path.getLast()).length()>1e-7)path.add(corner);
+                        if(wall.subtract(path.getLast()).length()>1e-7)path.add(wall);
+                        if(end.subtract(path.getLast()).length()>1e-7)path.add(end);
+                        var rings=TubeGeometry.rings(path,Node.RADIUS);
+                        tubeRings(emitter,rings,origin,variant,0,rings.size()-1);
+                        Vec sleeve=end.subtract(new Vec(d.getStepX(),d.getStepY(),d.getStepZ()).scale(.13));
+                        tube(emitter,sleeve,end,origin,.068,4);
+                        cap(emitter,end,end.subtract(sleeve),origin,.068,4);
                     }
                 }
             }

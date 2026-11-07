@@ -10,12 +10,17 @@ public final class CableSpan {
     private final Node start;
     private final Node end;
     private final List<Vec> points;
+    private final int paid;
+    public int cost(){return paid;}
     public UUID id() { return id; }
     public Node start() { return start; }
     public Node end() { return end; }
     public static final double MAX_DISTANCE = 5;
     public static final int STEPS = 96;
-    public CableSpan(UUID id, Node start, Node end) {
+    public CableSpan(UUID id, Node start, Node end) { this(id,start,end,Math.max(1,(int)Math.ceil(start.point().subtract(end.point()).length()-1e-9))); }
+    private CableSpan(UUID id,Node start,Node end,int paid){
+        if(paid<1||paid>5)throw new IllegalArgumentException("invalid paid wire count");
+        this.paid=paid;
         this.id=java.util.Objects.requireNonNull(id);
         this.start=java.util.Objects.requireNonNull(start);
         this.end=java.util.Objects.requireNonNull(end);
@@ -38,19 +43,19 @@ public final class CableSpan {
     }
     public List<Vec> points() { return points; }
     @Override public boolean equals(Object other) {
-        return other instanceof CableSpan s && id.equals(s.id) && start.equals(s.start) && end.equals(s.end);
+        return other instanceof CableSpan s && id.equals(s.id) && start.equals(s.start) && end.equals(s.end) && paid==s.paid;
     }
-    @Override public int hashCode() { return java.util.Objects.hash(id,start,end); }
+    @Override public int hashCode() { return java.util.Objects.hash(id,start,end,paid); }
     public double length() {
         List<Vec> points = points();
         double result = 0;
         for (int i = 1; i < points.size(); i++) result += points.get(i).subtract(points.get(i - 1)).length();
         return result;
     }
-    public String encode() { return id + ";" + start.encode() + ";" + end.encode(); }
+    public String encode() { return id + ";" + start.encode() + ";" + end.encode() + ";" + paid; }
     public static CableSpan decode(String text) {
         String[] p = text.split(";", -1);
-        if (p.length != 3) throw new IllegalArgumentException("invalid span");
-        return new CableSpan(UUID.fromString(p[0]), Node.decode(p[1]), Node.decode(p[2]));
+        if (p.length != 3 && p.length != 4) throw new IllegalArgumentException("invalid span");
+        return new CableSpan(UUID.fromString(p[0]), Node.decode(p[1]), Node.decode(p[2]),p.length==4?Integer.parseInt(p[3]):1);
     }
 }

@@ -77,6 +77,7 @@ public final class CableWorld {
     }
     public static String createSpan(Level level, Player player, CableSpan span, ItemStack stack) {
         Set<BlockPos> occupied = cells(span);
+        if(!player.isCreative() && stack.getCount()<span.cost())return "not_enough_wire";
         for (Node endpoint : List.of(span.start(), span.end())) {
             if (!data(level, pos(endpoint)).holder(endpoint.face())) return "missing_holder";
             long links=data(level,pos(endpoint)).spans().stream()
@@ -134,7 +135,7 @@ public final class CableWorld {
             spans.add(span);
             be.update(new CableSnapshot(before.wires(),before.holders(),spans));
         }
-        stack.consume(1,player);
+        stack.consume(span.cost(),player);
         return null;
     }
     private static boolean sharesEndpoint(CableSpan a, CableSpan b) {
@@ -144,7 +145,7 @@ public final class CableWorld {
         // Only the owning endpoint authorizes a refund, preventing duplicate drops from stale chunk fragments.
         BlockPos owner = pos(span.start());
         if (refund && data(level,owner).spans().stream().anyMatch(s -> s.id().equals(span.id())))
-            drop(level,owner,TechMod.COPPER_CABLE,1);
+            drop(level,owner,TechMod.COPPER_CABLE,span.cost());
         for (BlockPos p : cells(span)) {
             if (!level.hasChunkAt(p) || !(level.getBlockEntity(p) instanceof CableBlockEntity be)) continue;
             CableSnapshot s = be.snapshot();
@@ -175,7 +176,7 @@ public final class CableWorld {
         for (CableSpan span : snapshot.spans()) {
             // The block has already been removed by the engine; recover its ownership once here.
             boolean ownedHere = pos(span.start()).equals(p);
-            if (refund && ownedHere) drop(level,p,TechMod.COPPER_CABLE,1);
+            if (refund && ownedHere) drop(level,p,TechMod.COPPER_CABLE,span.cost());
             removeSpan(level,span,refund && !ownedHere);
         }
     }

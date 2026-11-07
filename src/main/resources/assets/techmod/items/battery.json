@@ -1,0 +1,720 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "techmod:item/battery_0"
+    },
+    "entries": [
+      {
+        "threshold": 0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_0"
+        }
+      },
+      {
+        "threshold": 1,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_1"
+        }
+      },
+      {
+        "threshold": 2,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_2"
+        }
+      },
+      {
+        "threshold": 3,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_3"
+        }
+      },
+      {
+        "threshold": 4,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_4"
+        }
+      },
+      {
+        "threshold": 5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_5"
+        }
+      },
+      {
+        "threshold": 6,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_6"
+        }
+      },
+      {
+        "threshold": 7,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_7"
+        }
+      },
+      {
+        "threshold": 8,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_8"
+        }
+      },
+      {
+        "threshold": 9,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_9"
+        }
+      },
+      {
+        "threshold": 10,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_10"
+        }
+      },
+      {
+        "threshold": 11,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_11"
+        }
+      },
+      {
+        "threshold": 12,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_12"
+        }
+      },
+      {
+        "threshold": 13,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_13"
+        }
+      },
+      {
+        "threshold": 14,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_14"
+        }
+      },
+      {
+        "threshold": 15,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_15"
+        }
+      },
+      {
+        "threshold": 16,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_16"
+        }
+      },
+      {
+        "threshold": 17,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_17"
+        }
+      },
+      {
+        "threshold": 18,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_18"
+        }
+      },
+      {
+        "threshold": 19,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_19"
+        }
+      },
+      {
+        "threshold": 20,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_20"
+        }
+      },
+      {
+        "threshold": 21,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_21"
+        }
+      },
+      {
+        "threshold": 22,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_22"
+        }
+      },
+      {
+        "threshold": 23,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_23"
+        }
+      },
+      {
+        "threshold": 24,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_24"
+        }
+      },
+      {
+        "threshold": 25,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_25"
+        }
+      },
+      {
+        "threshold": 26,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_26"
+        }
+      },
+      {
+        "threshold": 27,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_27"
+        }
+      },
+      {
+        "threshold": 28,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_28"
+        }
+      },
+      {
+        "threshold": 29,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_29"
+        }
+      },
+      {
+        "threshold": 30,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_30"
+        }
+      },
+      {
+        "threshold": 31,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_31"
+        }
+      },
+      {
+        "threshold": 32,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_32"
+        }
+      },
+      {
+        "threshold": 33,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_33"
+        }
+      },
+      {
+        "threshold": 34,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_34"
+        }
+      },
+      {
+        "threshold": 35,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_35"
+        }
+      },
+      {
+        "threshold": 36,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_36"
+        }
+      },
+      {
+        "threshold": 37,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_37"
+        }
+      },
+      {
+        "threshold": 38,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_38"
+        }
+      },
+      {
+        "threshold": 39,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_39"
+        }
+      },
+      {
+        "threshold": 40,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_40"
+        }
+      },
+      {
+        "threshold": 41,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_41"
+        }
+      },
+      {
+        "threshold": 42,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_42"
+        }
+      },
+      {
+        "threshold": 43,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_43"
+        }
+      },
+      {
+        "threshold": 44,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_44"
+        }
+      },
+      {
+        "threshold": 45,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_45"
+        }
+      },
+      {
+        "threshold": 46,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_46"
+        }
+      },
+      {
+        "threshold": 47,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_47"
+        }
+      },
+      {
+        "threshold": 48,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_48"
+        }
+      },
+      {
+        "threshold": 49,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_49"
+        }
+      },
+      {
+        "threshold": 50,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_50"
+        }
+      },
+      {
+        "threshold": 51,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_51"
+        }
+      },
+      {
+        "threshold": 52,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_52"
+        }
+      },
+      {
+        "threshold": 53,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_53"
+        }
+      },
+      {
+        "threshold": 54,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_54"
+        }
+      },
+      {
+        "threshold": 55,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_55"
+        }
+      },
+      {
+        "threshold": 56,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_56"
+        }
+      },
+      {
+        "threshold": 57,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_57"
+        }
+      },
+      {
+        "threshold": 58,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_58"
+        }
+      },
+      {
+        "threshold": 59,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_59"
+        }
+      },
+      {
+        "threshold": 60,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_60"
+        }
+      },
+      {
+        "threshold": 61,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_61"
+        }
+      },
+      {
+        "threshold": 62,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_62"
+        }
+      },
+      {
+        "threshold": 63,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_63"
+        }
+      },
+      {
+        "threshold": 64,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_64"
+        }
+      },
+      {
+        "threshold": 65,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_65"
+        }
+      },
+      {
+        "threshold": 66,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_66"
+        }
+      },
+      {
+        "threshold": 67,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_67"
+        }
+      },
+      {
+        "threshold": 68,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_68"
+        }
+      },
+      {
+        "threshold": 69,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_69"
+        }
+      },
+      {
+        "threshold": 70,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_70"
+        }
+      },
+      {
+        "threshold": 71,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_71"
+        }
+      },
+      {
+        "threshold": 72,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_72"
+        }
+      },
+      {
+        "threshold": 73,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_73"
+        }
+      },
+      {
+        "threshold": 74,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_74"
+        }
+      },
+      {
+        "threshold": 75,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_75"
+        }
+      },
+      {
+        "threshold": 76,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_76"
+        }
+      },
+      {
+        "threshold": 77,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_77"
+        }
+      },
+      {
+        "threshold": 78,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_78"
+        }
+      },
+      {
+        "threshold": 79,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_79"
+        }
+      },
+      {
+        "threshold": 80,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_80"
+        }
+      },
+      {
+        "threshold": 81,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_81"
+        }
+      },
+      {
+        "threshold": 82,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_82"
+        }
+      },
+      {
+        "threshold": 83,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_83"
+        }
+      },
+      {
+        "threshold": 84,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_84"
+        }
+      },
+      {
+        "threshold": 85,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_85"
+        }
+      },
+      {
+        "threshold": 86,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_86"
+        }
+      },
+      {
+        "threshold": 87,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_87"
+        }
+      },
+      {
+        "threshold": 88,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_88"
+        }
+      },
+      {
+        "threshold": 89,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_89"
+        }
+      },
+      {
+        "threshold": 90,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_90"
+        }
+      },
+      {
+        "threshold": 91,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_91"
+        }
+      },
+      {
+        "threshold": 92,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_92"
+        }
+      },
+      {
+        "threshold": 93,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_93"
+        }
+      },
+      {
+        "threshold": 94,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_94"
+        }
+      },
+      {
+        "threshold": 95,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_95"
+        }
+      },
+      {
+        "threshold": 96,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_96"
+        }
+      },
+      {
+        "threshold": 97,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_97"
+        }
+      },
+      {
+        "threshold": 98,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_98"
+        }
+      },
+      {
+        "threshold": 99,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_99"
+        }
+      },
+      {
+        "threshold": 100,
+        "model": {
+          "type": "minecraft:model",
+          "model": "techmod:item/battery_100"
+        }
+      }
+    ]
+  }
+}
