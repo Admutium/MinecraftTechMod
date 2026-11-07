@@ -24,6 +24,9 @@ public final class CableWorld {
     private CableWorld() {}
     public static BlockPos pos(Node n) { return new BlockPos(n.x(), n.y(), n.z()); }
     public static Direction direction(Face face) { return Direction.valueOf(face.name()); }
+    public static boolean isPanel(BlockState s){return s.getBlock() instanceof dev.admutium.techmod.machine.MachineBlock b&&b.kind==dev.admutium.techmod.machine.MachineKind.SOLAR;}
+    public static boolean isCableCell(BlockState s){return s.is(TechMod.CABLE)||isPanel(s);}
+    public static boolean panelCompatible(CableSnapshot s){return s.holders()==0&&s.spans().isEmpty()&&(s.wires()&~CableLayout.placement(0,0,0,Face.DOWN).bit())==0;}
     public static CableSnapshot data(Level level, BlockPos p) {
         return level.hasChunkAt(p) && level.getBlockEntity(p) instanceof CableBlockEntity be ? be.snapshot() : CableSnapshot.EMPTY;
     }
@@ -34,11 +37,11 @@ public final class CableWorld {
     public static boolean available(Level level, BlockPos pos) {
         if (!level.hasChunkAt(pos) || level.isOutsideBuildHeight(pos)) return false;
         BlockState s = level.getBlockState(pos);
-        return s.is(TechMod.CABLE) || s.isAir() || s.is(Blocks.WATER) || s.is(Blocks.SNOW)&&s.getValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS)<8;
+        return isCableCell(s) || s.isAir() || s.is(Blocks.WATER) || s.is(Blocks.SNOW)&&s.getValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS)<8;
     }
     public static CableBlockEntity ensure(Level level, BlockPos pos) {
         if (!available(level, pos)) return null;
-        if (!level.getBlockState(pos).is(TechMod.CABLE)) {
+        if (!isCableCell(level.getBlockState(pos))) {
             boolean water = level.getFluidState(pos).is(FluidTags.WATER);
             int snow=level.getBlockState(pos).is(Blocks.SNOW)?level.getBlockState(pos).getValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS):0;
             if (!level.setBlock(pos, TechMod.CABLE.defaultBlockState().setValue(CableBlock.WATERLOGGED, water).setValue(CableBlock.SNOW,snow), Block.UPDATE_ALL)) return null;
@@ -48,7 +51,7 @@ public final class CableWorld {
         return level.getBlockEntity(pos) instanceof CableBlockEntity be ? be : null;
     }
     public static void prune(Level level, BlockPos p) {
-        if (level.getBlockEntity(p) instanceof CableBlockEntity be && be.snapshot().empty()) {
+        if (level.getBlockState(p).is(TechMod.CABLE) && level.getBlockEntity(p) instanceof CableBlockEntity be && be.snapshot().empty()) {
             boolean water = be.getBlockState().getValue(CableBlock.WATERLOGGED);
             int layers=be.getBlockState().getValue(CableBlock.SNOW);
             var replacement=water?Blocks.WATER.defaultBlockState():layers>0?Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,layers):Blocks.AIR.defaultBlockState();
@@ -98,7 +101,7 @@ public final class CableWorld {
                 burn(level, p, stack, player);
                 return "lava";
             }
-            if (!available(level, p)) return "obstructed";
+            if (!available(level, p)||isPanel(level.getBlockState(p))) return "obstructed";
             if (data(level,p).spans().size()>=MAX_SPANS_PER_CELL) return "cell_full";
         }
         List<Vec> points = span.points();
@@ -212,7 +215,7 @@ public final class CableWorld {
                     occupied.stream().anyMatch(cell -> data(level,cell).spans().stream().noneMatch(s -> s.id().equals(span.id())));
             if (invalid) removeSpan(level,span,true);
         }
-        if (be.getBlockState().getValue(CableBlock.WATERLOGGED))
+        if (be.getBlockState().getValueOrElse(CableBlock.WATERLOGGED,false))
             level.scheduleTick(p,net.minecraft.world.level.material.Fluids.WATER,net.minecraft.world.level.material.Fluids.WATER.getTickDelay(level));
         prune(level,p);
     }

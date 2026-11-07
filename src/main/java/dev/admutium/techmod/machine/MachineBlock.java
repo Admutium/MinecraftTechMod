@@ -17,7 +17,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import java.util.List;
-public final class MachineBlock extends Block implements EntityBlock,CablePort {
+public class MachineBlock extends Block implements EntityBlock,CablePort {
  public static final EnumProperty<Direction> FACING=BlockStateProperties.HORIZONTAL_FACING;
  public static final BooleanProperty UPPER=BooleanProperty.create("upper"),ACTIVE=BooleanProperty.create("active");
  public static final IntegerProperty STATUS=IntegerProperty.create("status",0,2);

@@ -1,1 +1,17 @@
-{"schemaVersion":1,"id":"techmod_tests","version":"1.0","name":"Kontur integration tests","environment":"*","entrypoints":{"fabric-gametest":["dev.admutium.techmod.test.EnergyGameTests"]},"depends":{"techmod":"*","fabric-gametest-api-v1":"*"}}
+{
+  "schemaVersion": 1,
+  "id": "techmod_tests",
+  "version": "1.0",
+  "name": "Kontur integration tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "dev.admutium.techmod.test.EnergyGameTests",
+      "dev.admutium.techmod.test.SolarGameTests"
+    ]
+  },
+  "depends": {
+    "techmod": "*",
+    "fabric-gametest-api-v1": "*"
+  }
+}

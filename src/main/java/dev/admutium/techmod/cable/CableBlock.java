@@ -28,6 +28,11 @@ public final class CableBlock extends Block implements EntityBlock, SimpleWaterl
         registerDefaultState(stateDefinition.any().setValue(WATERLOGGED, false).setValue(SNOW,0));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(WATERLOGGED,SNOW); }
+    @Override protected boolean canBeReplaced(BlockState state,net.minecraft.world.item.context.BlockPlaceContext c){
+        if(c.getItemInHand().getItem() instanceof dev.admutium.techmod.machine.MachineItem i&&((dev.admutium.techmod.machine.MachineBlock)i.getBlock()).kind==dev.admutium.techmod.machine.MachineKind.SOLAR)
+            return !state.getValue(WATERLOGGED)&&state.getValue(SNOW)==0&&CableWorld.panelCompatible(CableWorld.data(c.getLevel(),c.getClickedPos()));
+        return super.canBeReplaced(state,c);
+    }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new CableBlockEntity(pos, state); }
     @Override public boolean placeLiquid(net.minecraft.world.level.LevelAccessor level,BlockPos pos,BlockState state,FluidState fluid){
         boolean placed=SimpleWaterloggedBlock.super.placeLiquid(level,pos,state,fluid);

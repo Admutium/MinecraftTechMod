@@ -49,5 +49,19 @@
   "tooltip.techmod.hold_shift": "Hold Shift for details",
   "tooltip.techmod.limits": "Max input: %s · output: %s TE/s",
   "tooltip.techmod.current_limit": "Current limit: %s TE/s",
-  "state.techmod.crushing": "Crushing"
+  "state.techmod.crushing": "Crushing",
+  "block.techmod.solar_panel": "Solar Panel",
+  "screen.techmod.solar_rate": "Generation: %s TE/s",
+  "screen.techmod.solar_efficiency": "Efficiency: %s%%",
+  "screen.techmod.solar_output": "Output: %s TE/s",
+  "state.techmod.no_sun": "No sunlight in this dimension",
+  "state.techmod.shaded": "Panel is shaded",
+  "state.techmod.night": "Night",
+  "state.techmod.solar_generating": "Solar generation",
+  "options.techmod.sounds": "Kontur sounds",
+  "options.techmod.machine_volume": "Machine volume: %s%%",
+  "options.techmod.sound_hint": "Sounds fade within 6 blocks; walls muffle them.",
+  "subtitles.techmod.coal_generator_loop": "Coal generator running",
+  "subtitles.techmod.electric_furnace_loop": "Electric furnace humming",
+  "subtitles.techmod.crusher_loop": "Ore being crushed"
 }

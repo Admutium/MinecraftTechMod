@@ -15,13 +15,13 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
-public final class CableBlockEntity extends BlockEntity implements RenderDataBlockEntity {
+public class CableBlockEntity extends BlockEntity implements RenderDataBlockEntity {
     private volatile CableSnapshot data = CableSnapshot.EMPTY;
     private volatile CableSnapshot renderData = CableSnapshot.EMPTY;
     private final CableShapeCache<net.minecraft.world.phys.shapes.VoxelShape> shapeCache = new CableShapeCache<>();
     private int cachedSnow=-1;
     public net.minecraft.world.phys.shapes.VoxelShape selectionShape(net.minecraft.world.level.BlockGetter world) {
-        int layers=getBlockState().getValue(CableBlock.SNOW);if(cachedSnow!=layers){shapeCache.invalidate();cachedSnow=layers;}
+        int layers=getBlockState().getValueOrElse(CableBlock.SNOW,0);if(cachedSnow!=layers){shapeCache.invalidate();cachedSnow=layers;}
         return shapeCache.get(() -> {var shape=CableShapes.build(world,worldPosition,renderData);return layers==0?shape:net.minecraft.world.phys.shapes.Shapes.joinUnoptimized(shape,net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,layers/8.0,1),net.minecraft.world.phys.shapes.BooleanOp.OR);});
     }
     private void invalidateShapes() {
@@ -37,7 +37,8 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
         super.setRemoved();
     }
 
-    public CableBlockEntity(BlockPos pos, BlockState state) { super(TechMod.CABLE_ENTITY, pos, state); }
+    public CableBlockEntity(BlockPos pos, BlockState state) { this(TechMod.CABLE_ENTITY,pos,state); }
+    protected CableBlockEntity(net.minecraft.world.level.block.entity.BlockEntityType<?> type,BlockPos pos,BlockState state){super(type,pos,state);}
     public CableSnapshot snapshot() { return data; }
     @Override public CableSnapshot getRenderData() { return renderData; }
     public void update(CableSnapshot next) {
@@ -51,7 +52,7 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
             // Connections can change across an edge, including diagonally adjacent faces.
             for (BlockPos p : BlockPos.betweenClosed(worldPosition.offset(-1, -1, -1), worldPosition.offset(1, 1, 1))) {
-                if (level.hasChunkAt(p) && level.getBlockState(p).is(TechMod.CABLE))
+                if (level.hasChunkAt(p) && CableWorld.isCableCell(level.getBlockState(p)))
                     level.sendBlockUpdated(p, level.getBlockState(p), level.getBlockState(p), 3);
             }
         }
@@ -63,10 +64,11 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
             try { spans.add(CableSpan.decode(encoded)); }
             catch (RuntimeException e) { LoggerFactory.getLogger("techmod").warn("Ignoring invalid saved cable span at {}", worldPosition); }
         }
+        CableSnapshot previous=data;
         data = new CableSnapshot(input.getLongOr("wires", 0) & ((1L << 54) - 1), input.getIntOr("holders", 0) & 63, spans);
         renderData=data.centered();
-        invalidateShapes();
-        if (level != null && level.isClientSide()) {
+        if(!data.equals(previous))invalidateShapes();
+        if (!data.equals(previous) && level != null && level.isClientSide()) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
             for (BlockPos p : BlockPos.betweenClosed(worldPosition.offset(-1, -1, -1), worldPosition.offset(1, 1, 1)))
                 level.sendBlockUpdated(p, level.getBlockState(p), level.getBlockState(p), 3);

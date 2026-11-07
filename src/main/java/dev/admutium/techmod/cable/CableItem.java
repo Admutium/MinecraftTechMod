@@ -28,7 +28,9 @@ public final class CableItem extends Item {
         BlockPos clicked = context.getClickedPos();
         if (!player.mayBuild() || !level.mayInteract(player,clicked)) return InteractionResult.FAIL;
         Vec hit = new Vec(context.getClickLocation().x,context.getClickLocation().y,context.getClickLocation().z);
-        boolean existing = level.getBlockState(clicked).is(TechMod.CABLE);
+        boolean panel=CableWorld.isPanel(level.getBlockState(clicked));
+        if(panel&&holder)return InteractionResult.FAIL;
+        boolean existing = CableWorld.isCableCell(level.getBlockState(clicked));
         Node nearest = existing ? WireCuttersItem.nearest(level,clicked,hit,false) : null;
         if (!holder && nearest != null && CableWorld.data(level,clicked).holder(nearest.face()) && nearest.u()==1 && nearest.v()==1) {
             if (level.isClientSide()) return InteractionResult.SUCCESS;
@@ -59,7 +61,8 @@ public final class CableItem extends Item {
 
         BlockPos cell;
         Face face;
-        if(level.getBlockState(clicked).is(net.minecraft.world.level.block.Blocks.SNOW)){cell=clicked;face=Face.DOWN;}
+        if(panel){cell=clicked;face=Face.DOWN;}
+        else if(level.getBlockState(clicked).is(net.minecraft.world.level.block.Blocks.SNOW)){cell=clicked;face=Face.DOWN;}
         else if (existing && nearest!=null) { cell=clicked; face=nearest.face(); }
         else { cell=clicked.relative(context.getClickedFace()); face=Face.valueOf(context.getClickedFace().getOpposite().name()); }
         if (!level.mayInteract(player,cell) || !player.mayUseItemAt(cell,Direction.valueOf(face.name()),context.getItemInHand()))
@@ -69,6 +72,7 @@ public final class CableItem extends Item {
             return InteractionResult.SUCCESS;
         }
         Node node=CableLayout.placement(cell.getX(),cell.getY(),cell.getZ(),face);
+        if (CableWorld.isPanel(level.getBlockState(cell))&&(holder||face!=Face.DOWN))return InteractionResult.FAIL;
         if (!CableWorld.available(level,cell) || !CableWorld.supported(level,node)) return InteractionResult.FAIL;
         CableSnapshot before=CableWorld.data(level,cell);
         if (holder ? before.holder(face) : CableLayout.hasFace(before.wires(),face)) return InteractionResult.SUCCESS;

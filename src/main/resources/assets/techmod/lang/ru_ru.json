@@ -49,5 +49,19 @@
   "tooltip.techmod.hold_shift": "Зажмите Shift для подробностей",
   "tooltip.techmod.limits": "Макс. вход: %s · выход: %s ТЕ/с",
   "tooltip.techmod.current_limit": "Текущий предел: %s ТЕ/с",
-  "state.techmod.crushing": "Дробление"
+  "state.techmod.crushing": "Дробление",
+  "block.techmod.solar_panel": "Солнечная панель",
+  "screen.techmod.solar_rate": "Выработка: %s ТЕ/с",
+  "screen.techmod.solar_efficiency": "Эффективность: %s%%",
+  "screen.techmod.solar_output": "Выход: %s ТЕ/с",
+  "state.techmod.no_sun": "Здесь нет солнечного света",
+  "state.techmod.shaded": "Панель затенена",
+  "state.techmod.night": "Ночь",
+  "state.techmod.solar_generating": "Солнечная генерация",
+  "options.techmod.sounds": "Звуки Контура",
+  "options.techmod.machine_volume": "Громкость механизмов: %s%%",
+  "options.techmod.sound_hint": "Звуки затихают к 6 блокам; стены их приглушают.",
+  "subtitles.techmod.coal_generator_loop": "Работает угольный генератор",
+  "subtitles.techmod.electric_furnace_loop": "Гудит электропечь",
+  "subtitles.techmod.crusher_loop": "Дробится руда"
 }

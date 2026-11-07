@@ -6,9 +6,11 @@ import net.fabricmc.fabric.api.client.model.loading.v1.CustomUnbakedBlockStateMo
 
 public final class TechModClient implements ClientModInitializer {
     @Override public void onInitializeClient() {
+        dev.admutium.techmod.client.sound.MachineAudio.init();
         dev.admutium.techmod.client.machine.EnergyTooltips.init();
         for(var menu:dev.admutium.techmod.machine.Machines.MENUS.values())net.minecraft.client.gui.screens.MenuScreens.register(menu,dev.admutium.techmod.client.machine.MachineScreen::new);
         net.minecraft.client.renderer.blockentity.BlockEntityRenderers.register(dev.admutium.techmod.machine.Machines.ENTITY,dev.admutium.techmod.client.machine.MachineRenderer::new);
+        CustomUnbakedBlockStateModel.register(TechMod.id("solar"),SolarModel.Unbaked.CODEC);
         CustomUnbakedBlockStateModel.register(TechMod.id("cable"), CableModel.Unbaked.CODEC);
     }
 }

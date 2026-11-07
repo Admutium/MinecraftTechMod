@@ -30,7 +30,7 @@ public final class CableModel implements BlockStateModel {
     }
     @Override public void emitQuads(QuadEmitter emitter, BlockAndTintGetter level, BlockPos pos, BlockState state,
                                     RandomSource random, Predicate<@Nullable Direction> cullTest) {
-        int snow=state.getValue(dev.admutium.techmod.cable.CableBlock.SNOW);
+        int snow=state.getValueOrElse(dev.admutium.techmod.cable.CableBlock.SNOW,0);
         if(snow>0){var snowState=net.minecraft.world.level.block.Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,snow);net.minecraft.client.Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(snowState).emitQuads(emitter,level,pos,snowState,random,cullTest);}
         CableSnapshot data=snapshot(level,pos);
         Vec origin=new Vec(pos.getX(),pos.getY(),pos.getZ());
@@ -56,7 +56,8 @@ public final class CableModel implements BlockStateModel {
                 BlockPos support=pos.relative(Direction.valueOf(n.face().name()));
                 if(level.getBlockState(support).getBlock() instanceof CablePort port && port.acceptsCable(level,support,Direction.valueOf(n.face().opposite().name()))) {
                     Vec socket=n.point().add(n.face().normal().scale(Node.HEIGHT));
-                    tube(emitter,n.point(),socket,origin,.063,4);
+                    tube(emitter,n.point(),socket,origin,.047,0);
+                    terminal(emitter,socket,n.face().normal().scale(-1),origin,.18);
                 }
                 // Compatible ports receive a surface-following lead and a visible terminal sleeve.
                 for (Direction d:Direction.values()) {
@@ -73,11 +74,14 @@ public final class CableModel implements BlockStateModel {
                         var rings=TubeGeometry.rings(path,Node.RADIUS);
                         tubeRings(emitter,rings,origin,variant,0,rings.size()-1);
                         Vec sleeve=end.subtract(new Vec(d.getStepX(),d.getStepY(),d.getStepZ()).scale(.13));
-                        tube(emitter,sleeve,end,origin,.068,4);
-                        cap(emitter,end,end.subtract(sleeve),origin,.068,4);
+                        terminal(emitter,end,new Vec(-d.getStepX(),-d.getStepY(),-d.getStepZ()),origin,.18);
                     }
                 }
             }
+        }
+        if(CableWorld.isPanel(state)){
+            Node floor=CableLayout.placement(pos.getX(),pos.getY(),pos.getZ(),Face.DOWN);
+            if(data.has(floor)){Vec socket=origin.add(new Vec(.5,3.25/16,.5));tube(emitter,floor.point(),socket,origin,Node.RADIUS,0);terminal(emitter,socket,new Vec(0,-1,0),origin,.125);}
         }
         for (Face f:Face.values()) if (data.holder(f)) {
             Node center=new Node(pos.getX(),pos.getY(),pos.getZ(),f,1,1);
@@ -163,6 +167,13 @@ public final class CableModel implements BlockStateModel {
             quad(out,new Vec[]{top,latitudes.getLast().get(side),latitudes.getLast().get(next),latitudes.getLast().get(next)},origin,material);
         }
     }
+    private void terminal(QuadEmitter out,Vec center,Vec outward,Vec origin,double half){
+        double x=outward.x()==0?half:0,y=outward.y()==0?half:0,z=outward.z()==0?half:0;
+        Vec a=center.subtract(new Vec(x,y,z)).add(outward.scale(.002));Vec b=center.add(new Vec(x,y,z)).add(outward.scale(.055));
+        double l=Math.min(a.x(),b.x()),r=Math.max(a.x(),b.x()),d=Math.min(a.y(),b.y()),u=Math.max(a.y(),b.y()),n=Math.min(a.z(),b.z()),s=Math.max(a.z(),b.z());
+        Vec p000=new Vec(l,d,n),p001=new Vec(l,d,s),p010=new Vec(l,u,n),p011=new Vec(l,u,s),p100=new Vec(r,d,n),p101=new Vec(r,d,s),p110=new Vec(r,u,n),p111=new Vec(r,u,s);
+        for(Vec[] face:new Vec[][]{{p000,p001,p011,p010},{p101,p100,p110,p111},{p001,p000,p100,p101},{p010,p011,p111,p110},{p100,p000,p010,p110},{p001,p101,p111,p011}})quad(out,face,origin,5);
+    }
     private void tube(QuadEmitter out,Vec a,Vec b,Vec origin,double radius,int material) {
         if (b.subtract(a).length()<1e-7) return;
         var rings=TubeGeometry.rings(List.of(a,b),radius);
@@ -191,7 +202,7 @@ public final class CableModel implements BlockStateModel {
         @Override public MapCodec<? extends CustomUnbakedBlockStateModel> codec() { return CODEC; }
         @Override public void resolveDependencies(Resolver resolver) {}
         @Override public BlockStateModel bake(ModelBaker baker) {
-            String[] names={"rubber","rubber_ribbed","rubber_marked","copper_end","holder"};
+            String[] names={"rubber","rubber_ribbed","rubber_marked","copper_end","holder","plug_face"};
             Material.Baked[] materials=new Material.Baked[names.length];
             for (int i=0;i<names.length;i++) materials[i]=baker.materials().get(new Material(TechMod.id("block/"+names[i])),this);
             return new CableModel(materials);

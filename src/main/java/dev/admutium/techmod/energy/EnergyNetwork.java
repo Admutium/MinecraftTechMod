@@ -18,7 +18,7 @@ public final class EnergyNetwork {
  public static void register(ServerLevel w,MachineBlockEntity m){var n=WORLDS.computeIfAbsent(w,k->new Network());if(n.machines.put(m.getBlockPos(),m)!=m)n.dirty=true;}
  private static MachineBlock block(MachineBlockEntity m){return (MachineBlock)m.getBlockState().getBlock();}
  public static void tick(ServerLevel w){
-  var n=WORLDS.get(w);if(n==null)return;
+  SolarBlock.restoreDetached(w);var n=WORLDS.get(w);if(n==null)return;
   if(n.machines.entrySet().removeIf(e->e.getValue().isRemoved() || !w.hasChunkAt(e.getKey()) || w.getBlockEntity(e.getKey())!=e.getValue()))n.dirty=true;
   var list=new ArrayList<>(n.machines.values());list.sort(Comparator.comparingLong(m->m.getBlockPos().asLong()));
   for(var m:list)m.beginTick();
@@ -26,12 +26,12 @@ public final class EnergyNetwork {
   var wires=new HashMap<Node,Long>();
   for(int type=0;type<2;type++)for(int j=0;j<list.size();j++){
    var source=list.get((j+n.turn)%list.size());
-   if((source.kind==MachineKind.GENERATOR?0:1)!=type || source.processes())continue;
+   if((source.generates()?0:1)!=type || source.processes())continue;
    long budget=Math.min(source.portLimit(),source.stored());
    var all=n.routes.getOrDefault(source.getBlockPos(),List.of());
    for(int priority=0;priority<2 && budget>0;priority++){
     var eligible=new ArrayList<Route>();for(var r:all)if(!r.target.isRemoved() && r.target.capacity()>r.target.stored()
-     && (r.target.kind==MachineKind.CABINET?1:0)==priority && (source.kind==MachineKind.GENERATOR || r.target.kind!=MachineKind.CABINET))eligible.add(r);
+     && (r.target.kind==MachineKind.CABINET?1:0)==priority && (source.generates() || r.target.kind!=MachineKind.CABINET))eligible.add(r);
     if(!eligible.isEmpty())Collections.rotate(eligible,n.turn%eligible.size());
     for(int round=0;round<2 && budget>0;round++)for(int i=0;i<eligible.size() && budget>0;i++){
      var r=eligible.get(i);var sink=r.target;long allowed=Math.max(1,budget/(eligible.size()-i));
@@ -54,11 +54,15 @@ public final class EnergyNetwork {
   Direction output=block(source).output(source.getBlockState());if(output==null)return List.of();
   BlockPos start=source.getBlockPos().relative(output);var found=new HashMap<MachineBlockEntity,Route>();
   var direct=net.machines.get(start);
-  if(direct!=null && block(direct).input(direct.getBlockState())==output.getOpposite())found.put(direct,new Route(direct,0,List.of()));
+  if(source.kind!=MachineKind.SOLAR && direct!=null && block(direct).input(direct.getBlockState())==output.getOpposite())found.put(direct,new Route(direct,0,List.of()));
   var distance=new HashMap<Node,Double>();var parents=new HashMap<Node,Node>();
   PriorityQueue<Visit> queue=new PriorityQueue<>(Comparator.comparingDouble(Visit::length));
   Vec origin=port(source.getBlockPos(),output);
-  for(Face f:Face.values())if(f.axis!=Face.valueOf(output.name()).axis || f==Face.valueOf(output.getOpposite().name())){
+  if(source.kind==MachineKind.SOLAR){
+   Node node=CableLayout.placement(source.getBlockPos().getX(),source.getBlockPos().getY(),source.getBlockPos().getZ(),Face.DOWN);
+   if(present(w,node)){distance.put(node,.16);queue.add(new Visit(node,.16));}
+  }
+  else for(Face f:Face.values())if(f.axis!=Face.valueOf(output.name()).axis || f==Face.valueOf(output.getOpposite().name())){
    Node node=CableLayout.placement(start.getX(),start.getY(),start.getZ(),f);if(present(w,node)){double d=terminalDistance(node.point(),origin);distance.put(node,d);queue.add(new Visit(node,d));}
   }
   int explored=0;

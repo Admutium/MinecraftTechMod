@@ -1,18 +1,14 @@
-"""Approved option 6, same geometry with user-requested mineral color correction."""
+"""Distinct mineral colors and silhouettes, derived from the approved ore style."""
 from pathlib import Path
 from PIL import Image
 import json, colorsys
 root=Path(__file__).resolve().parents[1]/'src/main/resources/assets/techmod'
-source=Image.open(Path(__file__).parent/'art/crushed_ore_source.png').convert('RGBA')
-source=source.crop(source.getbbox()).resize((112,80),Image.Resampling.NEAREST)
-for metal,hue,saturation in [('iron',.065,.52),('copper',.035,.72),('gold',.125,.72)]:
- im=Image.new('RGBA',(128,128));im.paste(source,(8,24))
- for y in range(128):
-  for x in range(128):
-   r,g,b,a=im.getpixel((x,y));h,s,v=colorsys.rgb_to_hsv(r/255,g/255,b/255)
-   if s>.2 and r>g and g>b:
-    nr,ng,nb=colorsys.hsv_to_rgb(hue,saturation,v);r,g,b=round(nr*255),round(ng*255),round(nb*255)
-   im.putpixel((x,y),(r,g,b,255 if a>=128 else 0))
+source=Image.open(Path(__file__).parent/'art/crushed_ores_distinct_source.png').convert('RGBA')
+for index,metal in enumerate(['iron','copper','gold']):
+ tile=source.crop((index*source.width//3,0,(index+1)*source.width//3,source.height))
+ tile.putalpha(tile.getchannel('A').point(lambda a:255 if a>=128 else 0))
+ tile=tile.crop(tile.getbbox());tile.thumbnail((122,116),Image.Resampling.NEAREST)
+ im=Image.new('RGBA',(128,128));im.paste(tile,((128-tile.width)//2,(128-tile.height)//2))
  name='crushed_'+metal
  im.save(root/f'textures/item/{name}.png')
  for sub,data in [('models/item',{'parent':'minecraft:item/generated','textures':{'layer0':'techmod:item/'+name}}),('items',{'model':{'type':'minecraft:model','model':'techmod:item/'+name}})]:

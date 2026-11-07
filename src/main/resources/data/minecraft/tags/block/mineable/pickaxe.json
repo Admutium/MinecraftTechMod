@@ -1,1 +1,10 @@
-{"replace":false,"values":["techmod:battery_cabinet","techmod:coal_generator","techmod:electric_furnace","techmod:crusher"]}
+{
+  "replace": false,
+  "values": [
+    "techmod:battery_cabinet",
+    "techmod:coal_generator",
+    "techmod:electric_furnace",
+    "techmod:crusher",
+    "techmod:solar_panel"
+  ]
+}

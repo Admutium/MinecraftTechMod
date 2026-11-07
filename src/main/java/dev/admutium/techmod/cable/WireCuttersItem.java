@@ -40,15 +40,15 @@ public final class WireCuttersItem extends Item {
         if (player==null) return InteractionResult.PASS;
         Level level=context.getLevel();
         BlockPos pos=context.getClickedPos();
-        if (!level.getBlockState(pos).is(TechMod.CABLE)) return InteractionResult.PASS;
+        if (!CableWorld.isCableCell(level.getBlockState(pos))) return InteractionResult.PASS;
         if (!player.mayBuild() || !level.mayInteract(player,pos) || !player.mayUseItemAt(pos,context.getClickedFace(),context.getItemInHand()))
             return InteractionResult.FAIL;
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         CableItem.clearSelection(player.getUUID());
         Vec hit=new Vec(context.getClickLocation().x,context.getClickLocation().y,context.getClickLocation().z);
-        Node node=nearest(level,pos,hit,false);
+        Node node=CableWorld.isPanel(level.getBlockState(pos))?CableLayout.placement(pos.getX(),pos.getY(),pos.getZ(),Face.DOWN):nearest(level,pos,hit,false);
         CableSnapshot data=CableWorld.data(level,pos);
-        if (node!=null) {
+        if (node!=null && (data.has(node)||data.holder(node.face()))) {
             boolean holder=node.u()==1 && node.v()==1 && data.holder(node.face());
             if (holder && player.isShiftKeyDown()) {
                 for (CableSpan span:data.spans()) if (span.start().equals(node) || span.end().equals(node)) {

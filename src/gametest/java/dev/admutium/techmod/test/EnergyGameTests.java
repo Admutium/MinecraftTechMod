@@ -14,12 +14,12 @@ import net.minecraft.nbt.NbtOps;
 import java.util.*;
 public final class EnergyGameTests {
  private MachineBlockEntity machine(GameTestHelper h,MachineKind kind,int x,int y,int z,Direction facing){
-  BlockPos rel=new BlockPos(x,y,z);h.setBlock(rel,Machines.BLOCKS.get(kind).defaultBlockState().setValue(MachineBlock.FACING,facing));
+  BlockPos rel=new BlockPos(x,y,z);if(kind==MachineKind.SOLAR)h.setBlock(rel.below(),Blocks.STONE);h.setBlock(rel,Machines.BLOCKS.get(kind).defaultBlockState().setValue(MachineBlock.FACING,facing));
   var be=(MachineBlockEntity)h.getLevel().getBlockEntity(h.absolutePos(rel));EnergyNetwork.register(h.getLevel(),be);return be;
  }
  private ItemStack battery(long energy){var s=new ItemStack(Machines.BATTERY);BatteryItem.setCharge(s,energy);return s;}
  @GameTest public void emptyDevicesAndBattery(GameTestHelper h){
-  for(var kind:MachineKind.values()){var m=machine(h,kind,1+kind.ordinal()*2,1,1,Direction.NORTH);h.assertTrue(m.stored()==0,"New device is charged");if(kind==MachineKind.CABINET)h.assertTrue(m.capacity()==0,"Empty cabinet has capacity");}
+  for(var kind:MachineKind.values()){var m=machine(h,kind,1+(kind.ordinal()%4)*2,1+(kind.ordinal()/4)*2,1,Direction.NORTH);h.assertTrue(m.stored()==0,"New device is charged");if(kind==MachineKind.CABINET)h.assertTrue(m.capacity()==0,"Empty cabinet has capacity");}
   h.assertTrue(BatteryItem.charge(new ItemStack(Machines.BATTERY))==0,"New battery is charged");h.succeed();
  }
  @GameTest public void directGeneratorPowersEightSmeltsIn64Seconds(GameTestHelper h){

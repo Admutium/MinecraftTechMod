@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "status=0": {
+      "fabric:type": "techmod:solar",
+      "model": "techmod:block/solar_panel_0"
+    },
+    "status=1": {
+      "fabric:type": "techmod:solar",
+      "model": "techmod:block/solar_panel_1"
+    },
+    "status=2": {
+      "fabric:type": "techmod:solar",
+      "model": "techmod:block/solar_panel_2"
+    }
+  }
+}

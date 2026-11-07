@@ -59,7 +59,7 @@ public final class TechMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> CableItem.clearSelections());
         ServerPlayConnectionEvents.DISCONNECT.register((handler,server) -> CableItem.clearSelection(handler.player.getUUID()));
         PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, entity) -> {
-            if (entity instanceof CableBlockEntity cable) {
+            if (state.is(CABLE) && entity instanceof CableBlockEntity cable) {
                 CableWorld.removeAll(level, pos, cable.snapshot(), !player.isCreative());
                 if (state.getValue(CableBlock.WATERLOGGED) && level.getBlockState(pos).isAir())
                     level.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);

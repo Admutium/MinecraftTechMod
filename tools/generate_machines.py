@@ -25,12 +25,12 @@ for name,color in [('plate',(43,49,58)),('steel',(100,113,127)),('inside',(23,28
   d.line((3,2,60,2),fill=(170,180,185),width=2)
  save(im,'block/machine_'+name)
 for state,color in [(0,(32,38,32)),(1,(119,199,49)),(2,(235,165,31))]:
- im=Image.new('RGB',(64,64),(24,29,34));d=ImageDraw.Draw(im);d.rectangle((8,8,55,55),fill=(92,104,111));d.rectangle((14,14,49,49),fill=color);d.line((17,16,45,16),fill=tuple(min(255,c+28)for c in color),width=3);save(im,f'block/machine_lamp_{state}')
+ im=Image.new('RGB',(64,64),(24,29,34));d=ImageDraw.Draw(im);d.rectangle((3,3,60,60),fill=(8,12,16));d.rectangle((7,7,56,56),fill=(117,128,135));d.rectangle((11,11,52,52),fill=color);d.rectangle((16,15,47,25),fill=tuple(min(255,c+45)for c in color));d.line((17,15,46,15),fill=(228,248,190)if state==1 else(255,226,126)if state==2 else(51,61,51),width=3);save(im,f'block/machine_lamp_{state}')
 # Paired arrows point relative to the connector, not relative to the neighboring face.
 for direction in ('input','output'):
  im=Image.open(ROOT/'textures/block/machine_plate.png').copy();d=ImageDraw.Draw(im)
- d.rectangle((21,18,42,45),fill=(17,20,24),outline=(180,103,47),width=3)
- d.rectangle((26,23,37,40),fill=(85,47,26));d.line((29,25,29,37),fill=(236,160,77),width=3);d.line((35,25,35,37),fill=(236,160,77),width=2)
+ d.rectangle((21,21,42,42),fill=(17,20,24),outline=(180,103,47),width=3)
+ d.rectangle((26,26,37,37),fill=(85,47,26));d.line((29,27,29,36),fill=(236,160,77),width=3);d.line((35,27,35,36),fill=(236,160,77),width=2)
  left=[(5,29),(12,29),(12,25),(18,32),(12,39),(12,35),(5,35)]
  if direction=='output':left=[(23-x,y)for x,y in left]
  d.polygon(left,fill=(224,150,51));d.polygon([(63-x,y)for x,y in left],fill=(224,150,51))
@@ -69,7 +69,7 @@ def model(kind,upper,active,status):
   # Recessed open chamber, front door frame; actual input item is rendered behind the opening.
   e +=[box([2,2,1],[14,4,3],'steel'),box([2,11,1],[14,14,3],'plate'),box([2,4,1],[3,11,3],'steel'),box([13,4,1],[14,11,3],'steel'),box([3,4,11],[13,11,12],'heater'),box([3,3,3],[13,4,12],'inside')]
   e +=[box([0,0,-.06],[1,16,.1],'steel'),box([15,0,-.06],[16,16,.1],'steel'),box([3,11,-.02],[13,12,1],'steel'),box([3,3,-.02],[13,4,1],'steel'),box([5,.5,-.05],[11,1.2,.05],'copper')]
-  e +=[box([3,12,.9],[5,14,1],'lamp',['north']),box([13,6,.4],[14,10,1.2],'copper')]
+  e +=[box([3,11.5,.78],[6,14,.95],'lamp',['north']),box([13,6,.4],[14,10,1.2],'copper')]
   if kind=='coal_generator':
    for x in [4,6.5,9,11.5]:e.append(box([x,4,1],[x+.55,8,2],'steel'))
    if active:
@@ -77,9 +77,13 @@ def model(kind,upper,active,status):
   if kind=='crusher':
    # Feed hopper on top, inset crushing rollers and bottom collection drawer.
    for a,b in [([3,14,3],[5,16,13]),([11,14,3],[13,16,13]),([5,14,3],[11,16,5]),([5,14,11],[11,16,13])]:e.append(box(a,b,'steel'))
-   e += [box([3,2,.2],[13,4,1],'plate'),box([6,2.5,-.1],[10,3.2,.4],'copper')]
+   e += [box([3,2.15,.2],[13,2.9,1],'plate'),box([6,2.35,-.1],[10,2.7,.4],'copper')]
    textures['heater']=tex['inside']
    e += [box([-.03,5,1],[0,6,15],'copper',['west']),box([16,5,1],[16.03,6,15],'copper',['east'])]
+  # The lamp uses its whole texture; world-space UV clipping made the old indicator tiny.
+  lamp=next(v for v in e if any(f['texture']=='#lamp' for f in v['faces'].values()))
+  for face in lamp['faces'].values():face['uv']=[0,0,16,16]
+  if status:lamp['light_emission']=10
   for x in [3,6,9,12]:e.append(box([x,15.9,5],[x+1,16.05,11],'inside'))
  return {'parent':'minecraft:block/block','textures':textures,'elements':e,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}}
 for kind in ['battery_cabinet','coal_generator','electric_furnace','crusher']:
@@ -97,19 +101,32 @@ for kind in ['battery_cabinet','coal_generator','electric_furnace','crusher']:
  if kind=='crusher':
   item=model(kind,False,False,0)
   for x in [4,9]:
-   item['elements'].append(box([x,4,2],[x+3,11,5],'steel'))
+   item['elements'].append(box([x,4.15,2],[x+3,10.85,5],'steel'))
    for y in [4,6,8,10]:item['elements'].append(box([x-.5,y,1.5],[x+3.5,y+1,5.5],'steel'))
   write('models/item/crusher.json',item);itemmodel='techmod:item/crusher'
  write('items/'+kind+'.json',{'model':{'type':'minecraft:model','model':itemmodel}})
 # Append translations without touching existing cable identifiers.
 for lang in ['ru_ru','en_us']:
  p=ROOT/f'lang/{lang}.json';d=json.loads(p.read_text());ru=lang=='ru_ru'
- names={'battery':('Аккумулятор','Battery'),'battery_cabinet':('Аккумуляторный шкаф АШ-8','AS-8 Battery Cabinet'),'coal_generator':('Угольный генератор','Coal Generator'),'electric_furnace':('Электропечь','Electric Furnace'),'crusher':('Дробитель','Crusher')}
+ names={'battery':('Аккумулятор','Battery'),'battery_cabinet':('Аккумуляторный шкаф АШ-8','AS-8 Battery Cabinet'),'coal_generator':('Угольный генератор','Coal Generator'),'electric_furnace':('Электропечь','Electric Furnace'),'crusher':('Дробитель','Crusher'),'solar_panel':('Солнечная панель','Solar Panel')}
  for key,pair in names.items():d[('item.'if key=='battery'else'block.')+'techmod.'+key]=pair[0 if ru else 1]
  for metal,pair in {'iron':('железная','Iron'),'copper':('медная','Copper'),'gold':('золотая','Gold')}.items():
   d['item.techmod.crushed_'+metal]=('Дроблёная '+pair[0]+' руда') if ru else ('Crushed '+pair[1]+' Ore')
  d['itemGroup.techmod']='Контур'if ru else'Kontur'
  strings={
+ 'screen.techmod.solar_rate':('Выработка: %s ТЕ/с','Generation: %s TE/s'),
+ 'screen.techmod.solar_efficiency':('Эффективность: %s%%','Efficiency: %s%%'),
+ 'screen.techmod.solar_output':('Выход: %s ТЕ/с','Output: %s TE/s'),
+ 'state.techmod.no_sun':('Здесь нет солнечного света','No sunlight in this dimension'),
+ 'state.techmod.shaded':('Панель затенена','Panel is shaded'),
+ 'state.techmod.night':('Ночь','Night'),
+ 'state.techmod.solar_generating':('Солнечная генерация','Solar generation'),
+ 'options.techmod.sounds':('Звуки Контура','Kontur sounds'),
+ 'options.techmod.machine_volume':('Громкость механизмов: %s%%','Machine volume: %s%%'),
+ 'options.techmod.sound_hint':('Звуки затихают к 6 блокам; стены их приглушают.','Sounds fade within 6 blocks; walls muffle them.'),
+ 'subtitles.techmod.coal_generator_loop':('Работает угольный генератор','Coal generator running'),
+ 'subtitles.techmod.electric_furnace_loop':('Гудит электропечь','Electric furnace humming'),
+ 'subtitles.techmod.crusher_loop':('Дробится руда','Ore being crushed'),
  'tooltip.techmod.hold_shift':('Зажмите Shift для подробностей','Hold Shift for details'),
  'tooltip.techmod.limits':('Макс. вход: %s · выход: %s ТЕ/с','Max input: %s · output: %s TE/s'),
  'tooltip.techmod.current_limit':('Текущий предел: %s ТЕ/с','Current limit: %s TE/s'),

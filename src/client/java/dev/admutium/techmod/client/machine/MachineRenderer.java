@@ -18,7 +18,7 @@ public final class MachineRenderer implements BlockEntityRenderer<MachineBlockEn
  private static final net.minecraft.resources.Identifier ROLLER_TEXTURE=net.minecraft.resources.Identifier.fromNamespaceAndPath("techmod","textures/block/machine_steel.png");
  public MachineRenderer(BlockEntityRendererProvider.Context c){resolver=c.itemModelResolver();
   var mesh=new net.minecraft.client.model.geom.builders.MeshDefinition();
-  var cubes=net.minecraft.client.model.geom.builders.CubeListBuilder.create().texOffs(0,0).addBox(-1.5f,-3,-1.5f,3,6,3);
+  var cubes=net.minecraft.client.model.geom.builders.CubeListBuilder.create().texOffs(0,0).addBox(-1.45f,-2.85f,-1.45f,2.9f,5.7f,2.9f);
   for(int y=-3;y<3;y+=2){cubes.texOffs(0,16).addBox(-2,y,-2,4,1,4);}
   mesh.getRoot().addOrReplaceChild("roller",cubes,net.minecraft.client.model.geom.PartPose.ZERO);
   roller=net.minecraft.client.model.geom.builders.LayerDefinition.create(mesh,64,64).bakeRoot();

@@ -1,0 +1,29 @@
+{
+  "coal_generator_loop": {
+    "subtitle": "subtitles.techmod.coal_generator_loop",
+    "sounds": [
+      {
+        "name": "techmod:machines/coal_generator",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "electric_furnace_loop": {
+    "subtitle": "subtitles.techmod.electric_furnace_loop",
+    "sounds": [
+      {
+        "name": "techmod:machines/electric_furnace",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "crusher_loop": {
+    "subtitle": "subtitles.techmod.crusher_loop",
+    "sounds": [
+      {
+        "name": "techmod:machines/crusher",
+        "attenuation_distance": 6
+      }
+    ]
+  }
+}
