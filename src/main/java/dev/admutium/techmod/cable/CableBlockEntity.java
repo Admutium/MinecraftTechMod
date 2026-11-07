@@ -19,8 +19,10 @@ public final class CableBlockEntity extends BlockEntity implements RenderDataBlo
     private volatile CableSnapshot data = CableSnapshot.EMPTY;
     private volatile CableSnapshot renderData = CableSnapshot.EMPTY;
     private final CableShapeCache<net.minecraft.world.phys.shapes.VoxelShape> shapeCache = new CableShapeCache<>();
+    private int cachedSnow=-1;
     public net.minecraft.world.phys.shapes.VoxelShape selectionShape(net.minecraft.world.level.BlockGetter world) {
-        return shapeCache.get(() -> CableShapes.build(world,worldPosition,renderData));
+        int layers=getBlockState().getValue(CableBlock.SNOW);if(cachedSnow!=layers){shapeCache.invalidate();cachedSnow=layers;}
+        return shapeCache.get(() -> {var shape=CableShapes.build(world,worldPosition,renderData);return layers==0?shape:net.minecraft.world.phys.shapes.Shapes.joinUnoptimized(shape,net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,layers/8.0,1),net.minecraft.world.phys.shapes.BooleanOp.OR);});
     }
     private void invalidateShapes() {
         shapeCache.invalidate();

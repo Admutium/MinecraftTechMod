@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.block.state.properties.*;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,11 +25,9 @@ public final class MachineBlock extends Block implements EntityBlock,CablePort {
  public MachineBlock(MachineKind k,Properties p){super(p);kind=k;registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(UPPER,false).setValue(ACTIVE,false).setValue(STATUS,0));}
  @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState>b){b.add(FACING,UPPER,ACTIVE,STATUS);}
  @Override public BlockState getStateForPlacement(BlockPlaceContext c){
-  if(kind==MachineKind.CABINET && (c.getClickedPos().getY()+1>=c.getLevel().getMaxY() || !c.getLevel().getBlockState(c.getClickedPos().above()).canBeReplaced(c)))return null;
   return defaultBlockState().setValue(FACING,c.getHorizontalDirection().getOpposite());
  }
  @Override public void setPlacedBy(Level w,BlockPos p,BlockState s,LivingEntity e,ItemStack stack){
-  if(kind==MachineKind.CABINET)w.setBlock(p.above(),s.setValue(UPPER,true),UPDATE_ALL);
   if(!w.isClientSide() && w.getBlockEntity(p) instanceof MachineBlockEntity be)be.restore(stack.getOrDefault(Machines.STATE,MachineState.EMPTY));
   EnergyNetwork.invalidate(w);
  }
@@ -50,7 +47,7 @@ public final class MachineBlock extends Block implements EntityBlock,CablePort {
   var s=w.getBlockState(p);return !s.getValue(UPPER) && (side==input(s)||side==output(s));
  }
  public Direction input(BlockState s){return kind==MachineKind.GENERATOR?null:kind==MachineKind.CABINET?s.getValue(FACING).getCounterClockWise():s.getValue(FACING).getOpposite();}
- public Direction output(BlockState s){return kind==MachineKind.FURNACE?null:kind==MachineKind.CABINET?s.getValue(FACING).getClockWise():s.getValue(FACING).getOpposite();}
+ public Direction output(BlockState s){return (kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER)?null:kind==MachineKind.CABINET?s.getValue(FACING).getClockWise():s.getValue(FACING).getOpposite();}
  @Override protected List<ItemStack> getDrops(BlockState s,LootParams.Builder b){
   if(s.getValue(UPPER))return List.of();
   var be=b.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
@@ -61,13 +58,6 @@ public final class MachineBlock extends Block implements EntityBlock,CablePort {
    BlockPos lower=p.below();if(w.getBlockState(lower).is(this))w.destroyBlock(lower,!player.isCreative(),player);
   }
   return super.playerWillDestroy(w,p,s,player);
- }
- @Override protected void neighborChanged(BlockState s,Level w,BlockPos p,Block source,Orientation orientation,boolean moved){
-  super.neighborChanged(s,w,p,source,orientation,moved);
-  if(!w.isClientSide() && kind==MachineKind.CABINET){
-   if(s.getValue(UPPER) && !w.getBlockState(p.below()).is(this))w.removeBlock(p,false);
-   else if(!s.getValue(UPPER) && !w.getBlockState(p.above()).is(this))w.destroyBlock(p,true);
-  }
  }
  @Override protected void onPlace(BlockState s,Level w,BlockPos p,BlockState old,boolean moved){super.onPlace(s,w,p,old,moved);if(!old.is(this))EnergyNetwork.invalidate(w);}
 }

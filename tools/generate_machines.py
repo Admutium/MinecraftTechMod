@@ -56,12 +56,16 @@ def model(kind,upper,active,status):
  textures=dict(tex);textures['lamp']=f'techmod:block/machine_lamp_{status}';textures['heater']=tex['heater_on'if active else'heater_off'];textures['particle']=tex['plate']
  e=[]
  if kind=='battery_cabinet':
-  e +=[box([0,0,0],[1,16,16],'steel'),box([15,0,0],[16,16,16],'steel'),box([7.5,0,0],[8.5,16,16],'steel'),box([0,0,7.5],[16,16,8.5],'inside'),box([0,0,0],[16,1,16],'steel'),box([0,15,0],[16,16,16],'steel')]
-  for x in [2,6,10,14]: e.append(box([x,1.5,.5],[x+.35,2,7.5],'copper'))
-  e +=[box([1,2,2],[7,2.5,14],'inside'),box([9,2,2],[15,2.5,14],'inside')]
+  e +=[box([0,0,0],[1,16,16],'steel'),box([15,0,0],[16,16,16],'steel'),box([7.5,0,0],[8.5,16,16],'steel'),box([1,1,5],[15,15,11],'inside'),box([0,0,0],[16,1,16],'steel'),box([0,15,0],[16,16,16],'steel')]
+  # Recessed backing, horizontal shelves and copper contacts for four bays per face.
+  e += [box([1,7.5,0],[15,8.5,16],'steel')]
+  for z in [1,14.5]:
+   for x in [1.5,9]:
+    for y in [1.5,9]:
+     e.append(box([x,y,z],[x+5.5,y+.4,z+.5],'copper'))
   e +=[box([-.02,1,1],[0,15,15],'plate'if upper else'input', ['west']),box([16,1,1],[16.02,15,15],'plate'if upper else'output',['east'])]
  else:
-  e +=[box([0,0,0],[16,2,16],'steel'),box([0,14,0],[16,16,16],'steel'),box([0,2,0],[2,14,16],'plate'),box([14,2,0],[16,14,16],'plate'),box([2,2,14],[14,14,16],'output'if kind=='coal_generator'else'input')]
+  e +=[box([0,0,0],[16,2,16],'steel'),*( [box([0,14,0],[16,16,3],'steel'),box([0,14,13],[16,16,16],'steel'),box([0,14,3],[3,16,13],'steel'),box([13,14,3],[16,16,13],'steel')] if kind=='crusher' else [box([0,14,0],[16,16,16],'steel')]),box([0,2,0],[2,14,16],'plate'),box([14,2,0],[16,14,16],'plate'),box([2,2,14],[14,14,16],'output'if kind=='coal_generator'else'input')]
   # Recessed open chamber, front door frame; actual input item is rendered behind the opening.
   e +=[box([2,2,1],[14,4,3],'steel'),box([2,11,1],[14,14,3],'plate'),box([2,4,1],[3,11,3],'steel'),box([13,4,1],[14,11,3],'steel'),box([3,4,11],[13,11,12],'heater'),box([3,3,3],[13,4,12],'inside')]
   e +=[box([0,0,-.06],[1,16,.1],'steel'),box([15,0,-.06],[16,16,.1],'steel'),box([3,11,-.02],[13,12,1],'steel'),box([3,3,-.02],[13,4,1],'steel'),box([5,.5,-.05],[11,1.2,.05],'copper')]
@@ -70,9 +74,15 @@ def model(kind,upper,active,status):
    for x in [4,6.5,9,11.5]:e.append(box([x,4,1],[x+.55,8,2],'steel'))
    if active:
     textures['fire']='minecraft:block/fire_0';e.append(box([3,4,9],[13,10,9.01],'fire',['north']))
+  if kind=='crusher':
+   # Feed hopper on top, inset crushing rollers and bottom collection drawer.
+   for a,b in [([3,14,3],[5,16,13]),([11,14,3],[13,16,13]),([5,14,3],[11,16,5]),([5,14,11],[11,16,13])]:e.append(box(a,b,'steel'))
+   e += [box([3,2,.2],[13,4,1],'plate'),box([6,2.5,-.1],[10,3.2,.4],'copper')]
+   textures['heater']=tex['inside']
+   e += [box([-.03,5,1],[0,6,15],'copper',['west']),box([16,5,1],[16.03,6,15],'copper',['east'])]
   for x in [3,6,9,12]:e.append(box([x,15.9,5],[x+1,16.05,11],'inside'))
  return {'parent':'minecraft:block/block','textures':textures,'elements':e,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}}
-for kind in ['battery_cabinet','coal_generator','electric_furnace']:
+for kind in ['battery_cabinet','coal_generator','electric_furnace','crusher']:
  variants={}
  for facing,yaw in [('north',0),('east',90),('south',180),('west',270)]:
   for upper in [False,True]:
@@ -82,23 +92,28 @@ for kind in ['battery_cabinet','coal_generator','electric_furnace']:
      write('models/block/'+name+'.json',model(kind,upper,active,status))
      variants[f'facing={facing},upper={str(upper).lower()},active={str(active).lower()},status={status}']={'model':'techmod:block/'+name,'y':yaw}
  write('blockstates/'+kind+'.json',{'variants':variants})
- if kind=='battery_cabinet':
-  lo=model(kind,False,False,0);hi=model(kind,True,False,0)
-  for part in hi['elements']:
-   part['from'][1]+=16;part['to'][1]+=16
-  lo['elements']+=hi['elements'];lo['display']['gui']={'rotation':[20,225,0],'translation':[0,-4,0],'scale':[.38,.38,.38]}
-  for context in ['firstperson_righthand','firstperson_lefthand','thirdperson_righthand','thirdperson_lefthand','ground','fixed']:
-   lo['display'][context]={'rotation':[0,45,0],'translation':[0,0,0],'scale':[.25,.25,.25]}
-  write('models/item/'+kind+'.json',lo);itemmodel='techmod:item/'+kind
- else:itemmodel=f'techmod:block/{kind}_0_0_0'
+ itemmodel=f'techmod:block/{kind}_0_0_0'
+ if kind=='battery_cabinet':write('models/item/battery_cabinet.json',model(kind,False,False,0))
+ if kind=='crusher':
+  item=model(kind,False,False,0)
+  for x in [4,9]:
+   item['elements'].append(box([x,4,2],[x+3,11,5],'steel'))
+   for y in [4,6,8,10]:item['elements'].append(box([x-.5,y,1.5],[x+3.5,y+1,5.5],'steel'))
+  write('models/item/crusher.json',item);itemmodel='techmod:item/crusher'
  write('items/'+kind+'.json',{'model':{'type':'minecraft:model','model':itemmodel}})
 # Append translations without touching existing cable identifiers.
 for lang in ['ru_ru','en_us']:
  p=ROOT/f'lang/{lang}.json';d=json.loads(p.read_text());ru=lang=='ru_ru'
- names={'battery':('Аккумулятор','Battery'),'battery_cabinet':('Аккумуляторный шкаф АШ-8','AS-8 Battery Cabinet'),'coal_generator':('Угольный генератор','Coal Generator'),'electric_furnace':('Электропечь','Electric Furnace')}
+ names={'battery':('Аккумулятор','Battery'),'battery_cabinet':('Аккумуляторный шкаф АШ-8','AS-8 Battery Cabinet'),'coal_generator':('Угольный генератор','Coal Generator'),'electric_furnace':('Электропечь','Electric Furnace'),'crusher':('Дробитель','Crusher')}
  for key,pair in names.items():d[('item.'if key=='battery'else'block.')+'techmod.'+key]=pair[0 if ru else 1]
+ for metal,pair in {'iron':('железная','Iron'),'copper':('медная','Copper'),'gold':('золотая','Gold')}.items():
+  d['item.techmod.crushed_'+metal]=('Дроблёная '+pair[0]+' руда') if ru else ('Crushed '+pair[1]+' Ore')
  d['itemGroup.techmod']='Контур'if ru else'Kontur'
  strings={
+ 'tooltip.techmod.hold_shift':('Зажмите Shift для подробностей','Hold Shift for details'),
+ 'tooltip.techmod.limits':('Макс. вход: %s · выход: %s ТЕ/с','Max input: %s · output: %s TE/s'),
+ 'tooltip.techmod.current_limit':('Текущий предел: %s ТЕ/с','Current limit: %s TE/s'),
+ 'state.techmod.crushing':('Дробление','Crushing'),
  'tooltip.techmod.charge':('Заряд: %s / %s ТЕ','Charge: %s / %s TE'),
  'tooltip.techmod.battery_rate':('Мощность аккумулятора: до %s ТЕ/с','Battery output: up to %s TE/s'),
  'tooltip.techmod.installed':('Установлено аккумуляторов: %s','Installed batteries: %s'),

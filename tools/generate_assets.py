@@ -55,7 +55,11 @@ save(im, 'textures/block/holder.png')
 # User-selected generated artwork, normalized to an atlas-friendly 128x128 PNG.
 # Resampling is nearest-neighbor to retain the approved pixel-art appearance.
 with Image.open(Path(__file__).parent / 'art/copper_cable_coil_source.png') as approved:
-    save(approved.convert('RGBA').resize((128, 128), Image.Resampling.NEAREST), 'textures/item/copper_cable.png')
+    sprite=approved.convert('RGBA').resize((128,128),Image.Resampling.NEAREST)
+    # Generated item extrusion treats any nonzero alpha as solid, while the shader discards faint pixels.
+    # Binary coverage keeps edge geometry and rendered coverage identical on both sides.
+    sprite.putalpha(sprite.getchannel('A').point(lambda a:255 if a>=128 else 0))
+    save(sprite,'textures/item/copper_cable.png')
 
 im = Image.new('RGBA', (32, 32))
 d = ImageDraw.Draw(im)

@@ -30,6 +30,8 @@ public final class CableModel implements BlockStateModel {
     }
     @Override public void emitQuads(QuadEmitter emitter, BlockAndTintGetter level, BlockPos pos, BlockState state,
                                     RandomSource random, Predicate<@Nullable Direction> cullTest) {
+        int snow=state.getValue(dev.admutium.techmod.cable.CableBlock.SNOW);
+        if(snow>0){var snowState=net.minecraft.world.level.block.Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,snow);net.minecraft.client.Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(snowState).emitQuads(emitter,level,pos,snowState,random,cullTest);}
         CableSnapshot data=snapshot(level,pos);
         Vec origin=new Vec(pos.getX(),pos.getY(),pos.getZ());
         for (Face face:Face.values()) {

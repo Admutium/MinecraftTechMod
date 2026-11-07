@@ -34,13 +34,14 @@ public final class CableWorld {
     public static boolean available(Level level, BlockPos pos) {
         if (!level.hasChunkAt(pos) || level.isOutsideBuildHeight(pos)) return false;
         BlockState s = level.getBlockState(pos);
-        return s.is(TechMod.CABLE) || s.isAir() || s.is(Blocks.WATER);
+        return s.is(TechMod.CABLE) || s.isAir() || s.is(Blocks.WATER) || s.is(Blocks.SNOW)&&s.getValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS)<8;
     }
     public static CableBlockEntity ensure(Level level, BlockPos pos) {
         if (!available(level, pos)) return null;
         if (!level.getBlockState(pos).is(TechMod.CABLE)) {
             boolean water = level.getFluidState(pos).is(FluidTags.WATER);
-            if (!level.setBlock(pos, TechMod.CABLE.defaultBlockState().setValue(CableBlock.WATERLOGGED, water), Block.UPDATE_ALL)) return null;
+            int snow=level.getBlockState(pos).is(Blocks.SNOW)?level.getBlockState(pos).getValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS):0;
+            if (!level.setBlock(pos, TechMod.CABLE.defaultBlockState().setValue(CableBlock.WATERLOGGED, water).setValue(CableBlock.SNOW,snow), Block.UPDATE_ALL)) return null;
             if (water) level.scheduleTick(pos, net.minecraft.world.level.material.Fluids.WATER,
                     net.minecraft.world.level.material.Fluids.WATER.getTickDelay(level));
         }
@@ -49,7 +50,10 @@ public final class CableWorld {
     public static void prune(Level level, BlockPos p) {
         if (level.getBlockEntity(p) instanceof CableBlockEntity be && be.snapshot().empty()) {
             boolean water = be.getBlockState().getValue(CableBlock.WATERLOGGED);
-            level.setBlock(p, water ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            int layers=be.getBlockState().getValue(CableBlock.SNOW);
+            var replacement=water?Blocks.WATER.defaultBlockState():layers>0?Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,layers):Blocks.AIR.defaultBlockState();
+            if(layers>0&&!replacement.canSurvive(level,p))replacement=Blocks.AIR.defaultBlockState();
+            level.setBlock(p,replacement,Block.UPDATE_ALL);
         }
     }
     public static void drop(Level level, BlockPos p, net.minecraft.world.item.Item item, int count) {

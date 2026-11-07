@@ -24,7 +24,7 @@ public final class TechMod implements ModInitializer {
     public static final String ID = "techmod";
     public static final CableBlock CABLE = new CableBlock(BlockBehaviour.Properties.of()
             .setId(ResourceKey.create(Registries.BLOCK, id("cable")))
-            .strength(.25f).noOcclusion().noCollision().dynamicShape());
+            .strength(.25f).noOcclusion().noCollision().dynamicShape().randomTicks());
     public static final BlockEntityType<CableBlockEntity> CABLE_ENTITY = FabricBlockEntityTypeBuilder
             .create(CableBlockEntity::new, CABLE).build();
     public static final Item COPPER_CABLE = new CableItem(properties("copper_cable"), false);
@@ -50,11 +50,12 @@ public final class TechMod implements ModInitializer {
                 .displayItems((context, output) -> {
                     output.accept(COPPER_CABLE);
                     output.accept(CABLE_HOLDER);
-                    output.accept(WIRE_CUTTERS);
+
                     output.accept(dev.admutium.techmod.machine.Machines.BATTERY);
                     for(var item:dev.admutium.techmod.machine.Machines.ITEMS.values())output.accept(item);
+                    for(var item:dev.admutium.techmod.machine.Machines.CRUSHED.values())output.accept(item);
                 }).build());
-        // TODO(crafting): add balanced recipes for the cable, holder and cutters after material progression is designed.
+        // TODO(crafting): add balanced recipes for cables, holders, batteries and all machines after material progression is designed.
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> CableItem.clearSelections());
         ServerPlayConnectionEvents.DISCONNECT.register((handler,server) -> CableItem.clearSelection(handler.player.getUUID()));
         PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, entity) -> {
@@ -62,6 +63,10 @@ public final class TechMod implements ModInitializer {
                 CableWorld.removeAll(level, pos, cable.snapshot(), !player.isCreative());
                 if (state.getValue(CableBlock.WATERLOGGED) && level.getBlockState(pos).isAir())
                     level.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
+                else if(state.getValue(CableBlock.SNOW)>0 && level.getBlockState(pos).isAir()){
+                    var snow=Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,state.getValue(CableBlock.SNOW));
+                    if(snow.canSurvive(level,pos))level.setBlock(pos,snow,Block.UPDATE_ALL);
+                }
             }
         });
     }

@@ -24,6 +24,8 @@ public final class Machines {
  public static final EnumMap<MachineKind,MachineBlock> BLOCKS=new EnumMap<>(MachineKind.class);
  public static final EnumMap<MachineKind,Item> ITEMS=new EnumMap<>(MachineKind.class);
  public static final EnumMap<MachineKind,MenuType<MachineMenu>> MENUS=new EnumMap<>(MachineKind.class);
+ public static final java.util.Map<Item,Item> CRUSHED=new java.util.LinkedHashMap<>();
+ public static final java.util.Map<Item,Item> SMELTED=new java.util.LinkedHashMap<>();
  public static BatteryItem BATTERY;
  public static BlockEntityType<MachineBlockEntity> ENTITY;
  public static void init(){
@@ -31,9 +33,11 @@ public final class Machines {
   Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,TechMod.id("machine_state"),STATE);
   BATTERY=new BatteryItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,TechMod.id("battery"))));
   Registry.register(BuiltInRegistries.ITEM,TechMod.id("battery"),BATTERY);
+  Item[] raw={Items.RAW_IRON,Items.RAW_GOLD,Items.RAW_COPPER};Item[] ingots={Items.IRON_INGOT,Items.GOLD_INGOT,Items.COPPER_INGOT};String[] names={"iron","gold","copper"};
+  for(int i=0;i<3;i++){var item=new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,TechMod.id("crushed_"+names[i]))));Registry.register(BuiltInRegistries.ITEM,TechMod.id("crushed_"+names[i]),item);CRUSHED.put(raw[i],item);SMELTED.put(item,ingots[i]);}
   for(var kind:MachineKind.values()){
    var b=new MachineBlock(kind,BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK,TechMod.id(kind.id)))
-    .strength(3.5f).noOcclusion().pushReaction(PushReaction.IMMOVEABLE).lightLevel(s->s.getValue(MachineBlock.ACTIVE)?7:0));
+    .strength(3.5f).requiresCorrectToolForDrops().noOcclusion().pushReaction(PushReaction.IMMOVEABLE).lightLevel(s->s.getValue(MachineBlock.ACTIVE)?7:0));
    BLOCKS.put(kind,b);Registry.register(BuiltInRegistries.BLOCK,TechMod.id(kind.id),b);
    var item=new MachineItem(b,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,TechMod.id(kind.id))));
    ITEMS.put(kind,item);Registry.register(BuiltInRegistries.ITEM,TechMod.id(kind.id),item);

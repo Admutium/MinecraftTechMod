@@ -15,7 +15,6 @@ import java.util.*;
 public final class EnergyGameTests {
  private MachineBlockEntity machine(GameTestHelper h,MachineKind kind,int x,int y,int z,Direction facing){
   BlockPos rel=new BlockPos(x,y,z);h.setBlock(rel,Machines.BLOCKS.get(kind).defaultBlockState().setValue(MachineBlock.FACING,facing));
-  if(kind==MachineKind.CABINET)h.setBlock(rel.above(),Machines.BLOCKS.get(kind).defaultBlockState().setValue(MachineBlock.FACING,facing).setValue(MachineBlock.UPPER,true));
   var be=(MachineBlockEntity)h.getLevel().getBlockEntity(h.absolutePos(rel));EnergyNetwork.register(h.getLevel(),be);return be;
  }
  private ItemStack battery(long energy){var s=new ItemStack(Machines.BATTERY);BatteryItem.setCharge(s,energy);return s;}
@@ -32,8 +31,8 @@ public final class EnergyGameTests {
  @GameTest public void coalAndCharcoalYieldExactly100TE(GameTestHelper h){
   var gen=machine(h,MachineKind.GENERATOR,1,1,1,Direction.WEST);gen.setItem(0,new ItemStack(Items.CHARCOAL));
   for(int i=0;i<900;i++){gen.beginTick();gen.finishTick();}
-  h.assertTrue(gen.stored()==Energy.BUFFER&&gen.fuelTicks==0,"Fuel yield or duration incorrect");
-  gen.setItem(0,new ItemStack(Items.COAL));gen.beginTick();h.assertTrue(gen.getItem(0).getCount()==1,"Full generator consumed fuel");h.succeed();
+  h.assertTrue(gen.stored()==100*Energy.UNIT&&gen.fuelTicks==0,"Fuel yield or duration incorrect");
+  gen.energy=Energy.BUFFER;gen.setItem(0,new ItemStack(Items.COAL));gen.beginTick();h.assertTrue(gen.getItem(0).getCount()==1,"Full generator consumed fuel");h.succeed();
  }
  @GameTest public void wrongPortCannotReceiveEnergy(GameTestHelper h){
   var gen=machine(h,MachineKind.GENERATOR,1,1,1,Direction.WEST);var furnace=machine(h,MachineKind.FURNACE,2,1,1,Direction.NORTH);
@@ -85,11 +84,15 @@ public final class EnergyGameTests {
   cabinet.setItem(0,battery(0));gen.setItem(0,new ItemStack(Items.COAL,2));furnace.setItem(0,new ItemStack(Items.IRON_ORE,8));
   for(int i=0;i<1280;i++)EnergyNetwork.tick(h.getLevel());h.assertTrue(furnace.getItem(1).getCount()==8,"Cabinet did not pass energy from input to output");h.succeed();
  }
- @GameTest public void cabinetUpperHalfBreakPreservesOneInventory(GameTestHelper h){
-  var cabinet=machine(h,MachineKind.CABINET,2,1,2,Direction.NORTH);cabinet.setItem(0,battery(250*Energy.UNIT));BlockPos p=cabinet.getBlockPos();h.getLevel().destroyBlock(p.above(),true);
-  var drops=h.getLevel().getEntitiesOfClass(ItemEntity.class,new AABB(p).inflate(3));int count=0;long charge=0;
-  for(var e:drops)if(e.getItem().is(Machines.ITEMS.get(MachineKind.CABINET))){count++;for(var b:e.getItem().get(Machines.STATE).batteries())charge+=BatteryItem.charge(b);}
-  h.assertTrue(count==1&&charge==250*Energy.UNIT,"Upper half lost or duplicated battery inventory");h.succeed();
+ @GameTest public void legacyCabinetCompactsWithoutLosingBatteries(GameTestHelper h){
+  var cabinet=machine(h,MachineKind.CABINET,2,1,2,Direction.NORTH);cabinet.setItem(0,battery(250*Energy.UNIT));BlockPos p=cabinet.getBlockPos();
+  h.getLevel().setBlock(p.above(),cabinet.getBlockState().setValue(MachineBlock.UPPER,true),3);cabinet.beginTick();
+  h.assertTrue(h.getLevel().getBlockState(p.above()).isAir()&&cabinet.stored()==250*Energy.UNIT,"Legacy cabinet migration lost contents");h.succeed();
+ }
+ @GameTest public void stackedCabinetsRemainIndependent(GameTestHelper h){
+  var bottom=machine(h,MachineKind.CABINET,2,1,2,Direction.NORTH);var top=machine(h,MachineKind.CABINET,2,2,2,Direction.NORTH);top.setItem(0,battery(250*Energy.UNIT));
+  bottom.beginTick();h.getLevel().destroyBlock(bottom.getBlockPos(),true);
+  h.assertTrue(!top.isRemoved()&&top.stored()==250*Energy.UNIT,"Removing a compact cabinet destroyed the independent cabinet above");h.succeed();
  }
  @GameTest public void furnaceBreakSeparatesMaterialsButKeepsBattery(GameTestHelper h){
   var f=machine(h,MachineKind.FURNACE,2,1,2,Direction.NORTH);f.setItem(0,new ItemStack(Items.IRON_ORE,3));f.setItem(1,new ItemStack(Items.IRON_INGOT,2));f.setItem(2,battery(170*Energy.UNIT));f.energy=30*Energy.UNIT;f.progress=70;
@@ -133,4 +136,57 @@ public final class EnergyGameTests {
   for(int i=0;i<100;i++){f.beginTick();f.energy+=900;f.finishTick();if(raw!=f.working)rawFlips++;if(visual!=f.visualActive)visualFlips++;raw=f.working;visual=f.visualActive;}
   h.assertTrue(rawFlips>80&&visualFlips<=2,"Brownout causes per-tick visual rebuilds");h.assertTrue(f.indicator==2,"Brownout must show yellow power warning");h.assertTrue(f.energy==0,"Brownout changed energy accounting");h.succeed();
  }
+ @GameTest public void crusherUses12TEInSixSecondsAndDoesNotRecycleIngots(GameTestHelper h){
+  var crusher=machine(h,MachineKind.CRUSHER,2,1,2,Direction.NORTH);crusher.energy=Energy.BUFFER;crusher.setItem(0,new ItemStack(Items.RAW_IRON));
+  for(int i=0;i<119;i++){crusher.beginTick();crusher.finishTick();}
+  h.assertTrue(crusher.getItem(1).isEmpty(),"Crusher completed too early");crusher.beginTick();crusher.finishTick();
+  h.assertTrue(crusher.getItem(1).is(Machines.CRUSHED.get(Items.RAW_IRON))&&crusher.getItem(1).getCount()==2&&crusher.energy==288*Energy.UNIT,"Crusher yield or energy cost wrong");
+  crusher.setItem(0,new ItemStack(Items.IRON_INGOT));long before=crusher.energy;for(int i=0;i<120;i++){crusher.beginTick();crusher.finishTick();}
+  h.assertTrue(crusher.energy==before&&crusher.getItem(1).getCount()==2,"Ingot recycling or idle energy drain");h.succeed();
+ }
+ @GameTest public void allThreeCrushedOresSmeltFor16TEEach(GameTestHelper h){
+  var f=machine(h,MachineKind.FURNACE,2,1,2,Direction.NORTH);
+  for(var pair:Machines.SMELTED.entrySet()){f.energy=Energy.BUFFER;f.setItem(0,new ItemStack(pair.getKey()));f.setItem(1,ItemStack.EMPTY);for(int i=0;i<160;i++){f.beginTick();f.finishTick();}
+   h.assertTrue(f.getItem(1).is(pair.getValue())&&f.energy==284*Energy.UNIT,"Crushed ore smelting recipe failed");}h.succeed();
+ }
+ @GameTest public void fullCrusherOutputPreservesInputAndEnergy(GameTestHelper h){
+  var m=machine(h,MachineKind.CRUSHER,2,1,2,Direction.NORTH);m.energy=Energy.BUFFER;m.setItem(0,new ItemStack(Items.RAW_COPPER));m.setItem(1,new ItemStack(Machines.CRUSHED.get(Items.RAW_COPPER),63));
+  for(int i=0;i<200;i++){m.beginTick();m.finishTick();}h.assertTrue(m.energy==Energy.BUFFER&&m.getItem(0).getCount()==1,"Full crusher consumed energy or input");h.succeed();
+ }
+ @GameTest public void coalBlockYields1000TEAndPortableFuelDoesNotReset(GameTestHelper h){
+  var g=machine(h,MachineKind.GENERATOR,2,1,2,Direction.NORTH);g.setItem(0,new ItemStack(Items.COAL_BLOCK));long total=0;
+  for(int i=0;i<9000;i++){
+   g.beginTick();g.finishTick();total+=g.extract(Energy.BUFFER);
+   if(i==300||i==8500){int remaining=g.fuelTicks;var state=g.portable();g.restore(state);h.assertTrue(g.fuelTicks==remaining&&g.fuelTotalTicks==9000,"Portable coal block fuel was truncated or reset");}
+  }
+  h.assertTrue(total==1000*Energy.UNIT&&g.fuelTicks==0&&g.getItem(0).isEmpty(),"Coal block fuel yield incorrect");h.succeed();
+ }
+ @GameTest public void thinSnowAndWireShareCellAndRemovingWirePreservesSnow(GameTestHelper h){
+  var rel=new BlockPos(2,1,2);h.setBlock(rel.below(),Blocks.STONE);h.setBlock(rel,Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,3));
+  var p=h.absolutePos(rel);h.assertTrue(CableWorld.available(h.getLevel(),p),"Thin snow cannot coexist with cable");
+  var be=CableWorld.ensure(h.getLevel(),p);var node=CableLayout.placement(p.getX(),p.getY(),p.getZ(),Face.DOWN);be.update(new CableSnapshot(node.bit(),0,List.of()));
+  h.assertTrue(be.getBlockState().getValue(CableBlock.SNOW)==3&&be.snapshot().has(node),"Placement erased snow or wire");
+  CableWorld.removeNode(h.getLevel(),node,false,false);var state=h.getLevel().getBlockState(p);
+  h.assertTrue(state.is(Blocks.SNOW)&&state.getValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS)==3,"Removing cable erased snow");
+  h.setBlock(rel,Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS,8));h.assertTrue(!CableWorld.available(h.getLevel(),p),"Full snow block accepted cable");h.succeed();
+ }
+ @GameTest public void mechanismsRequirePickaxeAndHaveBlockNames(GameTestHelper h){
+  for(var kind:MachineKind.values()){
+   var state=Machines.BLOCKS.get(kind).defaultBlockState();h.assertTrue(new ItemStack(Items.WOODEN_PICKAXE).isCorrectToolForDrops(state),"Wooden pickaxe cannot mine device");
+   h.assertTrue(!new ItemStack(Items.WOODEN_AXE).isCorrectToolForDrops(state),"Axe mines device");
+   h.assertTrue(Machines.ITEMS.get(kind).getDescriptionId().equals("block.techmod."+kind.id),"Machine item has untranslated item description prefix");
+  }h.succeed();
+ }
+
+ @GameTest public void snowCoverCanBeAddedAndWaterMeltsOnlySnow(GameTestHelper h){
+  var rel=new BlockPos(2,1,2);h.setBlock(rel.below(),Blocks.STONE);var p=h.absolutePos(rel);var w=h.getLevel();
+  var be=CableWorld.ensure(w,p);var node=CableLayout.placement(p.getX(),p.getY(),p.getZ(),Face.DOWN);be.update(new CableSnapshot(node.bit(),0,List.of()));
+  var player=h.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var stack=new ItemStack(Items.SNOW,2);
+  var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(p),Direction.UP,p,false);
+  var result=w.getBlockState(p).useItemOn(stack,w,player,net.minecraft.world.InteractionHand.MAIN_HAND,hit);
+  h.assertTrue(result.consumesAction()&&stack.getCount()==1&&w.getBlockState(p).getValue(CableBlock.SNOW)==1,"Snow placement erased wire or failed to consume snow");
+  TechMod.CABLE.placeLiquid(w,p,w.getBlockState(p),net.minecraft.world.level.material.Fluids.WATER.getSource(false));
+  h.assertTrue(w.getBlockState(p).getValue(CableBlock.SNOW)==0&&w.getBlockState(p).getValue(CableBlock.WATERLOGGED)&&CableWorld.data(w,p).has(node),"Water erased cable or retained submerged snow");h.succeed();
+ }
+
 }

@@ -41,5 +41,13 @@
   "state.techmod.no_input": "No input",
   "state.techmod.no_recipe_or_full": "No recipe / output full",
   "state.techmod.smelting": "Smelting",
-  "state.techmod.no_power": "Insufficient power"
+  "state.techmod.no_power": "Insufficient power",
+  "block.techmod.crusher": "Crusher",
+  "item.techmod.crushed_iron": "Crushed Iron Ore",
+  "item.techmod.crushed_copper": "Crushed Copper Ore",
+  "item.techmod.crushed_gold": "Crushed Gold Ore",
+  "tooltip.techmod.hold_shift": "Hold Shift for details",
+  "tooltip.techmod.limits": "Max input: %s · output: %s TE/s",
+  "tooltip.techmod.current_limit": "Current limit: %s TE/s",
+  "state.techmod.crushing": "Crushing"
 }

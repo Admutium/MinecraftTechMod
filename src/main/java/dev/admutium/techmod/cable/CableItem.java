@@ -59,7 +59,8 @@ public final class CableItem extends Item {
 
         BlockPos cell;
         Face face;
-        if (existing && nearest!=null) { cell=clicked; face=nearest.face(); }
+        if(level.getBlockState(clicked).is(net.minecraft.world.level.block.Blocks.SNOW)){cell=clicked;face=Face.DOWN;}
+        else if (existing && nearest!=null) { cell=clicked; face=nearest.face(); }
         else { cell=clicked.relative(context.getClickedFace()); face=Face.valueOf(context.getClickedFace().getOpposite().name()); }
         if (!level.mayInteract(player,cell) || !player.mayUseItemAt(cell,Direction.valueOf(face.name()),context.getItemInHand()))
             return InteractionResult.FAIL;

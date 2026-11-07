@@ -18,7 +18,7 @@ public final class BatteryItem extends Item {
  @Override public int getBarWidth(ItemStack s){return (int)Math.round(13.0*charge(s)/Energy.BATTERY);}
  @Override public int getBarColor(ItemStack s){return 0x82ce36;}
  @Override public void appendHoverText(ItemStack s,TooltipContext c,TooltipDisplay d,Consumer<Component> out,TooltipFlag f){
-  out.accept(Component.translatable("tooltip.techmod.charge",Energy.format(charge(s)),"300").append(Component.literal(String.format(java.util.Locale.ROOT," (%.1f%%)",100.0*charge(s)/Energy.BATTERY))));
-  out.accept(Component.translatable("tooltip.techmod.battery_rate","4"));
+  out.accept(Component.translatable("tooltip.techmod.charge",Energy.format(charge(s)),"300").append(Component.literal(" ("+(100*charge(s)/Energy.BATTERY)+"%)")));
+
  }
 }

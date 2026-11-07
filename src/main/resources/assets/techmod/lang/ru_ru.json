@@ -41,5 +41,13 @@
   "state.techmod.no_input": "Нет сырья",
   "state.techmod.no_recipe_or_full": "Нет рецепта / выход заполнен",
   "state.techmod.smelting": "Переплавка",
-  "state.techmod.no_power": "Недостаточно энергии"
+  "state.techmod.no_power": "Недостаточно энергии",
+  "block.techmod.crusher": "Дробитель",
+  "item.techmod.crushed_iron": "Дроблёная железная руда",
+  "item.techmod.crushed_copper": "Дроблёная медная руда",
+  "item.techmod.crushed_gold": "Дроблёная золотая руда",
+  "tooltip.techmod.hold_shift": "Зажмите Shift для подробностей",
+  "tooltip.techmod.limits": "Макс. вход: %s · выход: %s ТЕ/с",
+  "tooltip.techmod.current_limit": "Текущий предел: %s ТЕ/с",
+  "state.techmod.crushing": "Дробление"
 }

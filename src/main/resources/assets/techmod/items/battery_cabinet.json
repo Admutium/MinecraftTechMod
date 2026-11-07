@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "techmod:item/battery_cabinet"
+    "model": "techmod:block/battery_cabinet_0_0_0"
   }
 }

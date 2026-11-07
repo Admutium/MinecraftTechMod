@@ -26,7 +26,7 @@ public final class EnergyNetwork {
   var wires=new HashMap<Node,Long>();
   for(int type=0;type<2;type++)for(int j=0;j<list.size();j++){
    var source=list.get((j+n.turn)%list.size());
-   if((source.kind==MachineKind.GENERATOR?0:1)!=type || source.kind==MachineKind.FURNACE)continue;
+   if((source.kind==MachineKind.GENERATOR?0:1)!=type || source.processes())continue;
    long budget=Math.min(source.portLimit(),source.stored());
    var all=n.routes.getOrDefault(source.getBlockPos(),List.of());
    for(int priority=0;priority<2 && budget>0;priority++){
