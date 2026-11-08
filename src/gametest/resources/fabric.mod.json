@@ -8,7 +8,8 @@
     "fabric-gametest": [
       "dev.admutium.techmod.test.EnergyGameTests",
       "dev.admutium.techmod.test.SolarGameTests",
-      "dev.admutium.techmod.test.ConveyorGameTests"
+      "dev.admutium.techmod.test.ConveyorGameTests",
+      "dev.admutium.techmod.test.MaterialsGameTests"
     ]
   },
   "depends": {

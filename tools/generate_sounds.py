@@ -3,7 +3,7 @@ from pathlib import Path
 import math,random,wave,struct,subprocess,tempfile,json
 root=Path(__file__).resolve().parents[1]/'src/main/resources/assets/techmod'
 rate=44100;n=rate*4
-names=['coal_generator','electric_furnace','crusher','press','conveyor_drive'];events={}
+names=['coal_generator','electric_furnace','crusher','press','conveyor_drive','metal_cutter'];events={}
 for index,name in enumerate(names):
  rng=random.Random(903+index);samples=[];low=0;crackle=0
  for i in range(n):
@@ -14,6 +14,9 @@ for index,name in enumerate(names):
    v=.075*math.sin(2*math.pi*52*t)+.035*math.sin(2*math.pi*78*t)+low*.15+noise*crackle
   elif name=='electric_furnace':v=.055*math.sin(2*math.pi*90*t)+.015*math.sin(2*math.pi*180*t)+low*.12
   elif name=='conveyor_drive':v=.03*math.sin(2*math.pi*65*t)+low*.04
+  elif name=='metal_cutter':
+   contact=max(0,math.sin(2*math.pi*t/4))**4
+   v=.025*math.sin(2*math.pi*105*t)+low*(.04+.18*contact)
   elif name=='press':
    pulse=max(0,math.sin(2*math.pi*t/4))**20
    v=.04*math.sin(2*math.pi*70*t)+low*(.08+.25*pulse)

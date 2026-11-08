@@ -11,7 +11,7 @@ import java.util.*;
 public final class ItemAccess {
  private static Container container(Level w,BlockPos p){if(!w.hasChunkAt(p))return null;var s=w.getBlockState(p);if(s.getBlock() instanceof ChestBlock chest){if(s.getValue(ChestBlock.TYPE)!=net.minecraft.world.level.block.state.properties.ChestType.SINGLE&&!w.hasChunkAt(p.relative(ChestBlock.getConnectedDirection(s))))return null;return ChestBlock.getContainer(chest,s,w,p,true);}return w.getBlockEntity(p) instanceof Container c?c:null;}
  private static int[] slots(Container c,Direction face,boolean insert){
-  if(c instanceof MachineBlockEntity m){if(m.kind.slots==0||m.kind==MachineKind.CABINET||m.itemSides[face.ordinal()]!=(insert?1:2))return new int[0];return insert?new int[]{0}:m.processes()?new int[]{1}:new int[0];}
+
   if(c instanceof WorldlyContainer sided)return sided.getSlotsForFace(face);
   return java.util.stream.IntStream.range(0,c.getContainerSize()).toArray();
  }

@@ -43,5 +43,14 @@
         "attenuation_distance": 6
       }
     ]
+  },
+  "metal_cutter_loop": {
+    "subtitle": "subtitles.techmod.metal_cutter_loop",
+    "sounds": [
+      {
+        "name": "techmod:machines/metal_cutter",
+        "attenuation_distance": 6
+      }
+    ]
   }
 }

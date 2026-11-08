@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,open=false": {
+      "model": "techmod:block/reinforced_chest_0",
+      "y": 0
+    },
+    "facing=east,open=false": {
+      "model": "techmod:block/reinforced_chest_0",
+      "y": 90
+    },
+    "facing=south,open=false": {
+      "model": "techmod:block/reinforced_chest_0",
+      "y": 180
+    },
+    "facing=west,open=false": {
+      "model": "techmod:block/reinforced_chest_0",
+      "y": 270
+    },
+    "facing=north,open=true": {
+      "model": "techmod:block/reinforced_chest_1",
+      "y": 0
+    },
+    "facing=east,open=true": {
+      "model": "techmod:block/reinforced_chest_1",
+      "y": 90
+    },
+    "facing=south,open=true": {
+      "model": "techmod:block/reinforced_chest_1",
+      "y": 180
+    },
+    "facing=west,open=true": {
+      "model": "techmod:block/reinforced_chest_1",
+      "y": 270
+    }
+  }
+}

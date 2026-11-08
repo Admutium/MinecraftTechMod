@@ -7,7 +7,8 @@
   "entrypoints": {
     "fabric-client-gametest": [
       "dev.admutium.techmod.test.MachineVisualTest",
-      "dev.admutium.techmod.test.ConveyorVisualTest"
+      "dev.admutium.techmod.test.ConveyorVisualTest",
+      "dev.admutium.techmod.test.MaterialsVisualTest"
     ]
   },
   "depends": {

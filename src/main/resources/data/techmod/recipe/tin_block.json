@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "techmod:tin_ingot"
+  },
+  "result": {
+    "id": "techmod:tin_block"
+  }
+}

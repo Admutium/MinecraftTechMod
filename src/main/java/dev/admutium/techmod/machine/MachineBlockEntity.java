@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.*;
 import java.util.*;
-public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBlockEntity implements Container,MenuProvider {
+public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBlockEntity implements WorldlyContainer,MenuProvider {
  private final NonNullList<ItemStack> items;
  public final MachineKind kind;
  public long energy,incoming,outgoing,loss,displayIn,displayOut,displayLoss;
@@ -30,8 +30,8 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  public final int[] itemSides={2,1,0,0,1,1};
  public int solarEfficiency,solarRate,solarStatus;private long nextSkyCheck;private boolean solarSkyOpen;
  public boolean generates(){return kind==MachineKind.GENERATOR||kind==MachineKind.SOLAR;}
- public boolean processes(){return kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER||kind==MachineKind.PRESS;}
- public int processTicks(){return kind==MachineKind.CRUSHER?120:kind==MachineKind.PRESS?80:160;}
+ public boolean processes(){return kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER||kind==MachineKind.PRESS||kind==MachineKind.CUTTER;}
+ public int processTicks(){return kind==MachineKind.CRUSHER?120:kind==MachineKind.PRESS||kind==MachineKind.CUTTER?80:160;}
  public static int fuelDuration(ItemStack s){return s.is(Items.COAL_BLOCK)?9000:isFuel(s)?900:0;}
  public int batterySlot(){if(kind.slots==0)return -1;return kind==MachineKind.GENERATOR?1:2;}
  public long stored(){if(kind!=MachineKind.CABINET)return energy;long sum=0;for(var s:items)sum+=BatteryItem.charge(s);return sum;}
@@ -74,8 +74,8 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  private boolean fits(ItemStack result){var out=items.get(1);return !result.isEmpty() && (out.isEmpty() || ItemStack.isSameItemSameComponents(out,result)&&out.getCount()+result.getCount()<=out.getMaxStackSize());}
  private ItemStack outputForRecipe(){
   if(!(level instanceof ServerLevel w) || items.get(0).isEmpty()){cachedRecipe=null;return null;}
-  Item special=kind==MachineKind.CRUSHER?Machines.CRUSHED.get(items.get(0).getItem()):kind==MachineKind.PRESS?Machines.PLATES.get(items.get(0).getItem()):Machines.SMELTED.get(items.get(0).getItem());
-  if(kind==MachineKind.CRUSHER || kind==MachineKind.PRESS || special!=null){cachedRecipe=null;ItemStack result=special==null?ItemStack.EMPTY:new ItemStack(special,kind==MachineKind.CRUSHER?2:1);return fits(result)?result:null;}
+  Item special=kind==MachineKind.CRUSHER?Machines.CRUSHED.get(items.get(0).getItem()):kind==MachineKind.CUTTER?Machines.CUT.get(items.get(0).getItem()):kind==MachineKind.PRESS?Machines.PLATES.get(items.get(0).getItem()):Machines.SMELTED.get(items.get(0).getItem());
+  if(kind==MachineKind.CRUSHER || kind==MachineKind.PRESS || kind==MachineKind.CUTTER || special!=null){cachedRecipe=null;ItemStack result=special==null?ItemStack.EMPTY:new ItemStack(special,kind==MachineKind.CRUSHER?2:kind==MachineKind.CUTTER?4:1);return fits(result)?result:null;}
   var input=new SingleRecipeInput(items.get(0));
   var recipe=w.recipeAccess().getRecipeFor(RecipeType.SMELTING,input,w,cachedRecipe).orElse(null);
   cachedRecipe=recipe;if(recipe==null)return null;
@@ -119,7 +119,7 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
  private long visualStamp(){long h=progress/10;for(var s:items)h=h*31+(s.isEmpty()?0:Objects.hash(s.getItem(),s.getCount(),BatteryItem.charge(s)*100/Energy.BATTERY));return h;}
  public String statusKey(){if(kind==MachineKind.DRIVE)return "drive";if(kind==MachineKind.SOLAR)return solarStatusKey(solarStatus);if(kind==MachineKind.GENERATOR)return working?"generating":fuelTicks>0||isFuel(items.get(0))?"full":"no_fuel";
   if(kind==MachineKind.CABINET)return capacity()==0?"no_batteries":"storage";
-  if(items.get(0).isEmpty())return "no_input";if(outputForRecipe()==null)return "no_recipe_or_full";return working?(kind==MachineKind.CRUSHER?"crushing":"smelting"):"no_power";}
+  if(items.get(0).isEmpty())return "no_input";if(outputForRecipe()==null)return "no_recipe_or_full";return working?(kind==MachineKind.CRUSHER?"crushing":kind==MachineKind.PRESS?"pressing":kind==MachineKind.CUTTER?"cutting":"smelting"):"no_power";}
  public static String solarStatusKey(int status){return switch(status){case 1->"no_sun";case 2->"shaded";case 3->"night";case 4->"full";default->"solar_generating";};}
  public static boolean isFuel(ItemStack s){return s.is(Items.COAL)||s.is(Items.CHARCOAL)||s.is(Items.COAL_BLOCK);}
  public MachineState portable(){var batteries=new ArrayList<ItemStack>();if(kind==MachineKind.CABINET)batteries.addAll(items);else if(batterySlot()>=0)batteries.add(items.get(batterySlot()));return new MachineState(energy,fuelTicks,batteries,fuelTotalTicks);}
@@ -157,6 +157,14 @@ public final class MachineBlockEntity extends dev.admutium.techmod.cable.CableBl
   if(slot==batterySlot())return s.getItem() instanceof BatteryItem;
   return slot==0 && (processes() || isFuel(s));
  }
+ // Native hoppers and other sided inventory users share the same policy as manipulators.
+ @Override public int[] getSlotsForFace(Direction face){
+  if(!processes()&&kind!=MachineKind.GENERATOR)return new int[0];
+  if(face==Direction.DOWN)return processes()?new int[]{1}:new int[0];
+  return itemSides[face.ordinal()]==1?new int[]{0}:itemSides[face.ordinal()]==2&&processes()?new int[]{1}:new int[0];
+ }
+ @Override public boolean canPlaceItemThroughFace(int slot,ItemStack stack,Direction face){return face!=Direction.DOWN&&itemSides[face.ordinal()]==1&&slot==0&&canPlaceItem(slot,stack);}
+ @Override public boolean canTakeItemThroughFace(int slot,ItemStack stack,Direction face){return processes()&&slot==1&&(face==Direction.DOWN||itemSides[face.ordinal()]==2);}
  @Override public void clearContent(){items.clear();setChanged();}
  @Override public boolean stillValid(Player p){return level!=null && !isRemoved() && p.distanceToSqr(worldPosition.getX()+.5,worldPosition.getY()+.5,worldPosition.getZ()+.5)<64;}
  @Override public Component getDisplayName(){return Component.translatable("block.techmod."+kind.id);}

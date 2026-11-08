@@ -23,7 +23,7 @@ public final class ConveyorRenderer implements BlockEntityRenderer<ConveyorEntit
   for(int i=0;near&&i<Math.min(2,be.cargo.size());i++){var cargo=be.cargo.get(i);resolver.updateForTopItem(s.items[i],cargo.stack,ItemDisplayContext.FIXED,be.getLevel(),null,i);s.t[i]=(float)Math.clamp((cargo.progress+(be.moving?dt:0))/20,0,1);}
   if(near&&!be.hand.isEmpty())resolver.updateForTopItem(s.items[2],be.hand,ItemDisplayContext.FIXED,be.getLevel(),null,2);
   s.phase=(float)(be.armPhase==0?0:Math.min(be.hand.isEmpty()?20:10,be.armPhase+(be.powered?dt:0)));if(be.reverse)s.phase=-s.phase;
-  s.gate=(float)Math.clamp((be.getLevel().getGameTime()-be.lastGate+delta)/8,0,1)*70-35;
+  float travel=(float)Math.clamp((be.getLevel().getGameTime()-be.lastGate+delta)/8,0,1);s.gate=(be.rightNext?-1:1)*(-35+70*travel);
  }
  @Override public void submit(State s,PoseStack p,SubmitNodeCollector c,CameraRenderState camera){
   p.pushPose();p.translate(.5,0,.5);p.rotate(Axis.YP.rotationDegrees(-s.facing.toYRot()+180));p.translate(-.5,0,-.5);

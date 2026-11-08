@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "techmod:block/dandelion_stage_0"
+  }
+}

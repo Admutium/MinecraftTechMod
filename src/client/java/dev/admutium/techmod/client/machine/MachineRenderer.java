@@ -14,7 +14,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.phys.Vec3;
 public final class MachineRenderer implements BlockEntityRenderer<MachineBlockEntity,MachineRenderer.State> {
  private final ItemModelResolver resolver;
- private final net.minecraft.client.model.geom.ModelPart roller,pressHead,driveCoupler;
+ private final net.minecraft.client.model.geom.ModelPart roller,pressHead,driveCoupler,cutterBlade;
  private static final net.minecraft.resources.Identifier ROLLER_TEXTURE=net.minecraft.resources.Identifier.fromNamespaceAndPath("techmod","textures/block/machine_steel.png");
  public MachineRenderer(BlockEntityRendererProvider.Context c){resolver=c.itemModelResolver();
   var mesh=new net.minecraft.client.model.geom.builders.MeshDefinition();
@@ -23,6 +23,10 @@ public final class MachineRenderer implements BlockEntityRenderer<MachineBlockEn
   mesh.getRoot().addOrReplaceChild("roller",cubes,net.minecraft.client.model.geom.PartPose.ZERO);
   roller=net.minecraft.client.model.geom.builders.LayerDefinition.create(mesh,64,64).bakeRoot();
   var press=new net.minecraft.client.model.geom.builders.MeshDefinition();press.getRoot().addOrReplaceChild("head",net.minecraft.client.model.geom.builders.CubeListBuilder.create().texOffs(0,0).addBox(-4.5f,-1,-3,9,2,6).addBox(-1,1,-1,2,4,2),net.minecraft.client.model.geom.PartPose.ZERO);pressHead=net.minecraft.client.model.geom.builders.LayerDefinition.create(press,64,64).bakeRoot();
+  var cutter=new net.minecraft.client.model.geom.builders.MeshDefinition();
+  cutter.getRoot().addOrReplaceChild("disc",net.minecraft.client.model.geom.builders.CubeListBuilder.create().texOffs(0,0).addBox(-2.5f,-2.5f,-.35f,5,5,.7f),net.minecraft.client.model.geom.PartPose.ZERO);
+  for(int i=0;i<8;i++){float angle=(float)(i*Math.PI/4);cutter.getRoot().addOrReplaceChild("tooth"+i,net.minecraft.client.model.geom.builders.CubeListBuilder.create().texOffs(0,0).addBox(-.5f,2,-.4f,1,1.5f,.8f),net.minecraft.client.model.geom.PartPose.offsetAndRotation(0,0,0,0,0,angle));}
+  cutterBlade=net.minecraft.client.model.geom.builders.LayerDefinition.create(cutter,64,64).bakeRoot();
   var coupling=new net.minecraft.client.model.geom.builders.MeshDefinition();coupling.getRoot().addOrReplaceChild("coupling",net.minecraft.client.model.geom.builders.CubeListBuilder.create().texOffs(0,0).addBox(-1.75f,-1.75f,-1,3.5f,3.5f,2),net.minecraft.client.model.geom.PartPose.ZERO);driveCoupler=net.minecraft.client.model.geom.builders.LayerDefinition.create(coupling,64,64).bakeRoot();
  }
  public static final class State extends BlockEntityRenderState {
@@ -48,11 +52,12 @@ public final class MachineRenderer implements BlockEntityRenderer<MachineBlockEn
    boolean back=i>=4;int local=i%4;poses.pushPose();poses.translate(back?.27+(local%2)*.46:.73-(local%2)*.46,.26+(1-local/2)*.49,back?1.015:-.015);
    if(!back)poses.rotate(Axis.YP.rotationDegrees(180));poses.scale(.42f,.42f,.42f);
    state.items[i].submit(poses,collector,state.lightCoords,OverlayTexture.NO_OVERLAY,0);poses.popPose();
-  }}else if((state.kind==MachineKind.FURNACE||state.kind==MachineKind.CRUSHER||state.kind==MachineKind.PRESS) && !state.items[0].isEmpty()){
+  }}else if((state.kind==MachineKind.FURNACE||state.kind==MachineKind.CRUSHER||state.kind==MachineKind.PRESS||state.kind==MachineKind.CUTTER) && !state.items[0].isEmpty()){
    poses.pushPose();poses.translate(.5,state.kind==MachineKind.CRUSHER?.85:state.kind==MachineKind.PRESS?.32:.48,state.kind==MachineKind.CRUSHER?.5:state.kind==MachineKind.PRESS?.35:.16);poses.rotate(Axis.YP.rotationDegrees(180));if(state.kind==MachineKind.PRESS)poses.rotate(Axis.XP.rotationDegrees(-90));poses.scale(.33f,.33f,.33f);
    state.items[0].submit(poses,collector,state.active?0x00f000f0:state.lightCoords,OverlayTexture.NO_OVERLAY,0);poses.popPose();
   }
   if(state.kind==MachineKind.DRIVE){poses.pushPose();poses.translate(.5,.1875,.02);poses.rotate(Axis.ZP.rotationDegrees(state.rotation));collector.submitModelPart(driveCoupler,poses,net.minecraft.client.renderer.rendertype.RenderTypes.entityCutout(ROLLER_TEXTURE),state.lightCoords,OverlayTexture.NO_OVERLAY,null);poses.popPose();}
+  if(state.kind==MachineKind.CUTTER){poses.pushPose();poses.translate(.5,.5,.28);poses.rotate(Axis.ZP.rotationDegrees(state.rotation*2));collector.submitModelPart(cutterBlade,poses,net.minecraft.client.renderer.rendertype.RenderTypes.entityCutout(ROLLER_TEXTURE),state.lightCoords,OverlayTexture.NO_OVERLAY,null);poses.popPose();}
   if(state.kind==MachineKind.PRESS){poses.pushPose();poses.translate(.5,.65-.22*state.press,.35);collector.submitModelPart(pressHead,poses,net.minecraft.client.renderer.rendertype.RenderTypes.entityCutout(ROLLER_TEXTURE),state.lightCoords,OverlayTexture.NO_OVERLAY,null);poses.popPose();}
   if(state.kind==MachineKind.CRUSHER){
    for(int i=0;i<2;i++){

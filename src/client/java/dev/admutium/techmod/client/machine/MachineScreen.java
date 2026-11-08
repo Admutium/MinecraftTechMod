@@ -34,16 +34,26 @@ public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
   g.text(font,Component.translatable("state.techmod."+menu.stateKey()),x+12,y+115,0xffe7b666);
   super.extractContents(g,mx,my,delta);
   if(menu.kind.slots>0&&menu.kind!=MachineKind.CABINET){g.fill(x+163,y+8,x+211,y+22,0xff56616b);g.text(font,Component.translatable("screen.techmod.ports"),x+166,y+11,0xffeeeeee);}
-  if(ports){g.fill(x+8,y+29,x+210,y+124,0xff182129);for(int i=0;i<6;i++){int bx=x+12+(i%2)*98,by=y+34+(i/2)*28;g.fill(bx,by,bx+93,by+24,0xff343e49);g.text(font,Component.translatable("side.techmod."+i),bx+3,by+2,0xffeeeeee);g.text(font,Component.translatable("screen.techmod.port."+menu.side(i)),bx+3,by+13,0xffe7b666);}}
+  if(ports){
+   g.fill(x+8,y+29,x+210,y+124,0xff182129);
+   g.text(font,Component.translatable("screen.techmod.side_hint"),x+12,y+32,0xffa9b6be);
+   String[] names={"top","back","bottom","left","front","right"};
+   for(int i=0;i<6;i++){int bx=x+12+(i%3)*65,by=y+47+(i/3)*34,side=relativeSide(i),mode=side==0?2:menu.side(side);
+    g.fill(bx,by,bx+61,by+30,mode==1?0xff294b63:mode==2?0xff63502c:0xff343e49);
+    g.text(font,Component.translatable("screen.techmod.side_"+names[i]),bx+3,by+3,0xffeeeeee);
+    g.text(font,Component.translatable("screen.techmod.port_short."+mode),bx+3,by+17,0xffe7b666);
+   }
+  }
 
   if(minecraft.hasShiftDown() && mx>=x+8&&mx<x+210&&my>=y+78&&my<y+115){
    java.util.List<Component> details=java.util.List.of(Component.translatable("tooltip.techmod.limits",menu.kind==MachineKind.GENERATOR||menu.kind==MachineKind.SOLAR?"0.00":"8.00",menu.kind==MachineKind.SOLAR?"2.00":menu.kind==MachineKind.GENERATOR||menu.kind==MachineKind.CABINET?"8.00":"0.00"));
    g.setTooltipForNextFrame(font,details,java.util.Optional.empty(),mx,my);
   }
  }
+ private int relativeSide(int i){var front=menu.facing();return switch(i){case 0->1;case 1->front.getOpposite().ordinal();case 2->0;case 3->front.getClockWise().ordinal();case 4->front.ordinal();default->front.getCounterClockWise().ordinal();};}
  @Override public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent e,boolean twice){double x=e.x()-leftPos,y=e.y()-topPos;
   if(menu.kind.slots>0&&menu.kind!=MachineKind.CABINET&&x>=163&&x<=211&&y>=8&&y<=22){ports=!ports;return true;}
-  if(ports&&x>=8&&x<210&&y>=29&&y<124){int col=(int)((x-12)/98),row=(int)((y-34)/28);if(x>=12&&y>=34&&col<2&&row<3)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,100+row*2+col);return true;}
+  if(ports&&x>=8&&x<210&&y>=29&&y<124){int col=(int)((x-12)/65),row=(int)((y-47)/34);if(x>=12&&y>=47&&col<3&&row<2){int side=relativeSide(row*3+col);if(side!=0)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,100+side);}return true;}
   if(menu.kind==MachineKind.DRIVE&&x>=10&&x<210&&y>=50&&y<73){minecraft.gameMode.handleInventoryButtonClick(menu.containerId,110);return true;}
   return super.mouseClicked(e,twice);
  }

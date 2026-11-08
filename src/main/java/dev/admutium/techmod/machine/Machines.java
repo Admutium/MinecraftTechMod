@@ -26,6 +26,7 @@ public final class Machines {
  public static final EnumMap<MachineKind,MenuType<MachineMenu>> MENUS=new EnumMap<>(MachineKind.class);
  public static final java.util.Map<Item,Item> CRUSHED=new java.util.LinkedHashMap<>();
  public static final java.util.Map<Item,Item> SMELTED=new java.util.LinkedHashMap<>();
+ public static final java.util.Map<Item,Item> CUT=new java.util.LinkedHashMap<>();
  public static final java.util.Map<Item,Item> PLATES=new java.util.LinkedHashMap<>();
  public static BatteryItem BATTERY;
  public static BlockEntityType<MachineBlockEntity> ENTITY;
@@ -41,7 +42,7 @@ public final class Machines {
   for(int i=0;i<3;i++){var id=TechMod.id(names[i]+"_plate");var item=new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)));Registry.register(BuiltInRegistries.ITEM,id,item);PLATES.put(metals[i],item);}
   for(var kind:MachineKind.values()){
    var properties=BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK,TechMod.id(kind.id)))
-    .strength(3.5f).requiresCorrectToolForDrops().noOcclusion().pushReaction(PushReaction.IMMOVEABLE).lightLevel(s->kind==MachineKind.SOLAR?0:s.getValue(MachineBlock.ACTIVE)?7:0);
+    .strength(3.5f).requiresCorrectToolForDrops().noOcclusion().pushReaction(PushReaction.IMMOVEABLE).lightLevel(s->kind==MachineKind.SOLAR||kind==MachineKind.DRIVE?0:s.getValue(MachineBlock.ACTIVE)?7:0);
    MachineBlock b=kind==MachineKind.SOLAR?new SolarBlock(properties):kind==MachineKind.DRIVE?new dev.admutium.techmod.conveyor.DriveBlock(properties):new MachineBlock(kind,properties);
    BLOCKS.put(kind,b);Registry.register(BuiltInRegistries.BLOCK,TechMod.id(kind.id),b);
    var item=new MachineItem(b,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,TechMod.id(kind.id))));

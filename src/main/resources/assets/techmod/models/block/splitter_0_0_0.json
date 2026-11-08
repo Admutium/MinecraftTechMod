@@ -7,7 +7,7 @@
     "input": "techmod:block/machine_input",
     "lamp": "techmod:block/machine_lamp_1",
     "particle": "techmod:block/machine_steel",
-    "belt": "techmod:block/conveyor_belt_off"
+    "belt": "techmod:block/splitter_direction"
   },
   "elements": [
     {

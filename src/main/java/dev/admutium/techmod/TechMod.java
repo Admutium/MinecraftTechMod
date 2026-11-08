@@ -40,6 +40,8 @@ public final class TechMod implements ModInitializer {
     public void onInitialize() {
         dev.admutium.techmod.machine.Machines.init();
         dev.admutium.techmod.conveyor.Conveyors.init();
+        dev.admutium.techmod.material.Materials.init();
+        dev.admutium.techmod.storage.ReinforcedStorage.init();
         Registry.register(BuiltInRegistries.BLOCK, id("cable"), CABLE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("cable"), CABLE_ENTITY);
         Registry.register(BuiltInRegistries.ITEM, id("copper_cable"), COPPER_CABLE);
@@ -49,18 +51,20 @@ public final class TechMod implements ModInitializer {
                 .title(Component.translatable("itemGroup.techmod"))
                 .icon(() -> new ItemStack(COPPER_CABLE))
                 .displayItems((context, output) -> {
-                    output.accept(COPPER_CABLE);
-                    output.accept(CABLE_HOLDER);
-
-                    output.accept(dev.admutium.techmod.machine.Machines.BATTERY);
-                    for(var item:dev.admutium.techmod.machine.Machines.ITEMS.values())output.accept(item);
-                    for(var item:dev.admutium.techmod.machine.Machines.CRUSHED.values())output.accept(item);
-                    for(var item:dev.admutium.techmod.machine.Machines.PLATES.values())output.accept(item);
-                    for(var item:dev.admutium.techmod.conveyor.Conveyors.ITEMS.values())output.accept(item);
+                    var entries=new java.util.LinkedHashSet<Item>();
+                    entries.add(COPPER_CABLE);entries.add(CABLE_HOLDER);
+                    entries.add(dev.admutium.techmod.machine.Machines.BATTERY);
+                    entries.addAll(dev.admutium.techmod.machine.Machines.ITEMS.values());
+                    entries.addAll(dev.admutium.techmod.machine.Machines.CRUSHED.values());
+                    entries.addAll(dev.admutium.techmod.machine.Machines.PLATES.values());
+                    entries.addAll(dev.admutium.techmod.conveyor.Conveyors.ITEMS.values());
+                    entries.addAll(dev.admutium.techmod.material.Materials.CREATIVE);
+                    entries.add(dev.admutium.techmod.storage.ReinforcedStorage.ITEM);
+                    entries.forEach(output::accept);
                 }).build());
         // TODO(crafting): add balanced recipes for cables, holders, batteries and all machines after material progression is designed.
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> CableItem.clearSelections());
-        ServerPlayConnectionEvents.DISCONNECT.register((handler,server) -> CableItem.clearSelection(handler.player.getUUID()));
+        ServerPlayConnectionEvents.DISCONNECT.register((handler,server) -> {CableItem.clearSelection(handler.player.getUUID());dev.admutium.techmod.conveyor.ConveyorItem.clearServerPlayer(handler.player.getUUID());});
         PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, entity) -> {
             if (state.is(CABLE) && entity instanceof CableBlockEntity cable) {
                 CableWorld.removeAll(level, pos, cable.snapshot(), !player.isCreative());

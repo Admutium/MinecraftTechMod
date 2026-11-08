@@ -6,7 +6,7 @@ import net.minecraft.sounds.SoundEvent;
 import java.util.EnumMap;
 public final class MachineSounds {
  public static final EnumMap<MachineKind,SoundEvent> LOOPS=new EnumMap<>(MachineKind.class);
- public static void init(){for(var kind:new MachineKind[]{MachineKind.GENERATOR,MachineKind.FURNACE,MachineKind.CRUSHER,MachineKind.PRESS,MachineKind.DRIVE}){
+ public static void init(){for(var kind:new MachineKind[]{MachineKind.GENERATOR,MachineKind.FURNACE,MachineKind.CRUSHER,MachineKind.PRESS,MachineKind.DRIVE,MachineKind.CUTTER}){
   var id=TechMod.id(kind.id+"_loop");LOOPS.put(kind,Registry.register(BuiltInRegistries.SOUND_EVENT,id,SoundEvent.createFixedRangeEvent(id,6)));
  }}
  private MachineSounds(){}

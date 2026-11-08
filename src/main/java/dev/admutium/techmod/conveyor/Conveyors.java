@@ -18,7 +18,7 @@ public final class Conveyors {
  public static BlockEntityType<ConveyorEntity> ENTITY;
  public static MenuType<ConveyorMenu> MENU;
  public static void init(){
-  FilterPayload.init();
+  FilterPayload.init();ConveyorModePayload.init();
   for(var k:Kind.values()){
    var b=new ConveyorBlock(k,BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK,TechMod.id(k.id))).strength(2).noOcclusion().requiresCorrectToolForDrops());BLOCKS.put(k,b);Registry.register(BuiltInRegistries.BLOCK,TechMod.id(k.id),b);
    var item=new ConveyorItem(b,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,TechMod.id(k.id))).useBlockDescriptionPrefix());ITEMS.put(k,item);Registry.register(BuiltInRegistries.ITEM,TechMod.id(k.id),item);

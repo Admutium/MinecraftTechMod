@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " W ",
+    "WRW",
+    " W "
+  ],
+  "key": {
+    "W": "techmod:copper_wire",
+    "R": "techmod:rubber"
+  },
+  "result": {
+    "id": "techmod:copper_cable",
+    "count": 4
+  }
+}
