@@ -4,16 +4,28 @@
   "version": "${version}",
   "name": "Контур / Kontur",
   "description": "Industrial energy networks, battery storage and electric machinery.",
-  "authors": ["Admutium"],
+  "authors": [
+    "Admutium"
+  ],
   "environment": "*",
   "entrypoints": {
-    "main": ["dev.admutium.techmod.TechMod"],
-    "client": ["dev.admutium.techmod.client.TechModClient"]
+    "main": [
+      "dev.admutium.techmod.TechMod"
+    ],
+    "client": [
+      "dev.admutium.techmod.client.TechModClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.20.1",
     "minecraft": "~26.3",
     "java": ">=25",
     "fabric-api": ">=0.165.0+26.3"
-  }
+  },
+  "mixins": [
+    {
+      "config": "techmod.client.mixins.json",
+      "environment": "client"
+    }
+  ]
 }

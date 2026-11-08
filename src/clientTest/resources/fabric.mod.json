@@ -9,7 +9,8 @@
       "dev.admutium.techmod.test.MachineVisualTest",
       "dev.admutium.techmod.test.ConveyorVisualTest",
       "dev.admutium.techmod.test.MaterialsVisualTest",
-      "dev.admutium.techmod.test.DandelionWorldgenTest"
+      "dev.admutium.techmod.test.DandelionWorldgenTest",
+      "dev.admutium.techmod.test.SuitVisualTest"
     ]
   },
   "depends": {

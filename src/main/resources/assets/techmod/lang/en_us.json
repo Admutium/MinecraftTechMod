@@ -144,5 +144,19 @@
   "tooltip.techmod.cutters": "Copper plate → 4 bare wires. 64 operations.",
   "tooltip.techmod.roots_processing": "Press: 1 root → caoutchouc. Manual crafting needs 2 roots and a hammer.",
   "tooltip.techmod.caoutchouc_processing": "Smelt in a furnace to obtain rubber.",
-  "tooltip.techmod.seeds_growing": "Plant on farmland. Immature plants drop nothing."
+  "tooltip.techmod.seeds_growing": "Plant on farmland. Immature plants drop nothing.",
+  "key.techmod.suit_preview": "Suit preview",
+  "screen.techmod.suit_preview": "Kontur — suit fitting",
+  "screen.techmod.suit_visible": "Suit: %s",
+  "screen.techmod.suit_wings": "Wings: %s",
+  "screen.techmod.suit_color": "Accents: %s",
+  "screen.techmod.suit_visual_only": "Visual prototype",
+  "screen.techmod.suit_f5": "F5 — third-person view",
+  "screen.techmod.suit_wing.0": "Folded",
+  "screen.techmod.suit_wing.1": "Prismatic",
+  "screen.techmod.suit_wing.2": "Gravity",
+  "screen.techmod.suit_color.0": "Orange",
+  "screen.techmod.suit_color.1": "Teal",
+  "screen.techmod.suit_color.2": "Violet",
+  "screen.techmod.suit_color.3": "White"
 }

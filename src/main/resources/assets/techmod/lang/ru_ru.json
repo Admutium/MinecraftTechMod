@@ -144,5 +144,19 @@
   "tooltip.techmod.cutters": "Медная пластина → 4 проволоки. 64 операции.",
   "tooltip.techmod.roots_processing": "Пресс: 1 корень → каучук. В крафте с молотом нужны 2 корня.",
   "tooltip.techmod.caoutchouc_processing": "Переплавьте в печи, чтобы получить резину.",
-  "tooltip.techmod.seeds_growing": "Посев на пашне. Незрелое растение ничего не даёт."
+  "tooltip.techmod.seeds_growing": "Посев на пашне. Незрелое растение ничего не даёт.",
+  "key.techmod.suit_preview": "Предпросмотр костюма",
+  "screen.techmod.suit_preview": "Контур — примерка костюма",
+  "screen.techmod.suit_visible": "Костюм: %s",
+  "screen.techmod.suit_wings": "Крылья: %s",
+  "screen.techmod.suit_color": "Акценты: %s",
+  "screen.techmod.suit_visual_only": "Визуальный прототип",
+  "screen.techmod.suit_f5": "F5 — вид от третьего лица",
+  "screen.techmod.suit_wing.0": "Сложены",
+  "screen.techmod.suit_wing.1": "Радужные",
+  "screen.techmod.suit_wing.2": "Гравитационные",
+  "screen.techmod.suit_color.0": "Оранжевые",
+  "screen.techmod.suit_color.1": "Бирюзовые",
+  "screen.techmod.suit_color.2": "Фиолетовые",
+  "screen.techmod.suit_color.3": "Белые"
 }

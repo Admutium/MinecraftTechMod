@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.model.loading.v1.CustomUnbakedBlockStateMo
 public final class TechModClient implements ClientModInitializer {
     @Override public void onInitializeClient() {
         dev.admutium.techmod.client.conveyor.ConveyorPreview.init();
+        dev.admutium.techmod.client.suit.SuitPreview.init();
         net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->dev.admutium.techmod.conveyor.ConveyorItem.clearClient());
         net.minecraft.client.gui.screens.MenuScreens.register(dev.admutium.techmod.storage.ReinforcedStorage.MENU,dev.admutium.techmod.client.storage.ChestScreen::new);
         net.minecraft.client.renderer.blockentity.BlockEntityRenderers.register(dev.admutium.techmod.storage.ReinforcedStorage.ENTITY,dev.admutium.techmod.client.storage.ChestRenderer::new);

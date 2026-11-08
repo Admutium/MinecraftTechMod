@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.admutium.techmod.client.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "AvatarRendererMixin",
+    "LivingEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
