@@ -17,7 +17,9 @@ public final class DandelionPatch implements Feature {
    int x=cx+random.nextInt(7)-3,z=cz+random.nextInt(7)-3;
    var p=new BlockPos(x,w.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);
    var state=Materials.CROP.getStateForAge(7);
-   if(w.isEmptyBlock(p)&&state.canSurvive(w,p)){w.setBlock(p,state,2);placed++;}
+   // FEATURES runs before LIGHT. Crop survival reads skylight, which is still zero here.
+   // Validate the surface substrate directly; ordinary placed/farmed crops retain their light rule.
+   if(w.isEmptyBlock(p)&&RubberDandelion.wildSoil(w.getBlockState(p.below()))){w.setBlock(p,state,2);placed++;}
   }return placed>0;
  }
 }
