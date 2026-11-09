@@ -39,6 +39,7 @@ public final class TechMod implements ModInitializer {
     @Override
     public void onInitialize() {
         dev.admutium.techmod.machine.Machines.init();
+        dev.admutium.techmod.suit.Suits.init();
         dev.admutium.techmod.conveyor.Conveyors.init();
         dev.admutium.techmod.material.Materials.init();
         dev.admutium.techmod.storage.ReinforcedStorage.init();
@@ -52,6 +53,7 @@ public final class TechMod implements ModInitializer {
                 .icon(() -> new ItemStack(COPPER_CABLE))
                 .displayItems((context, output) -> {
                     var entries=new java.util.LinkedHashSet<Item>();
+                    entries.add(dev.admutium.techmod.suit.Suits.ITEM);entries.add(dev.admutium.techmod.suit.Suits.NUTRIENT);
                     entries.add(COPPER_CABLE);entries.add(CABLE_HOLDER);
                     entries.add(dev.admutium.techmod.machine.Machines.BATTERY);
                     entries.addAll(dev.admutium.techmod.machine.Machines.ITEMS.values());

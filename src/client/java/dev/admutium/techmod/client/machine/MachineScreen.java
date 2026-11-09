@@ -15,7 +15,8 @@ public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
   g.fill(x+4,y+4,x+214,y+25,0xff202932);g.fill(x+8,y+29,x+210,y+124,0xff182129);
   g.fill(x+10,y+26,x+208,y+28,0xffc48436);
   for(var slot:menu.slots){g.fill(x+slot.x-1,y+slot.y-1,x+slot.x+17,y+slot.y+17,0xff89969e);g.fill(x+slot.x,y+slot.y,x+slot.x+16,y+slot.y+16,0xff11181e);}
-  if(menu.kind==MachineKind.DRIVE){
+  if(menu.kind==MachineKind.CREATIVE_SOURCE){g.text(font,Component.literal("∞  8192 TE/s"),x+12,y+42,0xff83ded1);
+  }else if(menu.kind==MachineKind.DRIVE){
    g.text(font,Component.translatable("screen.techmod.drive_load",menu.driveLoad()),x+12,y+39,0xffe7b666);
    g.text(font,Component.translatable("screen.techmod.redstone."+menu.driveMode()),x+12,y+59,0xffedf0e5);
   }else if(menu.kind==MachineKind.SOLAR){

@@ -9,7 +9,7 @@ import java.util.*;
 public final class EnergyNetwork {
  private EnergyNetwork(){}
  private static final Map<ServerLevel,Network> WORLDS=new HashMap<>();
- private static final class Network {final Map<BlockPos,MachineBlockEntity> machines=new HashMap<>();final Map<BlockPos,List<Route>> routes=new HashMap<>();boolean dirty=true;int turn;}
+ private static final class Network {final Map<BlockPos,MachineBlockEntity> machines=new HashMap<>();final Map<BlockPos,List<Route>> routes=new HashMap<>();final java.util.ArrayDeque<Map<BlockPos,Long>> flow=new java.util.ArrayDeque<>();boolean dirty=true;int turn;}
  private record Route(MachineBlockEntity target,double length,List<Node> nodes){}
  private record Visit(Node node,double length){}
  public static void clearAll(){WORLDS.clear();}
@@ -47,8 +47,10 @@ public final class EnergyNetwork {
     }
    }
   }
+  var frame=new HashMap<BlockPos,Long>();for(var e:wires.entrySet())frame.merge(CableWorld.pos(e.getKey()),e.getValue(),Math::max);n.flow.addLast(frame);if(n.flow.size()>20)n.flow.removeFirst();
   for(var m:list)m.finishTick();n.turn=(n.turn+1)&0x7fffffff;
  }
+ public static long cableRate(ServerLevel w,BlockPos pos){var n=WORLDS.get(w);if(n==null)return 0;long sum=0;for(var frame:n.flow)sum+=frame.getOrDefault(pos,0L);return sum;}
  private static boolean present(ServerLevel w,Node node){var d=CableWorld.data(w,CableWorld.pos(node)).centered();return d.has(node)||d.holder(node.face());}
  private static List<Route> routes(ServerLevel w,Network net,MachineBlockEntity source){
   Direction output=block(source).output(source.getBlockState());if(output==null)return List.of();

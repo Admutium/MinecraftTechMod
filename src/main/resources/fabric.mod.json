@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "techmod",
   "version": "${version}",
-  "name": "Контур / Kontur",
+  "name": "\u041a\u043e\u043d\u0442\u0443\u0440 / Kontur",
   "description": "Industrial energy networks, battery storage and electric machinery.",
   "authors": [
     "Admutium"
@@ -26,6 +26,7 @@
     {
       "config": "techmod.client.mixins.json",
       "environment": "client"
-    }
+    },
+    "techmod.mixins.json"
   ]
 }

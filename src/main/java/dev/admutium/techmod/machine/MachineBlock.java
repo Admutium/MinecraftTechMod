@@ -46,10 +46,10 @@ public class MachineBlock extends Block implements EntityBlock,CablePort {
  @Override public boolean acceptsCable(BlockGetter w,BlockPos p,Direction side){
   var s=w.getBlockState(p);return !s.getValue(UPPER) && (side==input(s)||side==output(s));
  }
- public Direction input(BlockState s){return kind==MachineKind.GENERATOR?null:kind==MachineKind.CABINET?s.getValue(FACING).getCounterClockWise():s.getValue(FACING).getOpposite();}
- public Direction output(BlockState s){return (kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER||kind==MachineKind.PRESS||kind==MachineKind.CUTTER||kind==MachineKind.DRIVE)?null:kind==MachineKind.CABINET?s.getValue(FACING).getClockWise():s.getValue(FACING).getOpposite();}
+ public Direction input(BlockState s){return kind==MachineKind.GENERATOR||kind==MachineKind.CREATIVE_SOURCE?null:kind==MachineKind.CABINET?s.getValue(FACING).getCounterClockWise():s.getValue(FACING).getOpposite();}
+ public Direction output(BlockState s){return (kind==MachineKind.FURNACE||kind==MachineKind.CRUSHER||kind==MachineKind.PRESS||kind==MachineKind.CUTTER||kind==MachineKind.DRIVE||kind==MachineKind.STATION)?null:kind==MachineKind.CABINET?s.getValue(FACING).getClockWise():s.getValue(FACING).getOpposite();}
  @Override protected List<ItemStack> getDrops(BlockState s,LootParams.Builder b){
-  if(s.getValue(UPPER))return List.of();
+  if(s.getValue(UPPER)||kind==MachineKind.CREATIVE_SOURCE)return List.of();
   var be=b.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
   return List.of(be instanceof MachineBlockEntity m?m.dropStack():new ItemStack(Machines.ITEMS.get(kind)));
  }

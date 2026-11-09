@@ -10,3 +10,5 @@ python3 "$repo_dir/tools/generate_materials.py"
 python3 "$repo_dir/tools/generate_update_models.py"
 python3 "$repo_dir/tools/generate_sounds.py"
 python3 "$repo_dir/tools/generate_suit.py"
+
+python3 tools/generate_suit_runtime.py

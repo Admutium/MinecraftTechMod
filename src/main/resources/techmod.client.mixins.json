@@ -4,7 +4,11 @@
   "compatibilityLevel": "JAVA_25",
   "client": [
     "AvatarRendererMixin",
-    "LivingEntityRendererMixin"
+    "LivingEntityRendererMixin",
+    "SuitCameraMixin",
+    "SuitLightMixin",
+    "SuitTabMixin",
+    "SuitInventoryKeyMixin"
   ],
   "injectors": {
     "defaultRequire": 1

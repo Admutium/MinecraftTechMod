@@ -13,7 +13,7 @@ public final class SuitPreview {
  public static void init(){
   LivingEntityRenderLayerRegistrationCallback.EVENT.register((type,renderer,helper,context)->{if(renderer instanceof AvatarRenderer<?> avatar)helper.register(new SuitLayer(avatar));});
   var key=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.techmod.suit_preview",75,KeyMapping.Category.MISC));
-  ClientTickEvents.END_CLIENT_TICK.register(c->{while(key.consumeClick())if(c.player!=null&&c.gui.screen()==null){enabled=true;c.setScreenAndShow(new SuitPreviewScreen());}});
+  ClientTickEvents.END_CLIENT_TICK.register(c->{while(key.consumeClick())if(c.player!=null&&c.gui.screen()==null){if(!dev.admutium.techmod.suit.Suits.worn(c.player).isEmpty())c.setScreenAndShow(new SuitRadialScreen());else{enabled=true;c.setScreenAndShow(new SuitPreviewScreen());}}});
   ClientPlayConnectionEvents.DISCONNECT.register((handler,c)->{enabled=false;wings=0;color=0;});
  }
  public static boolean shownFor(int id){var p=Minecraft.getInstance().player;return enabled&&p!=null&&p.getId()==id;}

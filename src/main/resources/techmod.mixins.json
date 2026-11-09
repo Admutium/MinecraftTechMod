@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "dev.admutium.techmod.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "SuitPlayerMixin",
+    "SuitLivingMixin",
+    "SuitEntityMixin",
+    "SuitArmorSlotMixin",
+    "SuitPickupMixin",
+    "SuitMobMixin",
+    "SuitDeathMixin",
+    "SuitEquipMixin",
+    "SuitCreativeSlotMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

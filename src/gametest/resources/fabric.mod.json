@@ -9,7 +9,8 @@
       "dev.admutium.techmod.test.EnergyGameTests",
       "dev.admutium.techmod.test.SolarGameTests",
       "dev.admutium.techmod.test.ConveyorGameTests",
-      "dev.admutium.techmod.test.MaterialsGameTests"
+      "dev.admutium.techmod.test.MaterialsGameTests",
+      "dev.admutium.techmod.test.SuitGameTests"
     ]
   },
   "depends": {

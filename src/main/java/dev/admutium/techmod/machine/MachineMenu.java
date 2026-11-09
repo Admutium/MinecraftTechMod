@@ -34,7 +34,7 @@ public final class MachineMenu extends AbstractContainerMenu {
  @Override public boolean clickMenuButton(Player p,int code){if(machine==null||!stillValid(p))return false;if(code>=100&&code<106)machine.itemSides[code-100]=(machine.itemSides[code-100]+1)%3;else if(code==110&&kind==MachineKind.DRIVE)machine.driveMode=(machine.driveMode+1)%3;else return false;machine.setChanged();return true;}
  public int fuelTotalTicks(){return data.get(15);}
  public int progress(){return data.get(10);}public int fuel(){return data.get(11);}public boolean active(){return data.get(12)!=0;}
- public String stateKey(){if(kind==MachineKind.DRIVE)return "drive";if(kind==MachineKind.SOLAR)return MachineBlockEntity.solarStatusKey(data.get(18));if(kind==MachineKind.CABINET)return value(1)==0?"no_batteries":"storage";
+ public String stateKey(){if(kind==MachineKind.CREATIVE_SOURCE)return "generating";if(kind==MachineKind.DRIVE)return "drive";if(kind==MachineKind.SOLAR)return MachineBlockEntity.solarStatusKey(data.get(18));if(kind==MachineKind.CABINET)return value(1)==0?"no_batteries":"storage";
   if(kind==MachineKind.GENERATOR)return active()?"generating":fuel()>0||!inventory.getItem(0).isEmpty()?"full":"no_fuel";
   if(inventory.getItem(0).isEmpty())return "no_input";return data.get(13)==0?"no_recipe_or_full":data.get(14)==2 || !active()?"no_power":kind==MachineKind.CRUSHER?"crushing":kind==MachineKind.PRESS?"pressing":kind==MachineKind.CUTTER?"cutting":"smelting";}
  @Override public boolean stillValid(Player p){return machine==null || machine.stillValid(p);}

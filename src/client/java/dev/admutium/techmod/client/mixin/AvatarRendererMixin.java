@@ -14,7 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AvatarRendererMixin {
  @Inject(method="extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V",at=@At("RETURN"))
  private void kontur$previewState(net.minecraft.world.entity.Avatar avatar,net.minecraft.client.renderer.entity.state.AvatarRenderState state,float delta,CallbackInfo ci){
-  if(!SuitPreview.shownFor(state.id))return;
+  var data=avatar instanceof net.minecraft.world.entity.player.Player player?dev.admutium.techmod.suit.Suits.data(player):dev.admutium.techmod.suit.SuitData.EMPTY;
+  state.setData(SuitClient.SPRINT,avatar.isSprinting());state.setData(SuitClient.VISUAL,data);if(data.id().equals(dev.admutium.techmod.suit.SuitData.EMPTY_ID)&&!SuitPreview.shownFor(state.id))return;
+  if(data.energy()>0&&data.on("cloak")&&data.levels().getOrDefault("_reveal",0)==0){state.rightHandItemState.clear();state.leftHandItemState.clear();state.nameTag=null;}
   state.showHat=state.showJacket=state.showLeftPants=state.showRightPants=state.showLeftSleeve=state.showRightSleeve=state.showCape=false;
   // Hide equipment only in the extracted visual state. Actual inventories and armor attributes are untouched.
   state.headEquipment=state.chestEquipment=state.legsEquipment=state.feetEquipment=net.minecraft.world.item.ItemStack.EMPTY;state.heldOnHead.clear();

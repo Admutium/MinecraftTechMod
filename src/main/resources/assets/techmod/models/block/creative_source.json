@@ -1,0 +1,42 @@
+{
+  "textures": {
+    "particle": "techmod:block/machine_steel",
+    "steel": "techmod:block/machine_steel",
+    "front": "techmod:block/creative_source",
+    "socket": "techmod:block/machine_output"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#steel"
+        },
+        "down": {
+          "texture": "#steel"
+        },
+        "east": {
+          "texture": "#steel"
+        },
+        "west": {
+          "texture": "#steel"
+        },
+        "north": {
+          "texture": "#front"
+        },
+        "south": {
+          "texture": "#socket"
+        }
+      }
+    }
+  ]
+}

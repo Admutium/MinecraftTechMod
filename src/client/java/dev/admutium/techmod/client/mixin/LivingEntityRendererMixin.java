@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
  @Inject(method="getRenderType",at=@At("HEAD"),cancellable=true)
- private void kontur$skin(LivingEntityRenderState state,boolean bodyVisible,boolean translucent,boolean outline,CallbackInfoReturnable<RenderType> ci){if(state instanceof AvatarRenderState player&&SuitPreview.shownFor(player.id)&&!player.isSpectator)ci.setReturnValue(null);}
+ private void kontur$skin(LivingEntityRenderState state,boolean bodyVisible,boolean translucent,boolean outline,CallbackInfoReturnable<RenderType> ci){if(state instanceof AvatarRenderState player&&(SuitPreview.shownFor(player.id)||!player.getDataOrDefault(dev.admutium.techmod.client.suit.SuitClient.VISUAL,dev.admutium.techmod.suit.SuitData.EMPTY).id().equals(dev.admutium.techmod.suit.SuitData.EMPTY_ID))&&!player.isSpectator)ci.setReturnValue(null);}
 }

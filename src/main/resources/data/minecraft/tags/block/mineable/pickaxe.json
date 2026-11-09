@@ -14,6 +14,8 @@
     "techmod:tin_ore",
     "techmod:deepslate_tin_ore",
     "techmod:tin_block",
-    "techmod:metal_cutter"
+    "techmod:metal_cutter",
+    "techmod:suit_station",
+    "techmod:creative_source"
   ]
 }

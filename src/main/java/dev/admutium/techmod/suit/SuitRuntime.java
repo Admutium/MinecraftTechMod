@@ -1,0 +1,70 @@
+package dev.admutium.techmod.suit;
+import dev.admutium.techmod.TechMod;
+import dev.admutium.techmod.energy.Energy;
+import dev.admutium.techmod.machine.*;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.attachment.v1.*;
+import net.minecraft.core.*;import net.minecraft.core.registries.*;import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.*;import net.minecraft.world.entity.*;import net.minecraft.world.entity.ai.attributes.*;import net.minecraft.world.entity.item.ItemEntity;import net.minecraft.world.entity.monster.*;import net.minecraft.world.entity.player.*;import net.minecraft.world.item.*;import net.minecraft.world.phys.*;import net.minecraft.world.damagesource.*;import net.minecraft.tags.*;
+import java.util.*;
+public final class SuitRuntime {
+ public static final AttachmentType<Long> RESCUE=AttachmentRegistry.<Long>create(TechMod.id("rescue_ready"),b->b.persistent(com.mojang.serialization.Codec.LONG).initializer(()->0L).copyOnDeath());
+ private static boolean veinBreaking;
+ public static void init(){net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.register((p,w,hand,target,hit)->{if(!w.isClientSide()){var s=Suits.session(p);if(s!=null){s.revealTicks=60;if(s.level(SuitUpgrade.DAMAGE)>0&&!s.spend(.3*s.level(SuitUpgrade.DAMAGE),2))attr(p,Attributes.ATTACK_DAMAGE,0,true);s.flush();}}return net.minecraft.world.InteractionResult.PASS;});
+  ServerLivingEntityEvents.ALLOW_DEATH.register((entity,source,amount)->{if(!(entity instanceof ServerPlayer p))return true;var s=Suits.session(p);if(s==null)return true;long now=System.currentTimeMillis();if(s.level(SuitUpgrade.RESCUE)>0&&now>=Math.max(s.rescueReady,p.getAttachedOrCreate(RESCUE))&&s.energy>=3000L*Energy.UNIT){s.energy-=3000L*Energy.UNIT;s.spent[2]+=3000L*Energy.UNIT;s.rescueReady=now+300000;p.setAttached(RESCUE,s.rescueReady);p.setHealth(p.getMaxHealth()*.75f);s.flush();Suits.message(p,"Аварийное восстановление: 75% здоровья");return false;}return true;});
+  PlayerBlockBreakEvents.AFTER.register((w,p,pos,state,be)->{if(!(p instanceof ServerPlayer player)||veinBreaking)return;var s=Suits.session(p);if(s==null||!s.on("vein")||s.level(SuitUpgrade.VEIN)==0||!ore(state)||!p.hasCorrectToolForDrops(state))return;veinBreaking=true;try{var queue=new ArrayDeque<BlockPos>();var seen=new HashSet<BlockPos>();queue.add(pos);seen.add(pos);int count=0,limit=s.level(SuitUpgrade.VEIN)*8;while(!queue.isEmpty()&&count<limit){var here=queue.remove();for(var d:Direction.values()){var next=here.relative(d);if(!seen.add(next)||seen.size()>384||!w.hasChunkAt(next)||next.distSqr(pos)>144)continue;if(w.getBlockState(next).is(state.getBlock())&&s.spend(2,1)&&player.gameMode.destroyBlock(next)){count++;queue.add(next);if(count>=limit)break;}}}}finally{veinBreaking=false;}});
+ }
+ public static boolean ore(net.minecraft.world.level.block.state.BlockState s){return s.is(TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath("c","ores")))||BuiltInRegistries.BLOCK.getKey(s.getBlock()).getPath().endsWith("_ore");}
+ public static void toggle(ServerPlayer p,SuitSession s,String key){if(key.equals("magnet_pulse")){if(s.level(SuitUpgrade.MAGNET)>0&&s.spend(2,4))s.magnetPulse=20;return;}if(key.equals("warp")){if(s.level(SuitUpgrade.WARP)>0&&s.energy>=1500L*Energy.UNIT&&s.home.isPresent()&&!threat(p,12)){s.warpTicks=120;s.lastDamage=p.level().getGameTime();}else Suits.message(p,"Варп: нужны станция, 1500 ТЕ и безопасная зона");return;}if(key.equals("flight")){int n=s.level(SuitUpgrade.FLIGHT);if(n==0)return;String current=s.on("flight_jet")?"flight_jet":s.on("flight_elytra")?"flight_elytra":s.on("flight_gravity")?"flight_gravity":"";s.active.removeAll(List.of("flight_jet","flight_elytra","flight_gravity"));int next=current.isEmpty()?1:current.equals("flight_jet")?2:current.equals("flight_elytra")?3:4;if(next<=n)s.active.add(next==1?"flight_jet":next==2?"flight_elytra":"flight_gravity");s.flush();return;}var u=SuitUpgrade.byId(key);if(u==null||s.level(u)==0)return;if(!s.active.remove(key)){s.active.add(key);if(key.equals("cloak"))s.active.remove("beacon");if(key.equals("beacon"))s.active.remove("cloak");}s.flush();}
+ public static void tick(ServerPlayer p){var s=Suits.session(p);if(s==null){if(p.tickCount%5==0)SuitPackets.send(p);return;}if(!p.isAlive())return;if(s.revealTicks>0)s.revealTicks--;if(s.shieldDelay>0)s.shieldDelay--;
+  boolean power=s.energy>0;
+  if(s.on("ore_scan")&&s.level(SuitUpgrade.ORE_SCAN)>0&&!s.spend(.08,3))s.active.remove("ore_scan");
+  if(s.on("enemy_scan")&&!s.spend(.05,3))s.active.remove("enemy_scan");
+  if(s.on("cloak")&&!s.spend(.4,3))s.active.remove("cloak");
+  if(s.on("night")&&!s.spend(.02,3))s.active.remove("night");
+  if(s.on("light")&&!s.spend(.005*s.level(SuitUpgrade.LIGHT),3))s.active.remove("light");
+  if(s.on("beacon")&&!s.spend(.04,3))s.active.remove("beacon");
+  boolean sprint=p.isSprinting()&&s.on("run")&&power&&s.spend(.04*s.level(SuitUpgrade.RUN),0);
+  attr(p,Attributes.MOVEMENT_SPEED,sprint?.1*s.level(SuitUpgrade.RUN):0,true);
+  attr(p,Attributes.STEP_HEIGHT,sprint&&s.level(SuitUpgrade.STEP)>0?.4:0,false);
+  attr(p,Attributes.JUMP_STRENGTH,sprint?.05*s.level(SuitUpgrade.JUMP):0,true);
+  boolean swim=p.isSprinting()&&p.isInWater()&&power&&s.level(SuitUpgrade.SWIM)>0&&s.spend(.03*s.level(SuitUpgrade.SWIM),0);
+  attr(p,Attributes.WATER_MOVEMENT_EFFICIENCY,swim?.1*s.level(SuitUpgrade.SWIM):0,false);
+  if(swim&&p.tickCount%2==0)p.setDeltaMovement(p.getDeltaMovement().add(p.getLookAngle().scale(.012*s.level(SuitUpgrade.SWIM))));
+  attr(p,Attributes.ARMOR,20+(power?.2*s.level(SuitUpgrade.ARMOR):0),false);attr(p,Attributes.ARMOR_TOUGHNESS,12+(power?.2*s.level(SuitUpgrade.ARMOR):0),false);
+  attr(p,Attributes.ATTACK_DAMAGE,power?.05*s.level(SuitUpgrade.DAMAGE):0,true);
+  attr(p,Attributes.EXPLOSION_KNOCKBACK_RESISTANCE,power?.18*s.level(SuitUpgrade.KNOCKBACK):0,false);
+  attr(p,Attributes.SUBMERGED_MINING_SPEED,power&&s.level(SuitUpgrade.AQUA_MINING)>0?4:0,true);
+
+  if(s.shieldDelay==0&&s.shield<s.shieldCapacity()&&s.spend(.06,2))s.shield=Math.min(s.shieldCapacity(),s.shield+.1);
+  if(s.level(SuitUpgrade.FEED)>0&&s.on("feed")&&s.nutrients>0&&p.getFoodData().getFoodLevel()<=14&&s.spend(1,4)){s.nutrients--;p.getFoodData().eat(6,.8f);}
+  flight(p,s);
+  if(s.level(SuitUpgrade.MAGNET)>0&&(s.on("magnet")||s.magnetPulse>0)){double radius=s.magnetPulse>0?8:Math.min(s.magnetRange,s.level(SuitUpgrade.MAGNET));if(s.magnetPulse>0)s.magnetPulse--;if(radius>0&&s.spend(.025,4)){int count=0;for(var item:p.level().getEntitiesOfClass(ItemEntity.class,p.getBoundingBox().inflate(radius))){if(count++>=32)break;if(item instanceof SuitRemains||item.hasPickUpDelay()||s.blocked(item.getItem())||item.distanceToSqr(p)>radius*radius)continue;item.setDeltaMovement(p.position().add(0,.7,0).subtract(item.position()).normalize().scale(.22));}}}
+  if(s.level(SuitUpgrade.CREEPER)>0&&power&&p.tickCount%20==0){for(var c:p.level().getEntitiesOfClass(Creeper.class,p.getBoundingBox().inflate(8))){if((c.getTarget()==p||c.getSwellDir()>0)&&p.getLookAngle().dot(c.position().subtract(p.position()).normalize())<-.2){Suits.message(p,"⚠ Крипер сзади!");break;}}}
+  if(s.on("cloak")&&s.revealTicks==0&&power&&p.tickCount%10==0){for(var mob:p.level().getEntitiesOfClass(Mob.class,p.getBoundingBox().inflate(32),m->m.getTarget()==p))mob.setTarget(null);}
+  if(s.level(SuitUpgrade.VISOR)>0&&power&&p.tickCount%10==0&&p.pick(6,0,false) instanceof net.minecraft.world.phys.BlockHitResult hit&&p.level().getBlockState(hit.getBlockPos()).is(TechMod.CABLE))net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(p,new SuitPackets.Wire(hit.getBlockPos(),dev.admutium.techmod.energy.EnergyNetwork.cableRate(p.level(),hit.getBlockPos())));
+  if(s.warpTicks>0)warp(p,s);
+  for(var slot:List.of(EquipmentSlot.HEAD,EquipmentSlot.LEGS,EquipmentSlot.FEET)){var item=p.getItemBySlot(slot);if(!item.isEmpty()){p.setItemSlot(slot,ItemStack.EMPTY);if(!p.getInventory().add(item))p.drop(item,false,net.minecraft.util.Prediction.SERVER_ONLY);}}
+  s.endTick();s.startTick();if(p.tickCount%20==0)s.flush();if(p.tickCount%5==0)SuitPackets.send(p);
+ }
+ static void attr(Player p,Holder<Attribute> attribute,double value,boolean multiply){var a=p.getAttribute(attribute);if(a==null)return;var id=TechMod.id("suit_"+BuiltInRegistries.ATTRIBUTE.getKey(attribute.value()).getPath());var old=a.getModifier(id);if(value==0){if(old!=null)a.removeModifier(id);}else if(old==null||old.amount()!=value)a.addOrUpdateTransientModifier(new AttributeModifier(id,value,multiply?AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL:AttributeModifier.Operation.ADD_VALUE));}
+ public static void clear(Player p,SuitSession s){for(var attribute:List.of(Attributes.MOVEMENT_SPEED,Attributes.STEP_HEIGHT,Attributes.JUMP_STRENGTH,Attributes.WATER_MOVEMENT_EFFICIENCY,Attributes.ARMOR,Attributes.ARMOR_TOUGHNESS,Attributes.ATTACK_DAMAGE,Attributes.EXPLOSION_KNOCKBACK_RESISTANCE,Attributes.SUBMERGED_MINING_SPEED))attr(p,attribute,0,false);restoreFlight(p,s);}
+ static void restoreFlight(Player p,SuitSession s){if(s.flightGranted){p.getAbilities().mayfly=s.oldMayFly||p.isCreative()||p.isSpectator();p.getAbilities().flying=s.oldFlying&&p.getAbilities().mayfly;p.getAbilities().setFlyingSpeed(s.oldFlySpeed);p.onUpdateAbilities();s.flightGranted=false;}}
+ static void flight(ServerPlayer p,SuitSession s){boolean gravity=s.on("flight_gravity")&&s.level(SuitUpgrade.FLIGHT)>=3&&s.spend(p.isSprinting()?1.2:.5,0);if(gravity){if(!s.flightGranted){s.oldMayFly=p.isCreative()||p.isSpectator();s.oldFlying=p.getAbilities().flying&&s.oldMayFly;s.oldFlySpeed=p.getAbilities().getFlyingSpeed();s.flightGranted=true;}p.getAbilities().mayfly=true;p.getAbilities().flying=true;p.getAbilities().setFlyingSpeed(.32f);if(p.tickCount%5==0)p.onUpdateAbilities();p.resetFallDistance();}else restoreFlight(p,s);
+  if(s.on("flight_jet")&&s.level(SuitUpgrade.FLIGHT)>0&&(s.input&1)!=0&&!p.onGround()&&s.spend(.3,0)){var v=p.getDeltaMovement();p.setDeltaMovement(v.x,Math.min(.65,v.y+.14),v.z);p.resetFallDistance();}
+  if(s.on("flight_elytra")&&s.level(SuitUpgrade.FLIGHT)>=2&&p.isFallFlying()){if(!s.spend(p.isSprinting()?.35:.1,0)){p.stopFallFlying();return;}if(p.isSprinting()){var v=p.getDeltaMovement().add(p.getLookAngle().scale(.055));if(v.length()>1.65)v=v.normalize().scale(1.65);p.setDeltaMovement(v);}}
+ }
+ static boolean threat(Player p,double radius){return !p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(radius),m->m.isAlive()&&m.distanceToSqr(p)<=radius*radius).isEmpty();}
+ static void warp(ServerPlayer p,SuitSession s){if(p.tickCount%4==0)p.level().sendParticles(net.minecraft.core.particles.ParticleTypes.PORTAL,p.getX(),p.getY()+1,p.getZ(),12,.5,.8,.5,.1);if(threat(p,12)||p.level().getGameTime()-s.lastDamage<1||s.energy<1500L*Energy.UNIT){s.warpTicks=0;Suits.message(p,"Варп прерван");return;}if(--s.warpTicks>0)return;var home=s.home.orElse(null);if(home==null)return;var level=p.level().getServer().getLevel(home.dimension());if(level==null||!level.hasChunkAt(home.pos())||!level.getBlockState(home.pos()).is(Machines.BLOCKS.get(MachineKind.STATION))){Suits.message(p,"Станция не загружена или разрушена");return;}BlockPos safe=null;for(int x=-2;x<=2&&safe==null;x++)for(int z=-2;z<=2&&safe==null;z++){var pos=home.pos().offset(x,1,z);if(level.getBlockState(pos).isAir()&&level.getBlockState(pos.above()).isAir()&&level.getBlockState(pos.below()).isFaceSturdy(level,pos.below(),Direction.UP))safe=pos;}if(safe==null){Suits.message(p,"Нет безопасного места у станции");return;}if(p.teleportTo(level,safe.getX()+.5,safe.getY(),safe.getZ()+.5,Set.of(),p.getYRot(),p.getXRot(),true)){s.energy-=1500L*Energy.UNIT;p.resetFallDistance();s.flush();}}
+ public static float reduce(Player p,DamageSource source,float amount){if(!(p instanceof ServerPlayer))return amount;var s=Suits.session(p);if(s==null||s.energy<=0||amount<=0)return amount;s.lastDamage=p.level().getGameTime();s.revealTicks=60;s.warpTicks=0;float value=amount;
+  if((source.is(DamageTypes.ON_FIRE)||source.is(DamageTypes.IN_FIRE))&&s.level(SuitUpgrade.FIRE)>0&&s.spend(.3,2)){p.clearFire();return 0;}
+  double reduction=source.is(DamageTypeTags.IS_FALL)?.08*s.level(SuitUpgrade.FALL):source.is(DamageTypeTags.IS_EXPLOSION)?.08*s.level(SuitUpgrade.EXPLOSION):source.is(DamageTypeTags.IS_PROJECTILE)?.08*s.level(SuitUpgrade.PROJECTILE):source.is(DamageTypes.MAGIC)||source.is(DamageTypes.INDIRECT_MAGIC)?.08*s.level(SuitUpgrade.MAGIC):0;
+  if(reduction>0&&s.spend(value*reduction,2))value*=1-reduction;
+  if(s.shield>0&&s.shieldDelay==0){double block=Math.min(value*.98,Math.min(s.shield,6+3*s.level(SuitUpgrade.SHIELD_STRENGTH)));if(s.spend(block*(2-.2*s.level(SuitUpgrade.SHIELD_EFFICIENCY)),2)){value-=block;s.shield-=block;if(value>1)s.shieldDelay=60;}}
+  float excess=value-p.getMaxHealth()*.5f;if(excess>0&&s.level(SuitUpgrade.HEALTH_LIMIT)>0&&s.spend(excess*5,2))value-=excess;
+  s.flush();return Math.max(0,value);
+ }
+ public static float mining(Player p,float speed){var d=Suits.data(p);if(d.energy()<=0)return speed;if(p instanceof ServerPlayer){var s=Suits.session(p);if(s!=null){long now=p.level().getGameTime();if(s.lastMining!=now){if(!s.spend(.06,1))return speed;s.lastMining=now;}}}if(d.level(SuitUpgrade.AQUA_MINING)>0&&p.isInWater()&&!p.onGround())speed*=5;return speed*(1+.05f*d.level(SuitUpgrade.MINING));}
+ public static boolean hidden(Player p){var d=Suits.data(p);return d.energy()>0&&d.on("cloak")&&d.level(SuitUpgrade.CLOAK)>0&&d.levels().getOrDefault("_reveal",0)==0;}
+}
