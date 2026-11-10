@@ -2,7 +2,6 @@ package dev.admutium.techmod.client.suit;
 
 import dev.admutium.techmod.energy.Energy;
 import dev.admutium.techmod.suit.*;
-import java.util.Arrays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,12 +15,12 @@ public final class SuitHud {
   var a=layout(c.getWindow().getGuiScaledWidth(),c.getWindow().getGuiScaledHeight());int x=a.x(),y=a.y(),w=a.width();
   int used=0;for(int i=0;i<36;i++)if(!c.player.getInventory().getItem(i).isEmpty())used++;for(var item:d.contents().cargo())if(!item.isEmpty())used++;
   String cargo=used+"/"+(36+(d.level(SuitUpgrade.INVENTORY)>0?9:0));
-  g.fill(x-3,y-3,x+w+3,y+27,0x990d1820);
+  g.fill(x-3,y-3,x+w+3,y+(d.level(SuitUpgrade.SHIELD)>0?27:16),0x990d1820);
   g.text(c.font,Energy.format(d.energy())+"/"+Energy.format(d.capacity())+" ТЕ",x,y,0xffffbf68);
   int icon=x+w-c.font.width(cargo)-8;for(int row=0;row<2;row++)for(int col=0;col<2;col++)g.fill(icon+col*3,y+1+row*3,icon+col*3+2,y+3+row*3,0xff8ba4b1);g.text(c.font,cargo,x+w-c.font.width(cargo),y,used>=36+(d.level(SuitUpgrade.INVENTORY)>0?9:0)?0xffff8b73:0xffbac9d2);
   g.fill(x,y+10,x+w,y+13,0xff243640);int fill=(int)Math.clamp(w*d.energy()/Math.max(1,d.capacity()),0,w);g.fill(x,y+10,x+fill,y+13,d.energy()<d.capacity()/10?0xffda6751:0xffe9ab50);
-  String flow="−"+rate(Arrays.stream(SuitClient.rates).sum())+"/+"+rate(SuitClient.chargeRate)+" ТЕ/с";
-  g.text(c.font,flow,x,y+16,0xffc6dce5);String shield="Щит "+d.shield()/1000;g.text(c.font,shield,x+w-c.font.width(shield),y+16,0xff99d8d3);
+  if(d.level(SuitUpgrade.SHIELD)>0){String shield="Щит "+d.shield()/1000;g.text(c.font,shield,x,y+16,0xff99d8d3);}
+
  }
  public static void target(GuiGraphicsExtractor g,Minecraft c,LivingEntity target){
   int x=c.getWindow().getGuiScaledWidth()/2,y=c.getWindow().getGuiScaledHeight()/2-29;

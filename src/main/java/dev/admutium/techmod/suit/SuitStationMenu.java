@@ -7,10 +7,10 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.*;
 import net.minecraft.core.GlobalPos;
 public final class SuitStationMenu extends AbstractContainerMenu {
- public final Container bay;public final MachineBlockEntity station;public final Player owner;
+ public boolean treeView;public final Container bay;public final MachineBlockEntity station;public final Player owner;
  public SuitStationMenu(int id,Inventory inv){this(id,inv,new SimpleContainer(3),null);}
  public SuitStationMenu(int id,Inventory inv,MachineBlockEntity station){this(id,inv,station,station);}
- private SuitStationMenu(int id,Inventory inv,Container bay,MachineBlockEntity station){super(Suits.STATION_MENU,id);this.bay=bay;this.station=station;owner=inv.player;addSlot(new Slot(bay,0,12,30){public boolean mayPlace(ItemStack s){return s.is(Suits.ITEM);}});addStandardInventorySlots(inv,12,146);}
+ private SuitStationMenu(int id,Inventory inv,Container bay,MachineBlockEntity station){super(Suits.STATION_MENU,id);this.bay=bay;this.station=station;owner=inv.player;addSlot(new Slot(bay,0,12,30){public boolean isActive(){return !treeView;}public boolean mayPlace(ItemStack s){return s.is(Suits.ITEM);}});for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inv,col+row*9+9,12+col*18,146+row*18){public boolean isActive(){return !treeView;}});for(int col=0;col<9;col++)addSlot(new Slot(inv,col,12+col*18,204){public boolean isActive(){return !treeView;}});}
  public SuitSession subject(){var stack=bay.getItem(0);return stack.is(Suits.ITEM)?new SuitSession(stack):Suits.session(owner);}
  @Override public boolean stillValid(Player p){return station==null||station.stillValid(p);}
  @Override public ItemStack quickMoveStack(Player p,int i){var slot=slots.get(i);if(!slot.hasItem())return ItemStack.EMPTY;var s=slot.getItem();var copy=s.copy();if(i==0){if(!moveItemStackTo(s,1,slots.size(),true))return ItemStack.EMPTY;}else if(!s.is(Suits.ITEM)||!moveItemStackTo(s,0,1,false))return ItemStack.EMPTY;if(s.isEmpty())slot.setByPlayer(ItemStack.EMPTY);else slot.setChanged();return copy;}
@@ -20,7 +20,7 @@ public final class SuitStationMenu extends AbstractContainerMenu {
   if(key.equals("remove")){var s=Suits.session(owner);if(s!=null&&bay.getItem(0).isEmpty()){s.flush();SuitRuntime.clear(owner,s);owner.setItemSlot(EquipmentSlot.CHEST,ItemStack.EMPTY);Suits.SESSIONS.remove(owner.getUUID());bay.setItem(0,s.stack);syncEquipment();}return;}
   var s=subject();if(s==null)return;
   if(key.equals("all")){for(var u:SuitUpgrade.values()){if(s.level(u)==0)s.unlocked(u);s.levels.put(u.id(),u.max);}}
-  else if(key.equals("upgrade")){var u=SuitUpgrade.byId(value);if(u!=null)s.upgrade(u);}
+  else if(key.equals("upgrade")){var u=SuitUpgrade.byId(value);if(u!=null&&SuitTree.available(s.snapshot(),u))s.upgrade(u);}
   else if(key.equals("color")){try{s.tint=0xff000000|Integer.parseInt(value.replace("#",""),16)&0xffffff;}catch(NumberFormatException ignored){}}
   else if(key.equals("range")){try{s.magnetRange=Math.clamp(Integer.parseInt(value),0,3);}catch(NumberFormatException ignored){}}
   else if(key.equals("blacklist")&&s.level(SuitUpgrade.BLACKLIST)>0)edit(s.blacklist,value);

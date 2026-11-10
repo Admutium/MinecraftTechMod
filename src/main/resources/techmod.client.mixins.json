@@ -7,7 +7,9 @@
     "LivingEntityRendererMixin",
     "SuitCameraMixin",
     "SuitLightMixin",
+    "SuitLocalLightMixin",
     "SuitTabMixin",
+    "SuitMenuRepeatMixin",
     "SuitInventoryKeyMixin",
     "SuitGravityMixin"
   ],

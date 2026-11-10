@@ -188,7 +188,7 @@
   "suit.upgrade.mining": "Скорость добычи",
   "suit.upgrade.ore_scan": "Сканер руд",
   "suit.upgrade.vein": "Добыча жилы",
-  "suit.upgrade.light": "Личная яркость",
+  "suit.upgrade.light": "Локальный свет",
   "suit.upgrade.night": "Ночное зрение",
   "suit.upgrade.armor": "Броня",
   "suit.upgrade.shield": "Энергощит",
@@ -220,5 +220,6 @@
   "suit.branch.defense": "Щит",
   "suit.branch.combat": "Бой",
   "suit.branch.utility": "Сервис",
-  "suit.branch.energy": "ТЕ"
+  "suit.branch.energy": "ТЕ",
+  "item.techmod.empty_nutrient_capsule": "Пустая пищевая капсула"
 }

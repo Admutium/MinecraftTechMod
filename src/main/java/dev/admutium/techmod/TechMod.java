@@ -53,7 +53,7 @@ public final class TechMod implements ModInitializer {
                 .icon(() -> new ItemStack(COPPER_CABLE))
                 .displayItems((context, output) -> {
                     var entries=new java.util.LinkedHashSet<Item>();
-                    entries.add(dev.admutium.techmod.suit.Suits.ITEM);entries.add(dev.admutium.techmod.suit.Suits.NUTRIENT);
+                    entries.add(dev.admutium.techmod.suit.Suits.ITEM);entries.add(dev.admutium.techmod.suit.Suits.NUTRIENT);entries.add(dev.admutium.techmod.suit.Suits.EMPTY_CAN);
                     entries.add(COPPER_CABLE);entries.add(CABLE_HOLDER);
                     entries.add(dev.admutium.techmod.machine.Machines.BATTERY);
                     entries.addAll(dev.admutium.techmod.machine.Machines.ITEMS.values());

@@ -1,0 +1,8 @@
+package dev.admutium.techmod.client.mixin;
+import dev.admutium.techmod.client.suit.SuitLocalLight;import net.minecraft.util.LightCoordsUtil;import net.minecraft.world.level.BlockAndLightGetter;import net.minecraft.world.level.block.state.BlockState;import net.minecraft.core.BlockPos;import net.minecraft.client.multiplayer.ClientLevel;import net.minecraft.client.renderer.chunk.RenderSectionRegion;
+import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.injection.*;import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+@Mixin(LightCoordsUtil.class) public abstract class SuitLocalLightMixin {
+ private static int lit(BlockAndLightGetter world,BlockPos p,int value){if(!(world instanceof ClientLevel)&&!(world instanceof RenderSectionRegion))return value;int local=SuitLocalLight.at(p);return local==0?value:LightCoordsUtil.withBlock(value,Math.max(LightCoordsUtil.block(value),local));}
+ @Inject(method="getLightCoords(Lnet/minecraft/world/level/BlockAndLightGetter;Lnet/minecraft/core/BlockPos;)I",at=@At("RETURN"),cancellable=true) private static void simple(BlockAndLightGetter w,BlockPos p,CallbackInfoReturnable<Integer> cir){cir.setReturnValue(lit(w,p,cir.getReturnValue()));}
+ @Inject(method="getLightCoords(Lnet/minecraft/util/LightCoordsUtil$BrightnessGetter;Lnet/minecraft/world/level/BlockAndLightGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)I",at=@At("RETURN"),cancellable=true) private static void model(LightCoordsUtil.BrightnessGetter getter,BlockAndLightGetter w,BlockState state,BlockPos p,CallbackInfoReturnable<Integer> cir){cir.setReturnValue(lit(w,p,cir.getReturnValue()));}
+}

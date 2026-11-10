@@ -3446,29 +3446,6 @@
       ],
       "cubes": [
         {
-          "material": 0,
-          "from": [
-            -14,
-            0,
-            0.08
-          ],
-          "to": [
-            0,
-            12,
-            0.08
-          ],
-          "pass": "field",
-          "graphic": "rainbow_left",
-          "faces": [
-            "south"
-          ],
-          "uv": [
-            174.0,
-            170.0
-          ],
-          "uv_scale": 4.0
-        },
-        {
           "material": 4,
           "from": [
             -0.45,
@@ -3482,7 +3459,7 @@
           ],
           "pass": "base",
           "uv": [
-            206.0,
+            174.0,
             170.0
           ],
           "uv_scale": 4
@@ -3490,8 +3467,47 @@
       ]
     },
     {
-      "name": "wing_spar_-1",
+      "name": "prism_lobe_-1_0",
       "parent": "rainbow_-1",
+      "pivot": [
+        -0.5,
+        -2,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0.35
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            -14,
+            0,
+            0.08
+          ],
+          "to": [
+            0,
+            10,
+            0.08
+          ],
+          "pass": "field",
+          "graphic": "rainbow_left",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            182.0,
+            170.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_rib_-1_0",
+      "parent": "prism_lobe_-1_0",
       "pivot": [
         0,
         0,
@@ -3500,7 +3516,7 @@
       "rotation": [
         0,
         0,
-        2.8632929945846817
+        2.902361053626133
       ],
       "cubes": [
         {
@@ -3511,7 +3527,7 @@
             -0.18
           ],
           "to": [
-            14.680219778561037,
+            11.936530793765147,
             0.17,
             0.18
           ],
@@ -3525,17 +3541,56 @@
       ]
     },
     {
-      "name": "wing_tip_-1",
+      "name": "prism_lobe_-1_1",
       "parent": "rainbow_-1",
       "pivot": [
-        -14,
-        4,
+        -0.5,
+        3,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.22
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            -11,
+            0,
+            0.08
+          ],
+          "to": [
+            0,
+            9,
+            0.08
+          ],
+          "pass": "field",
+          "graphic": "rainbow_left",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            2.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_rib_-1_1",
+      "parent": "prism_lobe_-1_1",
+      "pivot": [
+        0,
+        0,
         -0.12
       ],
       "rotation": [
         0,
         0,
-        0.8224182792713783
+        2.869159750390094
       ],
       "cubes": [
         {
@@ -3546,13 +3601,87 @@
             -0.18
           ],
           "to": [
-            9.6724865872714,
+            9.485404422661096,
             0.17,
             0.18
           ],
           "pass": "base",
           "uv": [
-            2.0,
+            30.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_lobe_-1_2",
+      "parent": "rainbow_-1",
+      "pivot": [
+        -0.5,
+        7,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.58
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            -7,
+            0,
+            0.08
+          ],
+          "to": [
+            0,
+            7,
+            0.08
+          ],
+          "pass": "field",
+          "graphic": "rainbow_left",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            54.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_rib_-1_2",
+      "parent": "prism_lobe_-1_2",
+      "pivot": [
+        0,
+        0,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        2.8125429587494537
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            6.185410126281651,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            74.0,
             186.0
           ],
           "uv_scale": 4
@@ -3570,7 +3699,7 @@
       "rotation": [
         0,
         -0.12,
-        0.12
+        0
       ],
       "cubes": [
         {
@@ -3582,65 +3711,61 @@
           ],
           "to": [
             0.0,
-            1.2,
+            1.7000000000000002,
             1.4
           ],
           "pass": "base",
           "uv": [
-            30.0,
+            94.0,
             186.0
           ],
           "uv_scale": 4
         },
         {
-          "material": 0,
+          "material": 6,
           "from": [
-            -15,
+            -1.8,
             0,
-            0.3
+            1.42
           ],
           "to": [
-            0,
-            4,
-            0.3
+            -0.40000000000000013,
+            1.2,
+            1.54
           ],
-          "pass": "field",
-          "graphic": "gravity_left",
-          "faces": [
-            "south"
-          ],
+          "pass": "signal",
           "uv": [
-            46.0,
+            110.0,
             186.0
           ],
-          "uv_scale": 4.0
+          "uv_scale": 4
         }
       ]
     },
     {
-      "name": "gravity_fin_-1",
-      "parent": "gravity",
+      "name": "gravity_fin_-1_0",
+      "parent": "gravity_-1",
       "pivot": [
-        -2.5,
-        5.7,
-        1
+        -0.5,
+        -1,
+        0.8
       ],
       "rotation": [
         0,
         0,
-        -0.35
+        0.5
       ],
       "cubes": [
         {
           "material": 0,
           "from": [
-            -7.5,
+            -15,
             0,
             0.2
           ],
           "to": [
-            0.0,
-            2,
+            0,
+            3.2,
             0.2
           ],
           "pass": "field",
@@ -3649,10 +3774,193 @@
             "south"
           ],
           "uv": [
-            41.0,
-            93.0
+            118.0,
+            186.0
           ],
-          "uv_scale": 8.0
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "vector_rib_-1_0",
+      "parent": "gravity_fin_-1_0",
+      "pivot": [
+        0,
+        1.7600000000000002,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -3.0257499982388047
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            8.425666740244278,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            154.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "gravity_fin_-1_1",
+      "parent": "gravity_-1",
+      "pivot": [
+        -0.5,
+        2,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            -13,
+            0,
+            0.2
+          ],
+          "to": [
+            0,
+            2.8,
+            0.2
+          ],
+          "pass": "field",
+          "graphic": "gravity_left",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            178.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "vector_rib_-1_1",
+      "parent": "gravity_fin_-1_1",
+      "pivot": [
+        0,
+        1.54,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -3.0246462071631903
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            7.319173563680765,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            210.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "gravity_fin_-1_2",
+      "parent": "gravity_-1",
+      "pivot": [
+        -0.5,
+        5,
+        1.1600000000000001
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.5
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            -10,
+            0,
+            0.2
+          ],
+          "to": [
+            0,
+            2.4,
+            0.2
+          ],
+          "pass": "field",
+          "graphic": "gravity_left",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            230.0,
+            186.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "vector_rib_-1_2",
+      "parent": "gravity_fin_-1_2",
+      "pivot": [
+        0,
+        1.32,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -3.01142377106119
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            5.666927077220324,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            2.0,
+            202.0
+          ],
+          "uv_scale": 4
         }
       ]
     },
@@ -3671,29 +3979,6 @@
       ],
       "cubes": [
         {
-          "material": 0,
-          "from": [
-            0,
-            0,
-            0.08
-          ],
-          "to": [
-            14,
-            12,
-            0.08
-          ],
-          "pass": "field",
-          "graphic": "rainbow_right",
-          "faces": [
-            "south"
-          ],
-          "uv": [
-            118.0,
-            186.0
-          ],
-          "uv_scale": 4.0
-        },
-        {
           "material": 4,
           "from": [
             -0.45,
@@ -3707,16 +3992,55 @@
           ],
           "pass": "base",
           "uv": [
-            150.0,
-            186.0
+            22.0,
+            202.0
           ],
           "uv_scale": 4
         }
       ]
     },
     {
-      "name": "wing_spar_1",
+      "name": "prism_lobe_1_0",
       "parent": "rainbow_1",
+      "pivot": [
+        0.5,
+        -2,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.35
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            0,
+            0,
+            0.08
+          ],
+          "to": [
+            14,
+            10,
+            0.08
+          ],
+          "pass": "field",
+          "graphic": "rainbow_right",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            30.0,
+            202.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_rib_1_0",
+      "parent": "prism_lobe_1_0",
       "pivot": [
         0,
         0,
@@ -3725,7 +4049,7 @@
       "rotation": [
         0,
         0,
-        0.27829965900511133
+        0.2392315999636606
       ],
       "cubes": [
         {
@@ -3736,31 +4060,70 @@
             -0.18
           ],
           "to": [
-            14.680219778561037,
+            11.936530793765147,
             0.17,
             0.18
           ],
           "pass": "base",
           "uv": [
-            158.0,
-            186.0
+            62.0,
+            202.0
           ],
           "uv_scale": 4
         }
       ]
     },
     {
-      "name": "wing_tip_1",
+      "name": "prism_lobe_1_1",
       "parent": "rainbow_1",
       "pivot": [
-        14,
-        4,
+        0.5,
+        3,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0,
+        0.22
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            0,
+            0,
+            0.08
+          ],
+          "to": [
+            11,
+            9,
+            0.08
+          ],
+          "pass": "field",
+          "graphic": "rainbow_right",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            94.0,
+            202.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_rib_1_1",
+      "parent": "prism_lobe_1_1",
+      "pivot": [
+        0,
+        0,
         -0.12
       ],
       "rotation": [
         0,
         0,
-        2.3191743743184148
+        0.2724329031996996
       ],
       "cubes": [
         {
@@ -3771,14 +4134,88 @@
             -0.18
           ],
           "to": [
-            9.6724865872714,
+            9.485404422661096,
             0.17,
             0.18
           ],
           "pass": "base",
           "uv": [
-            194.0,
-            186.0
+            122.0,
+            202.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_lobe_1_2",
+      "parent": "rainbow_1",
+      "pivot": [
+        0.5,
+        7,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        0.58
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            0,
+            0,
+            0.08
+          ],
+          "to": [
+            7,
+            7,
+            0.08
+          ],
+          "pass": "field",
+          "graphic": "rainbow_right",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            146.0,
+            202.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "prism_rib_1_2",
+      "parent": "prism_lobe_1_2",
+      "pivot": [
+        0,
+        0,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0.32904969484033947
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            6.185410126281651,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            166.0,
+            202.0
           ],
           "uv_scale": 4
         }
@@ -3795,7 +4232,7 @@
       "rotation": [
         0,
         0.12,
-        -0.12
+        0
       ],
       "cubes": [
         {
@@ -3807,53 +4244,49 @@
           ],
           "to": [
             2.4,
-            1.2,
+            1.7000000000000002,
             1.4
           ],
           "pass": "base",
           "uv": [
-            222.0,
-            186.0
+            186.0,
+            202.0
           ],
           "uv_scale": 4
         },
         {
-          "material": 0,
+          "material": 6,
           "from": [
+            0.4,
             0,
-            0,
-            0.3
+            1.42
           ],
           "to": [
-            15,
-            4,
-            0.3
+            1.7999999999999998,
+            1.2,
+            1.54
           ],
-          "pass": "field",
-          "graphic": "gravity_right",
-          "faces": [
-            "south"
-          ],
+          "pass": "signal",
           "uv": [
-            2.0,
+            202.0,
             202.0
           ],
-          "uv_scale": 4.0
+          "uv_scale": 4
         }
       ]
     },
     {
-      "name": "gravity_fin_1",
-      "parent": "gravity",
+      "name": "gravity_fin_1_0",
+      "parent": "gravity_1",
       "pivot": [
-        2.5,
-        5.7,
-        1
+        0.5,
+        -1,
+        0.8
       ],
       "rotation": [
         0,
         0,
-        0.35
+        -0.5
       ],
       "cubes": [
         {
@@ -3864,8 +4297,8 @@
             0.2
           ],
           "to": [
-            7.5,
-            2,
+            15,
+            3.2,
             0.2
           ],
           "pass": "field",
@@ -3874,10 +4307,193 @@
             "south"
           ],
           "uv": [
-            19.0,
-            101.0
+            210.0,
+            202.0
           ],
-          "uv_scale": 8.0
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "vector_rib_1_0",
+      "parent": "gravity_fin_1_0",
+      "pivot": [
+        0,
+        1.7600000000000002,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.11584265535098841
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            8.425666740244278,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            2.0,
+            218.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "gravity_fin_1_1",
+      "parent": "gravity_1",
+      "pivot": [
+        0.5,
+        2,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            0,
+            0,
+            0.2
+          ],
+          "to": [
+            13,
+            2.8,
+            0.2
+          ],
+          "pass": "field",
+          "graphic": "gravity_right",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            26.0,
+            218.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "vector_rib_1_1",
+      "parent": "gravity_fin_1_1",
+      "pivot": [
+        0,
+        1.54,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.11694644642660303
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            7.319173563680765,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            58.0,
+            218.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "gravity_fin_1_2",
+      "parent": "gravity_1",
+      "pivot": [
+        0.5,
+        5,
+        1.1600000000000001
+      ],
+      "rotation": [
+        0,
+        0,
+        0.5
+      ],
+      "cubes": [
+        {
+          "material": 0,
+          "from": [
+            0,
+            0,
+            0.2
+          ],
+          "to": [
+            10,
+            2.4,
+            0.2
+          ],
+          "pass": "field",
+          "graphic": "gravity_right",
+          "faces": [
+            "south"
+          ],
+          "uv": [
+            78.0,
+            218.0
+          ],
+          "uv_scale": 4
+        }
+      ]
+    },
+    {
+      "name": "vector_rib_1_2",
+      "parent": "gravity_fin_1_2",
+      "pivot": [
+        0,
+        1.32,
+        -0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.13016888252860326
+      ],
+      "cubes": [
+        {
+          "material": 2,
+          "from": [
+            -0.12,
+            -0.17,
+            -0.18
+          ],
+          "to": [
+            5.666927077220324,
+            0.17,
+            0.18
+          ],
+          "pass": "base",
+          "uv": [
+            102.0,
+            218.0
+          ],
+          "uv_scale": 4
         }
       ]
     }

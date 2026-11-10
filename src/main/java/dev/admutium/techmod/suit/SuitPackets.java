@@ -20,6 +20,8 @@ public final class SuitPackets {
   if(a.key.equals("input")){if(s!=null)try{s.input=Integer.parseInt(a.value)&7;}catch(NumberFormatException ignored){}return;}
   if(a.key.equals("inventory")){if(s!=null)p.openMenu(new net.minecraft.world.SimpleMenuProvider((id,inv,player)->new SuitInventoryMenu(id,inv,s),net.minecraft.network.chat.Component.literal("Инвентарь костюма")));return;}
   if(a.key.equals("toggle")){if(s!=null){SuitRuntime.toggle(p,s,a.value);send(p);}return;}
+  if(a.key.equals("magnet_range")){if(s!=null&&s.level(SuitUpgrade.MAGNET)>0)try{s.magnetRange=Math.clamp(Integer.parseInt(a.value),0,Math.min(3,s.level(SuitUpgrade.MAGNET)));s.flush();send(p);}catch(NumberFormatException ignored){}return;}
+  if(a.key.equals("ore_filter")){if(s!=null&&s.level(SuitUpgrade.ORE_SCAN)>0){if(a.value.equals("*"))s.ores.clear();else SuitOres.toggle(s.ores,a.value);s.flush();send(p);}return;}
   if(a.key.equals("flight")){if(s!=null){SuitRuntime.selectFlight(p,s,a.value);send(p);}return;}
   if(p.containerMenu instanceof SuitStationMenu m&&m.containerId==a.menu&&m.stillValid(p)){m.action(a.key,a.value);send(p);}
  }));}

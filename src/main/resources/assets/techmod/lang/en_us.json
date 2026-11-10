@@ -220,5 +220,6 @@
   "suit.branch.defense": "Defens",
   "suit.branch.combat": "Combat",
   "suit.branch.utility": "Utilit",
-  "suit.branch.energy": "Energy"
+  "suit.branch.energy": "Energy",
+  "item.techmod.empty_nutrient_capsule": "Empty nutrient capsule"
 }

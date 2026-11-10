@@ -79,15 +79,21 @@ def plane(p,x,y,z,w,h,graphic):
 def beam(parent,name,side,a,b1):
  dx=b1[0]-a[0];dy=b1[1]-a[1];length=math.hypot(dx,dy);p=part(name,parent,(side*a[0],a[1],-.12),(0,0,math.atan2(dy,side*dx)));b(p,2,-.12,-.17,-.18,length+.24,.34,.36)
 for side in [-1,1]:
+ # Three independently attached lobes per side, like an articulated butterfly elytron.
  wing=part('rainbow_'+str(side),'rainbow',(side*2.9,.5,.8),(0,side*.22,-side*.19))
- plane(wing,-14 if side==-1 else 0,0,.08,14,12,'rainbow_left'if side==-1 else'rainbow_right')
- beam(wing['name'],'wing_spar_'+str(side),side,(0,0),(14,4));beam(wing['name'],'wing_tip_'+str(side),side,(14,4),(7.5,11))
  b(wing,4,-.45,-.4,-.55,.9,1.25,1.0)
- wing=part('gravity_'+str(side),'gravity',(side*2.7,1,.9),(0,side*.12,-side*.12))
- b(wing,2,(-2.4 if side==-1 else 0),-.5,-.4,2.4,1.7,1.8)
- plane(wing,-15 if side==-1 else 0,0,.3,15,4,'gravity_left'if side==-1 else'gravity_right')
- fin=part('gravity_fin_'+str(side),'gravity',(side*2.5,5.7,1),(0,0,side*.35))
- plane(fin,-7.5 if side==-1 else 0,0,.2,7.5,2,'gravity_left'if side==-1 else'gravity_right')
+ for index,(yy,angle,ww,hh) in enumerate([(-2,-.35,14,10),(3,.22,11,9),(7,.58,7,7)]):
+  lobe=part('prism_lobe_'+str(side)+'_'+str(index),wing['name'],(side*.5,yy,.15+index*.12),(0,0,side*angle))
+  plane(lobe,-ww if side==-1 else 0,0,.08,ww,hh,'rainbow_left'if side==-1 else'rainbow_right')
+  beam(lobe['name'],'prism_rib_'+str(side)+'_'+str(index),side,(0,0),(ww*.82,hh*.28))
+ # Three tapered field vanes, separated by dark air gaps and a compact physical hinge.
+ wing=part('gravity_'+str(side),'gravity',(side*2.7,1,.9),(0,side*.12,0))
+ b(wing,2,(-2.4 if side==-1 else 0),-.5,-.4,2.4,2.2,1.8)
+ lamp(wing,(-1.8 if side==-1 else .4),0,1.42,1.4,1.2,.12)
+ for index,(yy,angle,ww,hh) in enumerate([(-1,-.5,15,3.2),(2,0,13,2.8),(5,.5,10,2.4)]):
+  fin=part('gravity_fin_'+str(side)+'_'+str(index),wing['name'],(side*.5,yy,.8+index*.18),(0,0,side*angle))
+  plane(fin,-ww if side==-1 else 0,0,.2,ww,hh,'gravity_left'if side==-1 else'gravity_right')
+  beam(fin['name'],'vector_rib_'+str(side)+'_'+str(index),side,(0,hh*.55),(ww*.55,hh*.25))
 # UV-unwrapped per-cuboid material art: bevels, seams, brushed copper and woven undersuit.
 # UV coordinates are model pixels; scale .25 samples four atlas pixels per model pixel.
 SCALE=4;W=1024;H=1024;tex=Image.new('RGBA',(W,H),(0,0,0,0));rng=random.Random(144);cursor_x=0;cursor_y=0;row_h=0
@@ -125,7 +131,7 @@ def graphic(kind,left=False):
  import colorsys
  ww,hh=(56,48)if kind=='rainbow'else(60,16)
  im=Image.new('RGBA',(ww,hh));mask=Image.new('L',(ww,hh));draw=ImageDraw.Draw(mask)
- points=[(0,0),(55,16),(52,21),(30,44),(20,47),(5,30),(0,22)]if kind=='rainbow'else[(0,6),(59,0),(47,9),(0,15)]
+ points=[(0,17),(10,4),(34,0),(52,5),(55,15),(50,29),(36,43),(22,47),(11,39),(4,28)]if kind=='rainbow'else[(0,6),(44,0),(59,2),(46,8),(16,14),(0,15)]
  draw.polygon(points,fill=235)
  for y in range(hh):
   for x in range(ww):
@@ -147,9 +153,9 @@ for p in parts:
  for c in p['cubes']:
   dims=[b1-a for a,b1 in zip(c['from'],c['to'])]
   if 'graphic'in c:
-   image=graphic('rainbow'if c['graphic'].startswith('rainbow')else'gravity',c['graphic'].endswith('left'));ww,hh=image.size
+   image=graphic('rainbow'if c['graphic'].startswith('rainbow')else'gravity',c['graphic'].endswith('left')).resize((round(dims[0]*SCALE),round(dims[1]*SCALE)),Image.Resampling.NEAREST);ww,hh=image.size
    # Fin geometry is half-size, so it samples the same full texture with twice the UV density.
-   factor=ww/dims[0];u,v=allocate(ww*2,hh);tex.paste(image,(u,v));tex.paste(image,(u+ww,v));c['uv']=[u/factor,v/factor];c['uv_scale']=factor
+   factor=SCALE;u,v=allocate(ww*2,hh);tex.paste(image,(u,v));tex.paste(image,(u+ww,v));c['uv']=[u/factor,v/factor];c['uv_scale']=factor
   else:
    w,h,d=[v*SCALE for v in dims];u,v=allocate(2*(w+d),h+d);c['uv']=[u/SCALE,v/SCALE];c['uv_scale']=SCALE
    for rect in [(u+d,v,u+d+w,v+d),(u+d+w,v,u+d+2*w,v+d),(u,v+d,u+d,v+d+h),(u+d,v+d,u+d+w,v+d+h),(u+d+w,v+d,u+2*d+w,v+d+h),(u+2*d+w,v+d,u+2*d+2*w,v+d+h)]:face(rect,c['material'])
