@@ -9,6 +9,7 @@ public final class TechModClient implements ClientModInitializer {
         dev.admutium.techmod.client.conveyor.ConveyorPreview.init();
         dev.admutium.techmod.client.suit.SuitPreview.init();
         dev.admutium.techmod.client.suit.SuitClient.init();
+        KonturKeys.init();
         net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->dev.admutium.techmod.conveyor.ConveyorItem.clearClient());
         net.minecraft.client.gui.screens.MenuScreens.register(dev.admutium.techmod.storage.ReinforcedStorage.MENU,dev.admutium.techmod.client.storage.ChestScreen::new);
         net.minecraft.client.renderer.blockentity.BlockEntityRenderers.register(dev.admutium.techmod.storage.ReinforcedStorage.ENTITY,dev.admutium.techmod.client.storage.ChestRenderer::new);

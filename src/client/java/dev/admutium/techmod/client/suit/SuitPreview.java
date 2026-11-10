@@ -12,7 +12,7 @@ public final class SuitPreview {
  private static final int[] COLORS={0xffff9c26,0xff35d9dd,0xffa882ff,0xffedf2ff};
  public static void init(){
   LivingEntityRenderLayerRegistrationCallback.EVENT.register((type,renderer,helper,context)->{if(renderer instanceof AvatarRenderer<?> avatar)helper.register(new SuitLayer(avatar));});
-  var key=KeyMappingHelper.registerKeyMapping(new KeyMapping("key.techmod.suit_preview",75,KeyMapping.Category.MISC));
+  var key=dev.admutium.techmod.client.KonturKeys.register("key.techmod.suit_preview",com.mojang.blaze3d.platform.InputConstants.KEY_K,75,KeyMapping.Category.MISC);
   ClientTickEvents.END_CLIENT_TICK.register(c->{while(key.consumeClick())if(c.player!=null&&c.gui.screen()==null){if(!dev.admutium.techmod.suit.Suits.worn(c.player).isEmpty())c.setScreenAndShow(new SuitRadialScreen());else{enabled=true;c.setScreenAndShow(new SuitPreviewScreen());}}});
   ClientPlayConnectionEvents.DISCONNECT.register((handler,c)->{enabled=false;wings=0;color=0;});
  }

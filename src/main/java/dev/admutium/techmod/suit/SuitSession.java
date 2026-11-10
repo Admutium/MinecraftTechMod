@@ -13,7 +13,7 @@ public final class SuitSession {
  public int input,magnetPulse,warpTicks,shieldDelay,revealTicks;public long lastDamage,lastMining=-1000;
  public final long[] spent=new long[5],rates=new long[5];private final long[][] window=new long[20][5];private int cursor;public long spentTick,chargeTick,chargeRate;private final long[] chargeWindow=new long[20];
  public boolean flightGranted,oldMayFly,oldFlying;public float oldFlySpeed;
- public SuitSession(ItemStack stack){this.stack=stack;var s=Suits.ensure(stack);id=s.id();energy=s.energy();rescueReady=s.rescueReady();shield=s.shield()/1000.;levels.putAll(s.levels());active.addAll(s.active());blacklist.addAll(s.contents().blacklist());ores.addAll(s.contents().ores());for(int i=0;i<Math.min(9,s.contents().cargo().size());i++)cargo.set(i,s.contents().cargo().get(i).copy());salvage.addAll(s.contents().salvage().stream().map(ItemStack::copy).toList());nutrients=s.contents().nutrients();home=s.home();tint=s.tint();magnetRange=s.magnetRange();sealed=s.sealed();}
+ public SuitSession(ItemStack stack){this.stack=stack;var s=Suits.ensure(stack);id=s.id();energy=s.energy();rescueReady=s.rescueReady();shield=s.shield()/1000.;levels.putAll(s.levels());active.addAll(s.active());blacklist.addAll(s.contents().blacklist());ores.addAll(s.contents().ores());for(int i=0;i<Math.min(9,s.contents().cargo().size());i++)cargo.set(i,s.contents().cargo().get(i).copy());salvage.addAll(s.contents().salvage().stream().map(ItemStack::copy).toList());nutrients=s.contents().nutrients();home=s.home();tint=s.tint();magnetRange=s.magnetRange();sealed=s.sealed();if(!levels.containsKey("_controls_v2")){for(var u:new SuitUpgrade[]{SuitUpgrade.RUN,SuitUpgrade.FEED,SuitUpgrade.MAGNET})if(level(u)>0)active.add(u.id());levels.put("_controls_v2",1);}}
  public int level(SuitUpgrade upgrade){return Math.clamp(levels.getOrDefault(upgrade.id(),0),0,upgrade.max);}
  public boolean on(String key){return active.contains(key);}
  public long capacity(){return (12000L+level(SuitUpgrade.CAPACITY)*6000L)*Energy.UNIT;}
@@ -25,7 +25,8 @@ public final class SuitSession {
  public void endTick(){chargeRate+=chargeTick-chargeWindow[cursor];chargeWindow[cursor]=chargeTick;chargeTick=0;for(int i=0;i<5;i++){rates[i]+=spent[i]-window[cursor][i];window[cursor][i]=spent[i];}cursor=(cursor+1)%20;}
  public SuitData snapshot(){var l=new LinkedHashMap<>(levels);l.put("_reveal",revealTicks);return new SuitData(id,energy,l,List.copyOf(active),new SuitData.Contents(cargo,List.copyOf(blacklist),List.copyOf(ores),nutrients,salvage),home,rescueReady,Math.round(shield*1000),tint,magnetRange,sealed);}
  public void flush(){energy=Math.clamp(energy,0,capacity());stack.set(Suits.DATA,snapshot());}
- public void upgrade(SuitUpgrade upgrade){levels.put(upgrade.id(),Math.min(upgrade.max,level(upgrade)+1));flush();}
+ public void unlocked(SuitUpgrade u){if(u==SuitUpgrade.RUN||u==SuitUpgrade.FEED||u==SuitUpgrade.MAGNET)active.add(u.id());}
+ public void upgrade(SuitUpgrade upgrade){if(level(upgrade)==0)unlocked(upgrade);levels.put(upgrade.id(),Math.min(upgrade.max,level(upgrade)+1));flush();}
  public boolean blocked(ItemStack item){return blacklist.contains(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item.getItem()).toString());}
  public void insertCargo(ItemStack item){if(level(SuitUpgrade.INVENTORY)==0||item.is(Suits.ITEM))return;for(int i=0;i<9&&!item.isEmpty();i++){var existing=cargo.get(i);if(existing.isEmpty()){cargo.set(i,item.split(Math.min(item.getCount(),item.getMaxStackSize())));}else if(ItemStack.isSameItemSameComponents(existing,item)){int n=Math.min(item.getCount(),existing.getMaxStackSize()-existing.getCount());existing.grow(n);item.shrink(n);}}}
 }

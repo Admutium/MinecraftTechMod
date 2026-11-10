@@ -11,7 +11,8 @@
       "dev.admutium.techmod.test.MaterialsVisualTest",
       "dev.admutium.techmod.test.DandelionWorldgenTest",
       "dev.admutium.techmod.test.SuitVisualTest",
-      "dev.admutium.techmod.test.SuitFunctionalVisualTest"
+      "dev.admutium.techmod.test.SuitFunctionalVisualTest",
+      "dev.admutium.techmod.test.SuitMovementTest"
     ]
   },
   "depends": {

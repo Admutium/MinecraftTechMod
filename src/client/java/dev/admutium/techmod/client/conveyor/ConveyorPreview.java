@@ -17,7 +17,7 @@ public final class ConveyorPreview {
   for(var d:Direction.values())for(int y=-1;y<=1;y++){var at=p.relative(d).offset(0,y,0);if(c.level.hasChunkAt(at)&&c.level.getBlockEntity(at) instanceof ConveyorEntity be&&be.drivePos!=null&&be.driveDistance<15&&c.level.getBlockEntity(be.drivePos) instanceof MachineBlockEntity drive&&drive.driveLoad<16)return true;}return false;
  }
  public static void init(){
-  var key=net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping(new net.minecraft.client.KeyMapping("key.techmod.conveyor_slope",71,net.minecraft.client.KeyMapping.Category.register(dev.admutium.techmod.TechMod.id("controls"))));
+  var key=dev.admutium.techmod.client.KonturKeys.register("key.techmod.conveyor_slope",com.mojang.blaze3d.platform.InputConstants.KEY_G,71,net.minecraft.client.KeyMapping.Category.register(dev.admutium.techmod.TechMod.id("controls")));
   ClientTickEvents.END_CLIENT_TICK.register(c->{while(key.consumeClick())if(c.player!=null&&c.gui.screen()==null&&c.player.getMainHandItem().getItem() instanceof ConveyorItem item&&((ConveyorBlock)item.getBlock()).kind==Conveyors.Kind.BELT){
    int mode=ConveyorItem.mode(c.player),next=mode==0?1:mode==1?-1:0;ConveyorItem.setMode(c.player,next);net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new ConveyorModePayload(next));c.player.sendOverlayMessage(Component.translatable("conveyor.techmod.mode."+next));
   }});

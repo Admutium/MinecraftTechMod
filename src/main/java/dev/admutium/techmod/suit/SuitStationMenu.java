@@ -19,7 +19,7 @@ public final class SuitStationMenu extends AbstractContainerMenu {
   if(key.equals("equip")){if(!station.getLevel().getBlockState(station.getBlockPos().above()).getCollisionShape(station.getLevel(),station.getBlockPos().above()).isEmpty()){Suits.message(owner,"Нужно свободное место над станцией");return;}var stack=bay.getItem(0);if(!stack.is(Suits.ITEM)||Suits.ensure(stack).sealed())return;for(var slot:EquipmentSlot.values())if(slot.isArmor()&&!owner.getItemBySlot(slot).isEmpty()){Suits.message(owner,"Снимите всю броню перед экипировкой");return;}var s=new SuitSession(stack);s.home=java.util.Optional.of(GlobalPos.of(owner.level().dimension(),station.getBlockPos()));s.flush();bay.setItem(0,ItemStack.EMPTY);owner.setItemSlot(EquipmentSlot.CHEST,stack);syncEquipment();return;}
   if(key.equals("remove")){var s=Suits.session(owner);if(s!=null&&bay.getItem(0).isEmpty()){s.flush();SuitRuntime.clear(owner,s);owner.setItemSlot(EquipmentSlot.CHEST,ItemStack.EMPTY);Suits.SESSIONS.remove(owner.getUUID());bay.setItem(0,s.stack);syncEquipment();}return;}
   var s=subject();if(s==null)return;
-  if(key.equals("all")){for(var u:SuitUpgrade.values())s.levels.put(u.id(),u.max);}
+  if(key.equals("all")){for(var u:SuitUpgrade.values()){if(s.level(u)==0)s.unlocked(u);s.levels.put(u.id(),u.max);}}
   else if(key.equals("upgrade")){var u=SuitUpgrade.byId(value);if(u!=null)s.upgrade(u);}
   else if(key.equals("color")){try{s.tint=0xff000000|Integer.parseInt(value.replace("#",""),16)&0xffffff;}catch(NumberFormatException ignored){}}
   else if(key.equals("range")){try{s.magnetRange=Math.clamp(Integer.parseInt(value),0,3);}catch(NumberFormatException ignored){}}
